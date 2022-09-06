@@ -1,19 +1,16 @@
 <template>
-  <el-menu :class="'navbar-header-fixed' + (isMac ? ' dragTitle' : '')" mode="horizontal">
+  <el-menu
+    :class="'navbar-header-fixed' + (isMac ? ' dragTitle' : '')"
+    mode="horizontal"
+  >
     <div class="sys-btn" @click="sysBtnClick('window-mini')">
-      <svg-icon
-            icon-class="sys_mini"
-      ></svg-icon>
+      <svg-icon icon-class="sys_mini"></svg-icon>
     </div>
     <div class="sys-btn" @click="sysBtnClick('window-max')">
-      <svg-icon
-            icon-class="sys_max"
-      ></svg-icon>
+      <svg-icon icon-class="sys_max"></svg-icon>
     </div>
     <div class="sys-btn" @click="sysBtnClick('window-close')">
-      <svg-icon
-            icon-class="sys_close"
-      ></svg-icon>
+      <svg-icon icon-class="sys_close"></svg-icon>
     </div>
     <!-- <div class="top-right">
       <div class="hb-bd">
@@ -66,19 +63,19 @@ import Hamburger from "@/components/Hamburger";
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
   },
   data: () => ({
     time: "",
     userImage: require("@/assets/user.png"),
-    isMac: process.platform === "darwin"
+    isMac: process.platform === "darwin",
   }),
   mounted() {
     this.set_time();
     this.timer = setInterval(() => {
       this.set_time();
     }, 60000);
-    console.log(this.userImage)
+    console.log(this.userImage);
   },
   methods: {
     toggleSideBar() {
@@ -88,48 +85,48 @@ export default {
       this.$store.dispatch("LogOut").then(() => {
         this.$message({
           message: "退出成功",
-          type: "success"
+          type: "success",
         });
-        this.$router.push('/login')
+        this.$router.push("/login");
       });
     },
     set_time() {
       this.time = format(new Date(), "yyyy/MM/dd HH:mm");
     },
-    sysBtnClick(type){
-      var ipc = require('electron').ipcRenderer;
+    sysBtnClick(type) {
+      var ipc = require("electron").ipcRenderer;
       console.log(type);
       ipc.send(type);
-    }
+    },
   },
   computed: {
-    ...mapGetters(["name", "role", "sidebar"])
+    ...mapGetters(["name", "role", "sidebar"]),
   },
   beforeDestroy() {
     console.log("销毁计时器------------");
     clearInterval(this.timer);
     this.timer = null;
-  }
+  },
 };
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.sys-btn{
-  -webkit-app-region:no-drag;//设置按钮不可拖拽
+.sys-btn {
+  -webkit-app-region: no-drag; //设置按钮不可拖拽
   margin-right: 4px;
   height: 36px;
   width: 36px;
   display: flex;
   justify-content: center;
   align-items: center;
-  .svg-icon{
+  .svg-icon {
     height: 16px;
     width: 16px;
   }
 }
 .navbar-header-fixed {
-  -webkit-app-region: drag;//设置可拖拽
-  box-shadow: 9px 0px 16px 0px rgba(83,128,220,0.18);
+  -webkit-app-region: drag; //设置可拖拽
+  box-shadow: 0px 0px 16px 0px rgba(83, 128, 220, 0.18);
   transition: width 0.28s;
   width: calc(100% - 256px);
   display: flex;
@@ -204,4 +201,3 @@ export default {
   -webkit-app-region: drag;
 }
 </style>
-

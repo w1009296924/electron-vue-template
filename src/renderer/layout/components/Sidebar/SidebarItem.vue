@@ -1,65 +1,81 @@
 <template>
   <div
-    v-if="!item.hidden&&item.children"
+    v-if="!item.hidden && item.children"
     class="menu-wrapper"
-    :class="collapse?``:`active-menu-wrapper`"
+    :class="collapse ? `` : `active-menu-wrapper`"
   >
     <div v-if="item.onlyShowfirst">
       <router-link
-        v-if="OneShowingChild(item.children[0]) && !onlyOneChild.children&&!item.alwaysShow"
+        v-if="
+          OneShowingChild(item.children[0]) &&
+          !onlyOneChild.children &&
+          !item.alwaysShow
+        "
         :to="resolvePath(onlyOneChild.path)"
       >
         <el-menu-item
           :index="resolvePath(onlyOneChild.path)"
-          :class="{'submenu-title-noDropdown':!isNest}"
+          :class="{ 'submenu-title-noDropdown': !isNest }"
         >
           <svg-icon
-            v-if="onlyOneChild.meta&&onlyOneChild.meta.icon"
+            v-if="onlyOneChild.meta && onlyOneChild.meta.icon"
             :icon-class="onlyOneChild.meta.icon"
           ></svg-icon>
           <span
-            v-if="onlyOneChild.meta&&onlyOneChild.meta.title"
+            v-if="onlyOneChild.meta && onlyOneChild.meta.title"
             slot="title"
-          >{{onlyOneChild.meta.title}}</span>
+            >{{ onlyOneChild.meta.title }}</span
+          >
         </el-menu-item>
       </router-link>
     </div>
 
     <div v-else>
       <router-link
-        v-if="hasOneShowingChild(item.children) && !onlyOneChild.children&&!item.alwaysShow"
+        v-if="
+          hasOneShowingChild(item.children) &&
+          !onlyOneChild.children &&
+          !item.alwaysShow
+        "
         :to="resolvePath(onlyOneChild.path)"
       >
         <el-menu-item
           :index="resolvePath(onlyOneChild.path)"
-          :class="{'submenu-title-noDropdown':!isNest}"
+          :class="{ 'submenu-title-noDropdown': !isNest }"
         >
           <svg-icon
-            v-if="onlyOneChild.meta&&onlyOneChild.meta.icon"
+            v-if="onlyOneChild.meta && onlyOneChild.meta.icon"
             :icon-class="onlyOneChild.meta.icon"
           ></svg-icon>
           <span
-            v-if="onlyOneChild.meta&&onlyOneChild.meta.title"
+            v-if="onlyOneChild.meta && onlyOneChild.meta.title"
             class="my-title"
-          >{{onlyOneChild.meta.title}}</span>
+            >{{ onlyOneChild.meta.title }}</span
+          >
           <span
-            v-if="onlyOneChild.meta&&onlyOneChild.meta.title"
+            v-if="onlyOneChild.meta && onlyOneChild.meta.title"
             slot="title"
-          >{{onlyOneChild.meta.title}}</span>
+            >{{ onlyOneChild.meta.title }}</span
+          >
         </el-menu-item>
       </router-link>
 
-      <el-submenu v-else :index="item.name||item.path">
+      <el-submenu v-else :index="item.name || item.path">
         <template slot="title">
-          <svg-icon v-if="item.meta&&item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
-          <span v-if="item.meta&&item.meta.title" slot="title">{{item.meta.title}}</span>
+          <svg-icon
+            v-if="item.meta && item.meta.icon"
+            :icon-class="item.meta.icon"
+          ></svg-icon>
+          <span v-if="item.meta && item.meta.title" slot="title">{{
+            item.meta.title
+          }}</span>
         </template>
 
         <template v-for="child in item.children" v-if="!child.hidden">
           <sidebar-item
             :is-nest="true"
             class="nest-menu"
-            v-if="child.children&&child.children.length>0"
+            v-if="child.children && child.children.length > 0"
             :item="child"
             :key="child.path"
             :base-path="resolvePath(child.path)"
@@ -67,8 +83,13 @@
 
           <router-link v-else :to="resolvePath(child.path)" :key="child.name">
             <el-menu-item :index="resolvePath(child.path)">
-              <svg-icon v-if="child.meta&&child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
-              <span v-if="child.meta&&child.meta.title" slot="title">{{child.meta.title}}</span>
+              <svg-icon
+                v-if="child.meta && child.meta.icon"
+                :icon-class="child.meta.icon"
+              ></svg-icon>
+              <span v-if="child.meta && child.meta.title" slot="title">{{
+                child.meta.title
+              }}</span>
             </el-menu-item>
           </router-link>
         </template>
@@ -86,29 +107,29 @@ export default {
     // route配置json
     item: {
       type: Object,
-      required: true
+      required: true,
     },
     isNest: {
       type: Boolean,
-      default: false
+      default: false,
     },
     basePath: {
       type: String,
-      default: ""
+      default: "",
     },
     collapse: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      onlyOneChild: null
+      onlyOneChild: null,
     };
   },
   methods: {
     hasOneShowingChild(children) {
-      const showingChildren = children.filter(item => {
+      const showingChildren = children.filter((item) => {
         if (item.hidden) {
           return false;
         } else {
@@ -127,8 +148,8 @@ export default {
     OneShowingChild(children) {
       this.onlyOneChild = children;
       return true;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -142,11 +163,14 @@ export default {
   ::v-deep .el-menu-item {
     height: 94px;
     padding: 0 20px 0 12px;
-    .el-tooltip{
+    &.is-active {
+      background-color: #ecf5ff;
+    }
+    .el-tooltip {
       display: flex !important;
       flex-direction: column;
       align-items: center;
-      .svg-icon{
+      .svg-icon {
         margin-top: 16px;
         height: 36px;
         width: 36px;
@@ -154,13 +178,13 @@ export default {
     }
   }
 }
-.my-title{
+.my-title {
   font-family: PingFangSC-Regular;
-font-size: 16px;
-color: rgba(0,0,0,0.65);
-letter-spacing: 0;
-font-weight: 400;
-line-height: 22px;
-margin-top: 4px;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.65);
+  letter-spacing: 0;
+  font-weight: 400;
+  line-height: 22px;
+  margin-top: 4px;
 }
 </style>

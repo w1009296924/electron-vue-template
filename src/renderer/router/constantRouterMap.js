@@ -25,14 +25,14 @@ import Layout from '@/layout'
  **/
 export default [
   {
-    path: '/form',
+    path: '/home',
     component: Layout,
     meta: { title: '首页', icon: 'home' },
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
+        name: 'Home',
+        component: () => import('@/views/home/index'),
         meta: { title: '首页', icon: 'home' }
       }
     ]

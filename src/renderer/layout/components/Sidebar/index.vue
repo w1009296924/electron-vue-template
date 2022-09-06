@@ -8,30 +8,30 @@
     >
       <!-- <Logo :collapse="isCollapse" /> -->
       <div class="account">
-          <el-dropdown trigger="click">
-            <div class="account-inner">
-              <el-image :src="userImage" class="avatar">
-                <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline"></i>
-                </div>
-              </el-image>
-              <div class="el-dropdown-link">
-               {{name}}
+        <el-dropdown trigger="click">
+          <div class="account-inner">
+            <el-image :src="userImage" class="avatar">
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture-outline"></i>
               </div>
+            </el-image>
+            <div class="el-dropdown-link">
+              {{ name }}
             </div>
-            <el-dropdown-menu slot="dropdown">
-              <router-link to="/">
-                <el-dropdown-item>返回首页</el-dropdown-item>
-              </router-link>
-              <el-dropdown-item @click.native="logout">
-                <span>切换账号</span>
-              </el-dropdown-item>
-              <el-dropdown-item @click.native="logout">
-                <span>退出登录</span>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <router-link to="/">
+              <el-dropdown-item>返回首页</el-dropdown-item>
+            </router-link>
+            <el-dropdown-item @click.native="logout">
+              <span>切换账号</span>
+            </el-dropdown-item>
+            <el-dropdown-item @click.native="logout">
+              <span>退出登录</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
       <sidebar-item
         v-for="route in permission_routes"
         :key="route.name"
@@ -39,6 +39,10 @@
         :base-path="route.path"
         :collapse="isCollapse"
       ></sidebar-item>
+      <div class="selected-bar" :style="barDy">
+        <span class="bar-left"></span>
+        <span class="bar-right"></span>
+      </div>
     </el-menu>
   </scroll-bar>
 </template>
@@ -53,7 +57,8 @@ export default {
   components: { SidebarItem, ScrollBar, Logo },
   data: () => ({
     userImage: require("@/assets/userW.png"),
-    name:'又又不leng'
+    name: "又又不leng",
+    routeMap: [],
   }),
   computed: {
     ...mapGetters(["sidebar", "permission_routes"]),
@@ -61,6 +66,24 @@ export default {
       console.log(this.$store.getters);
       return !this.sidebar.opened;
     },
+    barDy() {
+      console.log(this.$route.path);
+      let index;
+      for (index = 0; index < this.routeMap.length; index++) {
+        if (this.$route.path.indexOf(this.routeMap[index].path + "/") === 0) {
+          break;
+        }
+        if (index == this.routeMap.length - 1) {
+          index = -1;
+          break;
+        }
+      }
+      console.log(index);
+      return index == -1 ? "display:none;" : `top:${144 + 94 * index}px;`;
+    },
+  },
+  mounted() {
+    this.routeMap = require("@/router/constantRouterMap").default;
   },
 };
 </script>
@@ -85,18 +108,18 @@ export default {
   overflow: hidden;
   width: 180px;
 }
-.account{
+.account {
   display: flex;
   justify-content: center;
   margin-top: 32px;
   user-select: none;
   margin-bottom: 24px;
-  .account-inner{
+  .account-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    .avatar{
+    .avatar {
       width: 64px;
     }
     ::v-deep .el-dropdown-link {
@@ -108,6 +131,28 @@ export default {
       letter-spacing: 0;
       font-weight: 400;
     }
+  }
+}
+.selected-bar {
+  height: 94px;
+  width: 8px;
+  position: absolute;
+  left: 92px;
+  transition: all 0.15s ease-in-out;
+  .bar-left {
+    position: absolute;
+    height: 94px;
+    width: 4px;
+    background: #bfd7f6;
+    border-radius: 4px 0 0 4px;
+  }
+  .bar-right {
+    position: absolute;
+    left: 4px;
+    height: 94px;
+    width: 4px;
+    background: #5380dc;
+    border-radius: 2px 0 0 2px;
   }
 }
 </style>
