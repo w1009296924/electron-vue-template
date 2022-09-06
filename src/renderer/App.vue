@@ -9,6 +9,7 @@
 
 <script>
 import CHeader from "./components/title";
+import '@/assets/font.css';
 export default {
   components: { CHeader }
 };
@@ -16,4 +17,12 @@ export default {
 
 <style>
 /* CSS */
+*{
+  /* font-family: PingFangSC-Regular;
+  font-weight: 400; */
+}
+
+body .el-tooltip__popper{
+  display: none;
+}
 </style>

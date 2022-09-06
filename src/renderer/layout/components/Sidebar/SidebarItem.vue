@@ -40,6 +40,10 @@
           ></svg-icon>
           <span
             v-if="onlyOneChild.meta&&onlyOneChild.meta.title"
+            class="my-title"
+          >{{onlyOneChild.meta.title}}</span>
+          <span
+            v-if="onlyOneChild.meta&&onlyOneChild.meta.title"
             slot="title"
           >{{onlyOneChild.meta.title}}</span>
         </el-menu-item>
@@ -129,13 +133,34 @@ export default {
 </script>
 <style lang="scss" scoped>
 .menu-wrapper {
+  height: 94px;
   ::v-deep .el-menu-item,
   .el-submenu__title {
     height: 46px;
     line-height: 46px;
   }
   ::v-deep .el-menu-item {
+    height: 94px;
     padding: 0 20px 0 12px;
+    .el-tooltip{
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      .svg-icon{
+        margin-top: 16px;
+        height: 36px;
+        width: 36px;
+      }
+    }
   }
+}
+.my-title{
+  font-family: PingFangSC-Regular;
+font-size: 16px;
+color: rgba(0,0,0,0.65);
+letter-spacing: 0;
+font-weight: 400;
+line-height: 22px;
+margin-top: 4px;
 }
 </style>

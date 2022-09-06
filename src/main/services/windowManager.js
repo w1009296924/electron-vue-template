@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu, app } from 'electron'
+import { BrowserWindow, Menu, app, ipcMain } from 'electron'
 import { platform } from "os"
 import menuconfig from '../config/menu'
 import config from '@config'
@@ -9,17 +9,34 @@ var loadWindow = null
 var mainWindow = null
 setIpc.Mainfunc(config.IsUseSysTitle)
 
+
+ipcMain.on('window-max', () => {
+  if(mainWindow.isMaximized()) {
+     mainWindow.restore()
+  }else{
+    mainWindow.maximize()
+  }
+})
+ipcMain.on('window-min', function () {
+    mainWindow.minimize();
+})
+ipcMain.on('window-close', function () {
+    mainWindow.close();
+})
+
 function createMainWindow() {
   /**
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 800,
+    height: 975,
     useContentSize: true,
-    width: 1700,
-    minWidth: 1366,
+    width: 1440,
+    minWidth: 1440,
     show: false,
     frame: config.IsUseSysTitle,
+    // frame: false,
+    // titleBarStyle: 'hidden',
     titleBarStyle: platform().includes('win32') ? 'default' : 'hidden',
     webPreferences: {
       contextIsolation: false,

@@ -27,13 +27,13 @@ export default [
   {
     path: '/form',
     component: Layout,
-    meta: { title: '表单', icon: 'form' },
+    meta: { title: '首页', icon: 'home' },
     children: [
       {
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: '表单', icon: 'form' }
+        meta: { title: '首页', icon: 'home' }
       }
     ]
   },
@@ -45,7 +45,7 @@ export default [
         path: 'index',
         name: '表格',
         component: () => import('@/views/table/index'),
-        meta: { title: '表格', icon: 'table' }
+        meta: { title: '任务', icon: 'task' }
       }
     ]
   },
@@ -58,7 +58,33 @@ export default [
         path: 'index',
         name: '权限',
         component: () => import('@/views/permission/index'),
-        meta: { title: '权限', icon: 'table' }
+        meta: { title: '待办', icon: 'todo' }
+      }
+    ]
+  },
+  {
+    path: '/permission',
+    component: Layout,
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'index',
+        name: '权限',
+        component: () => import('@/views/permission/index'),
+        meta: { title: '工时', icon: 'hour' }
+      }
+    ]
+  },
+  {
+    path: '/permission',
+    component: Layout,
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'index',
+        name: '权限',
+        component: () => import('@/views/permission/index'),
+        meta: { title: '工具箱', icon: 'tool' }
       }
     ]
   },

@@ -1,6 +1,21 @@
 <template>
   <el-menu :class="'navbar-header-fixed' + (isMac ? ' dragTitle' : '')" mode="horizontal">
-    <div class="top-right">
+    <div class="sys-btn" @click="sysBtnClick('window-mini')">
+      <svg-icon
+            icon-class="sys_mini"
+      ></svg-icon>
+    </div>
+    <div class="sys-btn" @click="sysBtnClick('window-max')">
+      <svg-icon
+            icon-class="sys_max"
+      ></svg-icon>
+    </div>
+    <div class="sys-btn" @click="sysBtnClick('window-close')">
+      <svg-icon
+            icon-class="sys_close"
+      ></svg-icon>
+    </div>
+    <!-- <div class="top-right">
       <div class="hb-bd">
         <hamburger
           class="hamburger-container"
@@ -39,7 +54,7 @@
           </el-dropdown>
         </div>
       </div>
-    </div>
+    </div> -->
   </el-menu>
 </template>
 
@@ -80,6 +95,11 @@ export default {
     },
     set_time() {
       this.time = format(new Date(), "yyyy/MM/dd HH:mm");
+    },
+    sysBtnClick(type){
+      var ipc = require('electron').ipcRenderer;
+      console.log(type);
+      ipc.send(type);
     }
   },
   computed: {
@@ -94,15 +114,33 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.sys-btn{
+  -webkit-app-region:no-drag;//设置按钮不可拖拽
+  margin-right: 4px;
+  height: 36px;
+  width: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .svg-icon{
+    height: 16px;
+    width: 16px;
+  }
+}
 .navbar-header-fixed {
+  -webkit-app-region: drag;//设置可拖拽
+  box-shadow: 9px 0px 16px 0px rgba(83,128,220,0.18);
   transition: width 0.28s;
   width: calc(100% - 256px);
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   position: fixed;
+  padding-right: 20px;
   right: 0;
-  z-index: 1002;
-  height: 62px;
+  z-index: 1001;
+  height: 48px;
+  border-bottom: none !important;
   .hamburger-container {
     line-height: 58px;
     height: 50px;

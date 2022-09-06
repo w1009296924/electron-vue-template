@@ -9,6 +9,7 @@
 
   // 侧边栏
   .sidebar-container {
+    box-shadow: 16px 30px 16px -16px rgba(83,128,220,0.18);
     .horizontal-collapse-transition {
       transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
     }
@@ -20,7 +21,7 @@
     font-size: 0px;
     bottom: 0;
     left: 0;
-    z-index: 1001;
+    z-index: 1002;
     overflow: hidden;
 
     a {
@@ -29,7 +30,7 @@
     }
 
     .svg-icon {
-      margin-left: 14px;
+      // margin-left: 14px;
     }
 
     .el-menu {
@@ -40,16 +41,16 @@
 
   .hideSidebar {
     .sidebar-container {
-      width: 60px !important;
+      width: 100px !important;
     }
 
     .navbar-header-fixed {
-      width: calc(100% - 60px);
+      width: calc(100% - 100px);
       ;
     }
 
     .main-container {
-      margin-left: 60px;
+      margin-left: 100px;
     }
 
     .submenu-title-noDropdown {
