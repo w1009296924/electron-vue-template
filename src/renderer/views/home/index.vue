@@ -1,9 +1,14 @@
 <template>
   <div class="app-container">
     <div class="main-box">
-      <HomeCard width="728" height="420" title="近期待办"></HomeCard>
-      <HomeCard width="544" height="420" title="工时日历"></HomeCard>
-      <HomeCard width="728" height="433" title="便签"></HomeCard>
+      <HomeCard width="728" height="420" title="工时日历">
+        <template v-slot:content>
+          <div class="center-box">
+            <Calendar></Calendar>
+          </div> </template
+      ></HomeCard>
+      <HomeCard width="544" height="420" title="便签"> </HomeCard>
+      <HomeCard width="728" height="433" title="近期待办"></HomeCard>
       <HomeCard width="544" height="433" title="快速入口">
         <template v-slot:content>
           <draggable
@@ -33,9 +38,10 @@
 <script>
 import HomeCard from "./components/HomeCard";
 import QucikEntry from "./components/QuickEntry";
+import Calendar from "./components/Calendar";
 import draggable from "vuedraggable";
 export default {
-  components: { HomeCard, QucikEntry, draggable },
+  components: { HomeCard, QucikEntry, Calendar, draggable },
   data() {
     return {
       quickEntryArray: [
@@ -89,6 +95,14 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+}
+.center-box {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: calc(100% - 48px);
+  width: 100%;
+  padding-top: 10px;
 }
 .quick-entrys {
   display: flex;
