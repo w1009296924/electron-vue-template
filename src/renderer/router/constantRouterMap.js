@@ -76,15 +76,54 @@ export default [
     ]
   },
   {
-    path: '/permission',
+    path: '/tools',
     component: Layout,
     meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
-        name: '权限',
-        component: () => import('@/views/permission/index'),
+        name: 'tools',
+        component: () => import('@/views/tools/index'),
         meta: { title: '工具箱', icon: 'tool' }
+      }
+    ]
+  },
+  {
+    path: '/tools/healthRemind',
+    hidden: true,
+    component: Layout,
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'index',
+        name: 'healthRemind',
+        component: () => import('@/views/tools/healthRemind/index')
+      }
+    ]
+  },
+  {
+    path: '/tools/copyImg',
+    hidden: true,
+    component: Layout,
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'index',
+        name: 'copyImg',
+        component: () => import('@/views/tools/copyImg/index')
+      }
+    ]
+  },
+  {
+    path: '/tools/countWorkTime',
+    hidden: true,
+    component: Layout,
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'index',
+        name: 'countWorkTime',
+        component: () => import('@/views/tools/countWorkTime/index')
       }
     ]
   },
