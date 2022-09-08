@@ -63,14 +63,14 @@ export default [
     ]
   },
   {
-    path: '/permission',
+    path: '/hour',
     component: Layout,
     meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
         name: '权限',
-        component: () => import('@/views/permission/index'),
+        component: () => import('@/views/hour/index'),
         meta: { title: '工时', icon: 'hour' }
       }
     ]

@@ -1,25 +1,22 @@
 <template>
-  <div class="tools-container">
-    <Card 
-      v-for="(item,index) of toolsArray"
-      :key="index"
-      :name="item.name"
-      :iconPath="item.iconPath"
-      :url="item.url"
-    />
-  </div>
+<div class="tools-container">
+  <Card v-for="(item,index) of toolsArray" :key="index" :name="item.name" :iconPath="item.iconPath" :url="item.url" />
+</div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import {
+  mapGetters
+} from "vuex";
 import Card from "./components/card";
 export default {
   name: "tools",
-  components: { Card },
+  components: {
+    Card
+  },
   data() {
     return {
-      toolsArray: [
-        {
+      toolsArray: [{
           name: "健康提醒",
           iconPath: require("@/assets/healthRemind.png"),
           url: "healthRemind",
@@ -43,7 +40,7 @@ export default {
 };
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" scoped>
 .tools-container {
   display: flex;
   margin: 28px;

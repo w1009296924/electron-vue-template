@@ -1,0 +1,259 @@
+<template>
+<div class="hour-container">
+  <div class="hour-title">
+    选择填报类型
+    <el-radio v-model="hourType" style="margin-left: 32px;margin-right: 24px !important;" label="1">项目工时</el-radio>
+    <el-radio v-model="hourType" label="2">非项目工时</el-radio>
+  </div>
+  <div class="hour-select">
+    <!-- 项目工时 -->
+    <div v-if="hourType=='1'">
+      <div class="flexCenter" style="margin-bottom:20px">
+        实施单元
+        <el-select v-model="unit" :disabled="smartChoose" style="margin: 0 8px;width:224px" placeholder="请选择">
+          <el-option v-for="item in unitList" :key="item.value" :label="item.value" :value="item.label">
+            <span style="float: left; color: #8492a6; font-size: 13px; margin-right: 20px;">{{ item.value }}</span>
+            <span style="float: right">{{ item.label }}</span>
+          </el-option>
+        </el-select>
+        <i slot="reference" class="el-icon-refresh-right" @click="refreshUnit" />
+      </div>
+      <div class="flexCenter" style="margin-bottom:20px">
+        剩余可填报工作量: {{ unit }}
+      </div>
+      <div class="flexCenter" style="margin-bottom:20px">
+        填报日期
+        <el-date-picker v-model="date" type="date" style="margin-left:8px" placeholder="选择日期" />
+      </div>
+      <div class="flexCenter" style="margin-bottom:20px">
+        填报工时
+        <el-input-number v-model="inputHour" controls-position="right" style="width:88px;margin:0 8px;" :min="1" :max="14" />
+        小时
+      </div>
+      <div class="flexCenter">
+        <el-popover placement="top-start" width="250" trigger="hover" content="开启智能填报后会默认填报剩余工时最多的实施单元。">
+          <div slot="reference">智能填报</div>
+        </el-popover>
+        <el-select v-model="smartChoose" style="margin-left:8px" @change="checkSmarkChoose">
+          <el-option v-for="item in smartChooses" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </div>
+    </div>
+    <!-- 非项目工时 -->
+    <div v-else>
+      <div class="flexCenter" style="margin-bottom:20px">
+        工作类型
+        <el-select v-model="type" style="margin: 0 8px;width:224px" placeholder="请选择">
+          <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </div>
+      <div class="flexCenter" style="margin-bottom:20px">
+        工作类别
+        <el-select v-model="category" style="margin: 0 8px;width:224px" placeholder="请选择">
+          <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </div>
+      <div class="flexCenter" style="margin-bottom:20px">
+        工作内容
+        <el-input v-model="jobContent" style="margin: 0 8px;width:224px" placeholder="请输入内容" />
+      </div>
+      <div class="flexCenter" style="margin-bottom:20px">
+        填报日期
+        <el-date-picker v-model="date" type="date" style="margin-left:8px" placeholder="选择日期" />
+      </div>
+      <div class="flexCenter" style="margin-bottom:20px">
+        填报工时
+        <el-input-number v-model="inputHour" controls-position="right" style="width:88px;margin:0 8px;" :min="1" :max="14" />
+        小时
+      </div>
+    </div>
+  </div>
+  <div class="auto-commit">
+    自动填报
+    <el-switch v-model="autoCommit" style="margin:0 32px 0 8px" />
+    自动填报时间
+    <el-time-select v-model="autoCommitTime" :picker-options="{
+        start: '08:30',
+        step: '00:15',
+        end: '18:30'
+      }" placeholder="选择时间">
+    </el-time-select>
+  </div>
+  <div class="buttonGroup">
+    <div class="abutton" :class="[canCommit?'commit':'rollback']" @click="commitOrBack">
+      {{ canCommit?'填报工时':'回退工时'}}
+    </div>
+    <div class="abutton refill" @click="refill">
+      补填工时
+    </div>
+  </div>
+</div>
+</template>
+
+<script>
+import {
+  mapGetters
+} from "vuex";
+export default {
+  name: "hour",
+  components: {},
+  data() {
+    return {
+      hourType: "1",
+      unitList: [{
+        value: '实施单元213-123UNKJ-2022-1234-代金券哦我我打算的弄啊-啊实打实撒大声地',
+        label: '103'
+      }, {
+        value: '实施单元213-123UNKJ-2022-12334-代金券哦我我打算的弄啊-啊实打实撒大声地',
+        label: '1.03'
+      }, {
+        value: '实施单元213-123UNKJ-2022-1214-代金券哦我我打算的弄啊-啊实打实撒大声地',
+        label: '10.3'
+      }, {
+        value: '实施单元213-123UNKJ-2022-1224-代金券哦我我打算的弄啊-啊实打实撒大声地',
+        label: '5.03'
+      }, {
+        value: '实施单元213-123UNKJ-2022-12378-代金券哦我我打算的弄啊-啊实打实撒大声地',
+        label: '2.03'
+      }, {
+        value: '实施单元213-123UNKJ-2022-1284-代金券哦我我打算的弄啊-啊实打实撒大声地',
+        label: '0.03'
+      }],
+      unit: '',
+      date: new Date(),
+      inputHour: 8,
+      smartChooses: [{
+        label: '是',
+        value: true
+      }, {
+        label: '否',
+        value: false
+      }],
+      smartChoose: false,
+      type: '',
+      typeList: [{
+        label: '撒大声地是',
+        value: '1'
+      }, {
+        label: '达到',
+        value: '2'
+      }],
+      category: '',
+      categoryList: [{
+        label: 'asda',
+        value: '1'
+      }, {
+        label: 'asdasdqwe',
+        value: '2'
+      }],
+      jobContent: '',
+      autoCommit: false,
+      autoCommitTime: '',
+      canCommit: true
+    };
+  },
+  computed: {
+    ...mapGetters(["name", "roles"]),
+  },
+  methods: {
+    refreshUnit() {
+      console.log('刷新实施单元');
+    },
+    //智能填报开启后，自动选择剩余工作量最多的实施单元
+    checkSmarkChoose() {
+      if (this.smartChoose) {
+        this.unit = this.unitList[0].label;
+      }
+    },
+    commitOrBack() {
+      this.canCommit = !this.canCommit;
+    },
+    refill() {
+      //todo 补填工时
+      console.log('补填工时');
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.hour-container {
+  margin: 28px;
+  padding: 40px;
+  border: 2px;
+  background-color: #ffffff;
+}
+
+.hour-title {
+  display: flex;
+  align-items: center;
+  font-family: PingFangSC-Regular;
+  line-height: 28px;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.65);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.hour-select {
+  width: 100%;
+  background: #F3F9FF;
+  border-radius: 4px;
+  margin-top: 22px;
+  padding: 24px 16px;
+  font-family: PingFangSC-Regular;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.65);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.el-icon-refresh-right {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+
+.auto-commit {
+  margin: 18px 0 50px;
+}
+
+.abutton {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 32px;
+  border-radius: 2px;
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: #FFFFFF;
+  line-height: 22px;
+  font-weight: 400;
+}
+
+.buttonGroup {
+  display: flex;
+  margin-left: 58px;
+}
+
+.commit {
+  background-color: #005BD2;
+}
+
+.rollback {
+  background-color: #FF3E52;
+}
+
+.refill {
+  background-color: #FFFFFF;
+  border: 1px solid #005BD2;
+  color: #005BD2;
+  margin-left: 24px;
+}
+</style>
