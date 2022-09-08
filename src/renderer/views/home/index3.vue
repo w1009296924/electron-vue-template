@@ -7,10 +7,12 @@
         </div>
       </HomeCard>
       <HomeCard width="544" height="420" title="便签">
-        <div class="note-box wrapper" ref="wrapper">
-          <div class="note-content">
-            <Note v-for="(item, index) in noteArray" :key="index" />
-          </div>
+        <div class="note-box" @mousewheel="handlerMouserScroll">
+          <Note
+            v-for="(item, index) in noteArray"
+            :key="index"
+            :class="{ 'rotate-note': !item.focus }"
+          />
         </div>
       </HomeCard>
       <HomeCard width="728" height="433" title="近期待办"></HomeCard>
@@ -44,13 +46,11 @@ import QucikEntry from './components/QuickEntry';
 import Calendar from './components/Calendar';
 import Note from './components/Note';
 import draggable from 'vuedraggable';
-import BScroll from '@better-scroll/core';
-import MouseWheel from '@better-scroll/mouse-wheel';
-BScroll.use(MouseWheel);
 export default {
   components: { HomeCard, QucikEntry, Calendar, Note, draggable },
   data() {
     return {
+      scrollAni: null,
       quickEntryArray: [
         {
           name: '归档目录',
@@ -83,24 +83,31 @@ export default {
           url: 'add',
         },
       ],
-      noteArray: [{ conten: '' }, { conten: '' }, { conten: '' }],
+      noteArray: [
+        { conten: '', focus: false },
+        { conten: '', focus: false },
+        { conten: '', focus: false },
+      ],
     };
   },
   created() {
     console.log('created');
   },
   mounted() {
-    this.$nextTick(() => {
-      this.bs = new BScroll(this.$refs.wrapper, {
-        scrollX: true,
-        scrollY: false,
-        mouseWheel: true,
-        disableMouse: true,
-        disableTouch: true,
-        bounce: false,
-      });
-    });
+    // setTimeout(() => {
+    //   this.bs = new BScroll(this.$refs.wrapper, {
+    //     //...
+    //     scrollX: true,
+    //     scrollY: false,
+    //     mouseWheel: true,
+    //     // speed: 20,
+    //     // invert: false,
+    //     // easeTime: 300,
+    //   });
+    // }, 3000);
+
     setTimeout(() => {
+      // console.log(document.querySelectorAll('.tox-edit-area__iframe'));
       document.querySelectorAll('.tox-edit-area__iframe').forEach((element) => {
         element.contentWindow.document.addEventListener(
           'mousewheel',
@@ -115,13 +122,80 @@ export default {
       if (e.relatedContext.element.name == '添加') return false;
       return true;
     },
+    scrollNotes(e) {
+      // console.log(e);
+      const step = 0.4;
+      e.target.scrollLeft += step * e.deltaY;
+
+      const startX = e.target.scrollLeft;
+      const endX = startX + step * 10;
+
+      let ani = setInterval(() => {
+        rate = (right.offsetWidth - midWidth) / offWidth;
+        rightContent.style.opacity = Math.abs(rate);
+        if (rate > 0) {
+          rightContent.classList.remove('min');
+        }
+        if (rate > 0.98) {
+          rightContent.style.opacity = '1';
+          clearInterval(ani);
+        }
+      }, 20);
+    },
+    clickss(e) {
+      console.log(e);
+    },
     hander(e) {
+      // console.log(e.view.document.hasFocus());
+      // e.preventDefault();
+      // e.stopPropagation();
       if (!e.view.document.hasFocus()) {
         let eventClone = new e.constructor(e.type, e);
-        document
-          .querySelector('.note-box')
-          .firstChild.dispatchEvent(eventClone);
+        document.querySelector('.note-box').dispatchEvent(eventClone);
       }
+    },
+    handlerMouserScroll(event) {
+      this.documentObj = event.target;
+      //获取滚轮跨距，兼容获取方式
+      let detail = event.wheelDelta || event.detail || event.wheelDeltaY;
+      /*反向*/
+      let moveForwardStep = -1;
+      /*正向*/
+      let moveBackStep = 1;
+      let step = 0;
+      //如果跨步大于0，表明正向跨步，将跨步放大100倍，改变滑动速度，如果跨步小于0，表明反向跨步，将跨步放大500倍，改变滑动速度
+      step = detail > 0 ? moveForwardStep * 120 : moveBackStep * 120;
+      /*覆盖当前滚动条的位置,单位是像素，叠增或剃减*/
+      this.documentObj.scrollLeft = this.documentObj.scrollLeft + step;
+
+      //平滑值(越小越慢，不能小于等于0)
+      let slipNum = 0.84;
+      //末尾值（越小，则越平稳，越大越仓促）
+      let endNum = 4;
+      /*递减步伐值*/
+      let decreasingPaceNum = step;
+      /*速度*/
+      let paceNum = 60;
+      clearInterval(this.scrollAni);
+      /*效果一*/
+      this.scrollAni = setInterval(() => {
+        if (Math.abs(decreasingPaceNum) < endNum) {
+          clearInterval(this.scrollAni);
+          return;
+        }
+        decreasingPaceNum = decreasingPaceNum * slipNum;
+        this.documentObj.scrollLeft =
+          this.documentObj.scrollLeft + decreasingPaceNum;
+      }, paceNum);
+
+      /*效果二*/
+      // for (let i = 1; Math.abs(decreasingPaceNum) > endNum; i++) {
+      //   decreasingPaceNum = decreasingPaceNum * slipNum;
+      //   setTimeout(() => {
+      //     this.documentObj.scrollLeft =
+      //       this.documentObj.scrollLeft + decreasingPaceNum;
+      //   }, i * paceNum);
+      // }
     },
   },
 };
@@ -149,10 +223,15 @@ export default {
   height: calc(100% - 48px);
   width: 512px;
   overflow: hidden;
+  gap: 10px;
+  scroll-behavior: smooth;
   .note-content {
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+  .rotate-note {
+    // pointer-events: none !important;
   }
 }
 .quick-entrys {

@@ -7,9 +7,13 @@
         </div>
       </HomeCard>
       <HomeCard width="544" height="420" title="便签">
-        <div class="note-box wrapper" ref="wrapper">
+        <div class="note-box wrapper" ref="wrapper" @click="clickss">
           <div class="note-content">
-            <Note v-for="(item, index) in noteArray" :key="index" />
+            <Note
+              v-for="(item, index) in noteArray"
+              :key="index"
+              :class="{ 'rotate-note': !item.focus }"
+            />
           </div>
         </div>
       </HomeCard>
@@ -83,13 +87,29 @@ export default {
           url: 'add',
         },
       ],
-      noteArray: [{ conten: '' }, { conten: '' }, { conten: '' }],
+      noteArray: [
+        { conten: '', focus: false },
+        { conten: '', focus: false },
+        { conten: '', focus: false },
+      ],
     };
   },
   created() {
     console.log('created');
   },
   mounted() {
+    // setTimeout(() => {
+    //   this.bs = new BScroll(this.$refs.wrapper, {
+    //     //...
+    //     scrollX: true,
+    //     scrollY: false,
+    //     mouseWheel: true,
+    //     // speed: 20,
+    //     // invert: false,
+    //     // easeTime: 300,
+    //   });
+    // }, 3000);
+
     this.$nextTick(() => {
       this.bs = new BScroll(this.$refs.wrapper, {
         scrollX: true,
@@ -97,10 +117,15 @@ export default {
         mouseWheel: true,
         disableMouse: true,
         disableTouch: true,
-        bounce: false,
+        bounceTime: 200,
+        // stopPropagation: true,
+        // probeType: 3,
+        // speed: 20,
+        // invert: false,
       });
     });
     setTimeout(() => {
+      // console.log(document.querySelectorAll('.tox-edit-area__iframe'));
       document.querySelectorAll('.tox-edit-area__iframe').forEach((element) => {
         element.contentWindow.document.addEventListener(
           'mousewheel',
@@ -115,7 +140,18 @@ export default {
       if (e.relatedContext.element.name == '添加') return false;
       return true;
     },
+    scrollNotes(e) {
+      console.log(e);
+      const step = 0.4;
+      e.target.scrollLeft += step * e.deltaY;
+    },
+    clickss(e) {
+      console.log(e);
+    },
     hander(e) {
+      // console.log(e.view.document.hasFocus());
+      // e.preventDefault();
+      // e.stopPropagation();
       if (!e.view.document.hasFocus()) {
         let eventClone = new e.constructor(e.type, e);
         document
@@ -153,6 +189,9 @@ export default {
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+  .rotate-note {
+    // pointer-events: none !important;
   }
 }
 .quick-entrys {
