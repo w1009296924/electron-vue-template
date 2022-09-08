@@ -2,35 +2,40 @@
   <div class="app-container">
     <div class="main-box">
       <HomeCard width="728" height="420" title="工时日历">
-        <template v-slot:content>
-          <div class="center-box">
-            <Calendar></Calendar>
-          </div> </template
-      ></HomeCard>
-      <HomeCard width="544" height="420" title="便签"> </HomeCard>
+        <div class="calendar-box">
+          <Calendar />
+        </div>
+      </HomeCard>
+      <HomeCard width="544" height="420" title="便签">
+        <div class="note-box wrapper" ref="wrapper">
+          <div class="note-content content">
+            <Note class="rotate-note" />
+            <Note class="rotate-note" />
+            <Note class="rotate-note" />
+          </div>
+        </div>
+      </HomeCard>
       <HomeCard width="728" height="433" title="近期待办"></HomeCard>
       <HomeCard width="544" height="433" title="快速入口">
-        <template v-slot:content>
-          <draggable
-            v-model="quickEntryArray"
-            delay="50"
-            animation="300"
-            filter=".forbid"
-            ghostClass="ghost"
-            :move="onMove"
-          >
-            <transition-group class="quick-entrys">
-              <qucik-entry
-                v-for="element in quickEntryArray"
-                :key="element.name"
-                :name="element.name"
-                :iconPath="element.iconPath"
-                :url="element.url"
-                :class="{ forbid: element.name == '添加' }"
-              />
-            </transition-group>
-          </draggable>
-        </template>
+        <draggable
+          v-model="quickEntryArray"
+          delay="50"
+          animation="300"
+          filter=".forbid"
+          ghostClass="ghost"
+          :move="onMove"
+        >
+          <transition-group class="quick-entrys">
+            <qucik-entry
+              v-for="element in quickEntryArray"
+              :key="element.name"
+              :name="element.name"
+              :iconPath="element.iconPath"
+              :url="element.url"
+              :class="{ forbid: element.name == '添加' }"
+            />
+          </transition-group>
+        </draggable>
       </HomeCard>
     </div>
   </div>
@@ -39,9 +44,13 @@
 import HomeCard from "./components/HomeCard";
 import QucikEntry from "./components/QuickEntry";
 import Calendar from "./components/Calendar";
+import Note from "./components/Note";
 import draggable from "vuedraggable";
+import BScroll from "@better-scroll/core";
+import MouseWheel from "@better-scroll/mouse-wheel";
+BScroll.use(MouseWheel);
 export default {
-  components: { HomeCard, QucikEntry, Calendar, draggable },
+  components: { HomeCard, QucikEntry, Calendar, Note, draggable },
   data() {
     return {
       quickEntryArray: [
@@ -81,10 +90,38 @@ export default {
   created() {
     console.log("created");
   },
+  mounted() {
+    // setTimeout(() => {
+    //   this.bs = new BScroll(this.$refs.wrapper, {
+    //     //...
+    //     scrollX: true,
+    //     scrollY: false,
+    //     mouseWheel: true,
+    //     // speed: 20,
+    //     // invert: false,
+    //     // easeTime: 300,
+    //   });
+    // }, 3000);
+    this.$nextTick(() => {
+      this.bs = new BScroll(this.$refs.wrapper, {
+        scrollX: true,
+        scrollY: false,
+        mouseWheel: true,
+        // speed: 20,
+        // invert: false,
+        // easeTime: 300,
+      });
+    });
+  },
   methods: {
     onMove(e) {
       if (e.relatedContext.element.name == "添加") return false;
       return true;
+    },
+    scrollNotes(e) {
+      console.log(e);
+      const step = 0.4;
+      e.target.scrollLeft += step * e.deltaY;
     },
   },
 };
@@ -96,13 +133,26 @@ export default {
   flex-wrap: wrap;
   gap: 16px;
 }
-.center-box {
+.calendar-box {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   height: calc(100% - 48px);
   width: 100%;
-  padding-top: 10px;
+  // padding-top: 10px;
+}
+.note-box {
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  height: calc(100% - 48px);
+  width: 544px;
+  overflow: hidden;
+  .note-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 .quick-entrys {
   display: flex;

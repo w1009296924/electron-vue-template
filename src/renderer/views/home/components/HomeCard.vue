@@ -4,7 +4,7 @@
       <div class="title-line"></div>
       <div class="title-text">{{ title }}</div>
     </div>
-    <slot name="content"></slot>
+    <slot></slot>
   </div>
 </template>
 <script>

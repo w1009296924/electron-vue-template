@@ -48,7 +48,7 @@ export default {
       default: "",
     },
     toolbar: {
-      type: Array,
+      type: [Array, String],
       required: false,
       default() {
         return [];
@@ -129,11 +129,16 @@ export default {
       window.tinymce.init({
         selector: `#${this.tinymceId}`,
         language: this.languageTypeList["zh"],
-        min_height: this.height,
-        body_class: "panel-body ",
+        height: this.height,
+        width: this.width,
+        body_class: "panel-body",
+        content_css: require("@/components/Tinymce/style.css"),
+        statusbar: false,
         draggable_modal: true,
         object_resizing: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
+        toolbar_mode: "floating",
+        toolbar_location: "bottom",
         menubar: this.menubar,
         plugins: plugins,
         fontsize_formats: "12px 14px 16px 18px 24px 36px 48px 56px 72px",

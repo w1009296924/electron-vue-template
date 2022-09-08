@@ -50,14 +50,14 @@ export default [
     ]
   },
   {
-    path: '/permission',
+    path: '/form',
     component: Layout,
     meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
         name: '权限',
-        component: () => import('@/views/permission/index'),
+        component: () => import('@/views/form/index'),
         meta: { title: '待办', icon: 'todo' }
       }
     ]
