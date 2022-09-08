@@ -1,44 +1,24 @@
 <template>
   <div class="calendar-wrapper">
-    <div class="month-list" :class="{ show: showMonthList }">
-      <div
-        v-for="count in 12"
-        :key="count"
-        class="month-item"
-        @click="chooseMonth(count)"
-      >
-        {{ count }}月
-      </div>
-    </div>
     <!-- 月份变换区 -->
-    <div class="header" v-if="headerBar">
-      <div class="arrowIcon" @click="changYear('pre')" v-if="monthOpen">
-        <!-- <svg-icon icon-class="home"></svg-icon> -->
-        <span><</span>
+    <div class="header rowJcAc" v-if="headerBar">
+      <div
+        class="arrowIcon rowJcAc"
+        @click="changeMonth('pre')"
+        v-if="monthOpen"
+      >
+        <svg-icon icon-class="home"></svg-icon>
         <!-- <van-icon name="arrow-left" color="#9EA8BA" size="12px" /> -->
       </div>
 
       <!-- <div class="pre " @click="changeMonth('pre')">上个月</div> -->
-      <div class="yearMonth">{{ y }}</div>
-      <div class="arrowIcon" @click="changYear('next')" v-if="monthOpen">
-        <!-- <svg-icon icon-class="home"></svg-icon> -->
-        <span>></span>
-        <!-- <van-icon name="arrow" color="#9EA8BA" size="12px" /> -->
-      </div>
-
-      <div class="arrowIcon" @click="changeMonth('pre')" v-if="monthOpen">
-        <!-- <svg-icon icon-class="home"></svg-icon> -->
-        <span><</span>
-        <!-- <van-icon name="arrow-left" color="#9EA8BA" size="12px" /> -->
-      </div>
-
-      <!-- <div class="pre " @click="changeMonth('pre')">上个月</div> -->
-      <div class="yearMonth point" @click="showMonthList = true">
-        {{ formatNum(m) + '月' }}
-      </div>
-      <div class="arrowIcon" @click="changeMonth('next')" v-if="monthOpen">
-        <!-- <svg-icon icon-class="home"></svg-icon> -->
-        <span>></span>
+      <div class="yearMonth">{{ y + '年' + formatNum(m) + '月' }}</div>
+      <div
+        class="arrowIcon rowJcAc"
+        @click="changeMonth('next')"
+        v-if="monthOpen"
+      >
+        <svg-icon icon-class="home"></svg-icon>
         <!-- <van-icon name="arrow" color="#9EA8BA" size="12px" /> -->
       </div>
       <!-- <div class="next" @click="changeMonth('next')">下个月</div> -->
@@ -52,48 +32,36 @@
     </div>
 
     <!-- 日历显示区 -->
-    <!-- <transition name="toTop"> -->
-    <div
-      :class="[
-        { 'to-top-ani': showingDays },
-        { 'to-left-ani': toLeft },
-        { 'leave-left-ani': leaveLeft },
-        { 'to-right-ani': toRight },
-        { 'leave-right-ani': leaveRight },
-      ]"
-    >
-      <div :class="{ hide: !monthOpen }" class="content">
-        <div :style="{ top: positionTop + 'px' }" class="days">
-          <div class="item" v-for="(item, index) in dates" :key="index">
-            <div class="restDay" v-if="item.isRestDay">休</div>
+    <div :class="{ hide: !monthOpen }" class="content">
+      <div :style="{ top: positionTop + 'px' }" class="days">
+        <div class="item rowJcAc" v-for="(item, index) in dates" :key="index">
+          <div class="restDay" v-if="item.isRestDay">休</div>
+          <div
+            class="day"
+            @click="selectOne(item, $event)"
+            :class="{
+              choose: choose == `${item.year}-${item.month}-${item.date}`,
+              todayChoose: isTodayChoose(item.year, item.month, item.date),
+              nolm: !item.isCurM,
+              today: isToday(item.year, item.month, item.date),
+            }"
+          >
             <div
-              class="day"
-              @click="selectOne(item, $event)"
-              :class="{
-                choose: choose == `${item.year}-${item.month}-${item.date}`,
-                todayChoose: isTodayChoose(item.year, item.month, item.date),
-                nolm: !item.isCurM,
-                today: isToday(item.year, item.month, item.date),
-              }"
-            >
-              <div
-                class="markDay"
-                v-if="isMarkDay(item.year, item.month, item.date)"
-                :class="[
-                  choose == `${item.year}-${item.month}-${item.date}`
-                    ? 'markDayChoose'
-                    : 'markDayNoChoose',
-                ]"
-              ></div>
-              {{ Number(item.date) }}
-            </div>
+              class="markDay"
+              v-if="isMarkDay(item.year, item.month, item.date)"
+              :class="[
+                choose == `${item.year}-${item.month}-${item.date}`
+                  ? 'markDayChoose'
+                  : 'markDayNoChoose',
+              ]"
+            ></div>
+            {{ Number(item.date) }}
           </div>
         </div>
       </div>
     </div>
-    <!-- </transition> -->
     <!-- 伸缩按钮：待定 -->
-    <div class="bottomLine" v-if="collapsible" @click="toggle">
+    <div class="bottomLine rowJcAc" v-if="collapsible" @click="toggle">
       <div></div>
     </div>
     <!-- 伸缩按钮：待定 -->
@@ -160,12 +128,6 @@ export default {
       monthOpen: true,
       choose: '',
       isCurM: true,
-      showMonthList: false,
-      showingDays: false,
-      leaveLeft: false,
-      toLeft: false,
-      leaveRight: false,
-      toRight: false,
     };
   },
   created() {
@@ -360,16 +322,11 @@ export default {
       //   return false;
       // }
       this.choose = date;
-      // if (!i.isCurM) {
-      //   this.y = i.year;
-      //   this.m = i.month;
-      //   this.dates = this.monthDay(this.y, this.m);
-      // }
-      console.log(i.month, this.m);
-      if (i.year > this.y || (i.year == this.y && i.month > this.m)) {
-        this.changeMonth('next');
-      } else if (i.year < this.y || (i.year == this.y && i.month < this.m)) {
-        this.changeMonth('pre');
+      if (!i.isCurM) {
+        this.y = i.year;
+        this.m = i.month;
+        this.dates = this.monthDay(this.y, this.m);
+        console.log(this.y, this.m, this.choose, this.dates);
       }
       this.$emit('onDayClick', response);
       this.$emit('setDate', response);
@@ -381,63 +338,26 @@ export default {
       this.y = y;
       this.m = m;
     },
-    changYear(type) {
-      type == 'pre' ? this.y-- : this.y++;
-      this.dates = this.monthDay(this.y, this.m);
-      this.showDays();
-    },
     changeMonth(type) {
+      this.y = parseInt(this.y);
+      this.m = parseInt(this.m);
       if (type == 'pre') {
-        this.leaveRight = true;
-        setTimeout(() => {
-          this.leaveRight = false;
-          this.y = parseInt(this.y);
-          this.m = parseInt(this.m);
-          if (this.m + 1 == 2) {
-            this.m = 12;
-            this.y = parseInt(this.y) - 1;
-          } else {
-            this.m = this.m - 1;
-          }
-          this.dates = this.monthDay(this.y, this.m);
-          this.toRight = true;
-          setTimeout(() => {
-            this.toRight = false;
-          }, 200);
-        }, 200);
+        if (this.m + 1 == 2) {
+          this.m = 12;
+          this.y = parseInt(this.y) - 1;
+        } else {
+          this.m = this.m - 1;
+        }
       } else {
-        this.leaveLeft = true;
-        setTimeout(() => {
-          this.leaveLeft = false;
-          this.y = parseInt(this.y);
-          this.m = parseInt(this.m);
-          if (this.m + 1 == 13) {
-            this.m = 1;
-            this.y = this.y + 1;
-          } else {
-            this.m = this.m + 1;
-          }
-          this.dates = this.monthDay(this.y, this.m);
-          this.toLeft = true;
-          setTimeout(() => {
-            this.toLeft = false;
-          }, 200);
-        }, 200);
+        if (this.m + 1 == 13) {
+          this.m = 1;
+          this.y = this.y + 1;
+        } else {
+          this.m = this.m + 1;
+        }
       }
-
-      // this.$emit("changeMonth");
-    },
-    chooseMonth(count) {
-      this.m = count;
       this.dates = this.monthDay(this.y, this.m);
-      this.showMonthList = false;
-      this.showDays();
-    },
-    showDays() {
-      this.showingDays = true;
-      setTimeout(() => {
-        this.showingDays = false;
-      }, 400);
+      // this.$emit("changeMonth");
     },
   },
 };
@@ -458,8 +378,6 @@ export default {
   color: #cfd4db !important;
 }
 .calendar-wrapper {
-  position: relative;
-  overflow: hidden;
   user-select: none;
   padding: 20px 0;
   width: 90%;
@@ -505,6 +423,7 @@ export default {
       position: relative;
       font-size: 14px;
       line-height: 19px;
+
       .item {
         position: relative;
         display: block;
@@ -583,7 +502,6 @@ export default {
   .arrowIcon {
     width: 50px;
     height: 23px;
-    cursor: pointer;
   }
   // .weektoggle {
   //   width: 85px;
@@ -597,113 +515,5 @@ export default {
   //     bottom: 0;
   //   }
   // }
-}
-.point {
-  cursor: pointer;
-}
-
-.month-list {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background-color: white;
-  padding: 20px;
-  grid-template-columns: repeat(4, auto);
-  gap: 5px;
-  display: grid;
-  transform: scale(1.5);
-  visibility: hidden;
-  pointer-events: none;
-  .month-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-  &.show {
-    z-index: 1005;
-    transform: scale(1);
-    visibility: visible;
-    pointer-events: visible;
-    transition: all 0.2s ease-in-out;
-  }
-}
-
-.to-top-ani {
-  animation: to-top 0.4s ease forwards;
-}
-.leave-left-ani {
-  animation: leave-left 0.2s ease forwards;
-}
-.to-left-ani {
-  animation: to-left 0.2s ease forwards;
-}
-.leave-right-ani {
-  animation: leave-right 0.2s ease forwards;
-}
-.to-right-ani {
-  animation: to-right 0.2s ease forwards;
-}
-
-@keyframes to-top {
-  0% {
-    transform: translateY(50%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes leave-left {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-50%);
-    opacity: 0;
-  }
-}
-@keyframes to-left {
-  0% {
-    transform: translateX(50%);
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes leave-right {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(50%);
-    opacity: 0;
-  }
-}
-@keyframes to-right {
-  0% {
-    transform: translateX(-50%);
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes to-top {
-  0% {
-    transform: translateY(50%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 </style>
