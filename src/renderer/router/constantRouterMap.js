@@ -50,14 +50,14 @@ export default [
     ]
   },
   {
-    path: '/form',
+    path: '/pending',
     component: Layout,
     meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
         name: '权限',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/pending/index'),
         meta: { title: '待办', icon: 'todo' }
       }
     ]

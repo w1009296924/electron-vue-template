@@ -1,7 +1,9 @@
 <template>
-<div class="tools-container">
-  <Card v-for="(item,index) of toolsArray" :key="index" :name="item.name" :iconPath="item.iconPath" :url="item.url" />
-</div>
+  <div class="app-container">
+    <div class="tools-container">
+      <Card v-for="(item,index) of toolsArray" :key="index" :name="item.name" :iconPath="item.iconPath" :url="item.url" />
+    </div>
+  </div> 
 </template>
 
 <script>
@@ -43,7 +45,7 @@ export default {
 <style lang="scss" scoped>
 .tools-container {
   display: flex;
-  margin: 28px;
+  height: 875px;
   padding: 40px;
   border: 2px;
   background-color: #ffffff;

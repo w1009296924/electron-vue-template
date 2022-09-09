@@ -1,30 +1,32 @@
 <template>
-<div class="tools-container">
-  <ToolTitle toolName="图片粘贴" />
-  <div class="set-copyImgSwitch">
-    <div class="tabLine">
-      图片粘贴
-      <el-switch v-model="copyImgSwitch" style="margin-left:16px" />
-      <el-popover placement="right-start" width="560" trigger="hover" content="开启本功能后，从新call浦或直接复制图片至word文档中可直接设定为目标大小哦～">
-        <i slot="reference" class="el-icon-warning-outline" style="margin-left:8px" />
-      </el-popover>
-    </div>
-    <div class="tabLine">
-      等比缩放
-      <el-switch v-model="equalRatioSwitch" style="margin-left:16px" />
-      <el-popover placement="right-start" width="260" trigger="hover" content="开启后，仅需填写高度或宽度一项">
-        <i slot="reference" class="el-icon-warning-outline" style="margin-left:8px" />
-      </el-popover>
-    </div>
-    <div class="tabLine">
-      目标高度
-      <el-input-number v-model="aimHeight" controls-position="right" style="width:90px;margin-left:16px" :max="30" :min="1" @change="handleChange" />
-      <span class="append-text">厘米</span>
-    </div>
-    <div class="tabLine">
-      目标宽度
-      <el-input-number v-model="aimWidth" controls-position="right" style="width:90px;margin-left:16px" :max="30" :min="1" @change="handleChange" />
-      <span class="append-text">厘米</span>
+<div class="app-container">
+  <div class="tools-container">
+    <ToolTitle toolName="图片粘贴" />
+    <div class="set-copyImgSwitch">
+      <div class="tabLine">
+        图片粘贴
+        <el-switch v-model="copyImgSwitch" style="margin-left:16px" />
+        <el-popover placement="right-start" width="560" trigger="hover" content="开启本功能后，从新call浦或直接复制图片至word文档中可直接设定为目标大小哦～">
+          <i slot="reference" class="el-icon-warning-outline" style="margin-left:8px" />
+        </el-popover>
+      </div>
+      <div class="tabLine">
+        等比缩放
+        <el-switch v-model="equalRatioSwitch" style="margin-left:16px" />
+        <el-popover placement="right-start" width="260" trigger="hover" content="开启后，仅需填写高度或宽度一项">
+          <i slot="reference" class="el-icon-warning-outline" style="margin-left:8px" />
+        </el-popover>
+      </div>
+      <div class="tabLine">
+        目标高度
+        <el-input-number v-model="aimHeight" controls-position="right" style="width:90px;margin-left:16px" :max="30" :min="1" @change="handleChange" />
+        <span class="append-text">厘米</span>
+      </div>
+      <div class="tabLine">
+        目标宽度
+        <el-input-number v-model="aimWidth" controls-position="right" style="width:90px;margin-left:16px" :max="30" :min="1" @change="handleChange" />
+        <span class="append-text">厘米</span>
+      </div>
     </div>
   </div>
 </div>
@@ -56,7 +58,7 @@ export default {
 
 <style lang="scss" scoped>
 .tools-container {
-  margin: 28px;
+  height: 875px;
   padding: 24px;
   border: 2px;
   background-color: #ffffff;

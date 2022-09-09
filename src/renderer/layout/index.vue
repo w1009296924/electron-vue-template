@@ -78,4 +78,9 @@ export default {
   background-color: #ffffff;
   z-index: 1003;
 }
+.main-container {
+  height: 919px;
+  user-select: none;
+  background-color: #f6f9fc;
+}
 </style>

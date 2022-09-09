@@ -1,39 +1,43 @@
 <template>
-<div class="tools-container">
-  <ToolTitle toolName="工作量统计" toolNotice="本数据参考自研发单元数据，可按实际情况进行修改。" />
-  <div class="set-timeRage">
-    时间范围
-    <el-date-picker
-      v-model="dataRange"
-      ref="picker"
-      type="daterange"
-      style="margin:0 32px 0 16px"
-      :picker-options="pickerOptions"
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期" />
-    <div class="button-query" @click="query">查询</div>
-  </div>
-  <div class="showMessage">
-    <div>工作量: {{ workLoads }}</div>
-    <div class="missionList">投产需求: </div>
-    <el-table :data="tableData" border style="width: 100%">
-      <el-table-column fixed prop="date" label="投产日期" width="150" />
-      <el-table-column prop="missionNo" label="需求编号" width="300" />
-      <el-table-column prop="missionName" label="需求名称" width="500" />
-      <el-table-column prop="workLoad" label="工作量" width="150">
-        <template slot-scope="scope">
-          <el-input ref="gain" size="mini" v-if="scope.row.isOK" @keyup.native.enter="enterClick(scope)" v-model="scope.row.workLoad" style="width:100%;hight:100%" />
-          <span size="mini" v-else>{{scope.row.workLoad}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">{{ scope.row.isOK?'确认':'修改' }}</el-button>
-          <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+<div class="app-container">
+  <div class="tools-container">
+    <ToolTitle toolName="工作量统计" toolNotice="本数据参考自研发单元数据，可按实际情况进行修改。" />
+    <div class="set-timeRage">
+      时间范围
+      <el-date-picker
+        v-model="dataRange"
+        ref="picker"
+        type="daterange"
+        style="margin:0 32px 0 16px"
+        :picker-options="pickerOptions"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期" />
+      <div class="button-query" @click="query">查询</div>
+    </div>
+    <div class="maxHeight">
+      <div class="showMessage">
+        <div>工作量: {{ workLoads }}</div>
+        <div class="missionList">投产需求:</div>
+        <el-table :data="tableData" border style="width: 100%">
+          <el-table-column fixed prop="date" label="投产日期" width="150" />
+          <el-table-column prop="missionNo" label="需求编号" width="300" />
+          <el-table-column prop="missionName" label="需求名称" width="500" />
+          <el-table-column prop="workLoad" label="工作量" width="120">
+            <template slot-scope="scope">
+              <el-input ref="gain" size="mini" v-if="scope.row.isOK" @keyup.native.enter="enterClick(scope)" v-model="scope.row.workLoad" style="width:100%;hight:100%" />
+              <span size="mini" v-else>{{scope.row.workLoad}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="handleClick(scope.row)">{{ scope.row.isOK?'确认':'修改' }}</el-button>
+              <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -158,7 +162,7 @@ export default {
 
 <style lang="scss" scoped>
 .tools-container {
-  margin: 28px;
+  height: 875px;
   padding: 24px;
   border: 2px;
   background-color: #ffffff;
@@ -198,14 +202,15 @@ export default {
   background: #005BD2;
   border-radius: 2px;
 }
-
+.maxHeight {
+  height: 700px;
+  overflow-y: scroll;
+}
 .showMessage {
   width: 100%;
-  height: 680px;
   background: #F3F9FF;
   border-radius: 4px;
   padding: 32px 24px;
-  overflow-y: scroll;
 }
 
 .missionList {

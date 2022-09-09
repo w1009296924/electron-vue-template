@@ -1,26 +1,28 @@
 <template>
-<div class="tools-container">
-  <ToolTitle toolName="健康提醒" />
-  <div class="set-healthRemind">
-    <div class="topLine">
-      健康提醒
-      <el-switch v-model="healthRemindSwitch" style="margin-left:16px" />
+<div class="app-container">
+  <div class="tools-container">
+    <ToolTitle toolName="健康提醒" />
+    <div class="set-healthRemind">
+      <div class="topLine">
+        健康提醒
+        <el-switch v-model="healthRemindSwitch" style="margin-left:16px" />
+      </div>
+      <div class="midLine">
+        间隔时间
+        <el-input-number v-model="inputTime" style="width:90px;margin-left:16px" controls-position="right" :max="120" :min="5" @change="timeChange" />
+        <span class="append-text">分钟</span>
+      </div>
     </div>
-    <div class="midLine">
-      间隔时间
-      <el-input-number v-model="inputTime" style="width:90px;margin-left:16px" controls-position="right" :max="120" :min="5" @change="timeChange" />
-      <span class="append-text">分钟</span>
-    </div>
-  </div>
-  <div class="set-voice">
-    <div class="topLine">
-      提示气泡音
-      <el-switch v-model="voiceSwitch" style="margin-left:16px" />
-    </div>
-    <div class="midLine">
-      自定义提示话术
-      <el-input v-model="inputWord" style="width:500px;margin-left:16px" @change="wordChange" />
-      <div class="append-text" style="margin:12px 0 0 158px">可用%代表设定的时间</div>
+    <div class="set-voice">
+      <div class="topLine">
+        提示气泡音
+        <el-switch v-model="voiceSwitch" style="margin-left:16px" />
+      </div>
+      <div class="midLine">
+        自定义提示话术
+        <el-input v-model="inputWord" style="width:500px;margin-left:16px" @change="wordChange" />
+        <div class="append-text" style="margin:12px 0 0 158px">可用%代表设定的时间</div>
+      </div>
     </div>
   </div>
 </div>
@@ -78,7 +80,7 @@ export default {
 
 <style lang="scss" scoped>
 .tools-container {
-  margin: 28px;
+  height: 875px;
   padding: 24px;
   border: 2px;
   background-color: #ffffff;

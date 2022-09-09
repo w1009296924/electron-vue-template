@@ -1,6 +1,6 @@
 <template>
 <div class="tool-box" @click="clickTool">
-  <img class="tool-icon" :src="iconPath" />
+  <img draggable="false" class="tool-icon" :src="iconPath" />
   <div class="tool-name">{{ name }}</div>
 </div>
 </template>
@@ -34,6 +34,10 @@ export default {
 
 <style lang="scss" scoped>
 .tool-box {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: pointer;
   width: 140px;
   height: 140px;
@@ -42,7 +46,7 @@ export default {
   border-radius: 8px;
   padding: 10px;
   align-items: center;
-  margin-right: 62px;
+  margin-right: 31px;
 
   .tool-icon {
     width: 100px;
