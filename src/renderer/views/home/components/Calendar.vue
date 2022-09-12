@@ -36,7 +36,7 @@
 
         <!-- <div class="pre " @click="changeMonth('pre')">上个月</div> -->
         <div class="yearMonth point" @click="showMonthList = true">
-          {{ formatNum(m) + "月" }}
+          {{ formatNum(m) + '月' }}
         </div>
         <div class="arrowIcon" @click="changeMonth('next')" v-if="monthOpen">
           <!-- <svg-icon icon-class="home"></svg-icon> -->
@@ -114,7 +114,7 @@
 
 <script>
 export default {
-  name: "Calendar",
+  name: 'Calendar',
   props: {
     // 星期几为第一天(0为星期日)
     weekstart: {
@@ -125,7 +125,7 @@ export default {
     markDays: {
       type: Array,
       default: () => {
-        return ["2022-09-18"];
+        return ['2022-09-18'];
       },
     },
     //是否展示月份切换按钮
@@ -156,13 +156,13 @@ export default {
   },
   data() {
     return {
-      weektext: ["日", "一", "二", "三", "四", "五", "六"],
+      weektext: ['日', '一', '二', '三', '四', '五', '六'],
       y: new Date().getFullYear(), // 年
       m: new Date().getMonth() + 1, // 月
       dates: [], // 当前月的日期数据
       positionTop: 0,
       monthOpen: true,
-      choose: "",
+      choose: '',
       isCurM: true,
       showMonthList: false,
       showingDays: false,
@@ -182,8 +182,8 @@ export default {
     selectDate() {
       if (this.selectDate) {
         this.choose = this.selectDate;
-        this.y = Number(this.selectDate.split("-")[0]);
-        this.m = Number(this.selectDate.split("-")[1]);
+        this.y = Number(this.selectDate.split('-')[0]);
+        this.m = Number(this.selectDate.split('-')[1]);
         this.dates = this.monthDay(this.y, this.m);
         if (!this.monthOpen) {
           let index = -1;
@@ -195,17 +195,17 @@ export default {
       }
     },
     m() {
-      this.$emit("changeMonth", { year: this.y, month: this.m });
+      this.$emit('changeMonth', { year: this.y, month: this.m });
     },
     dates() {
-      this.$emit("changeDates", { dates: this.dates });
+      this.$emit('changeDates', { dates: this.dates });
     },
   },
   mounted() {
     if (this.selectDate) {
       this.choose = this.selectDate;
-      this.y = this.selectDate.split("-")[0];
-      this.m = this.selectDate.split("-")[1];
+      this.y = this.selectDate.split('-')[0];
+      this.m = this.selectDate.split('-')[1];
     } else {
       this.choose = this.getToday().date;
     }
@@ -230,10 +230,10 @@ export default {
       let m = date.getMonth();
       let d = date.getDate();
       let week = new Date().getDay();
-      let weekText = ["日", "一", "二", "三", "四", "五", "六"];
-      let formatWeek = "星期" + weekText[week];
+      let weekText = ['日', '一', '二', '三', '四', '五', '六'];
+      let formatWeek = '星期' + weekText[week];
       let today = {
-        date: y + "-" + this.formatNum(m + 1) + "-" + this.formatNum(d),
+        date: y + '-' + this.formatNum(m + 1) + '-' + this.formatNum(d),
         week: formatWeek,
       };
       return today;
@@ -286,7 +286,7 @@ export default {
         dates.push({
           date: this.formatNum(k),
           day: (lastDateOfMonth + startDay + weekstart + k - 1) % 7 || 7,
-          month: m + 1 <= 12 ? this.formatNum(m + 1) : "01",
+          month: m + 1 <= 12 ? this.formatNum(m + 1) : '01',
           year: m + 1 <= 12 ? y : y + 1,
           isCurM: false,
           isRestDay:
@@ -299,7 +299,7 @@ export default {
     isFutureDay(y, m, d) {
       //是否未来日期
       let ymd = `${y}/${m}/${d}`;
-      let formatDY = new Date(ymd.replace(/-/g, "/"));
+      let formatDY = new Date(ymd.replace(/-/g, '/'));
       let showTime = formatDY.getTime();
       let curTime = new Date().getTime();
       if (showTime > curTime) {
@@ -321,7 +321,7 @@ export default {
       return flag;
     },
     isToday(y, m, d) {
-      let checkD = y + "-" + m + "-" + d;
+      let checkD = y + '-' + m + '-' + d;
       let today = this.getToday().date;
       if (checkD == today) {
         return true;
@@ -330,12 +330,12 @@ export default {
       }
     },
     isTodayChoose(year, month, day) {
-      let checkD = year + "-" + month + "-" + day;
+      let checkD = year + '-' + month + '-' + day;
       let today = this.getToday().date;
       return this.choose == `${year}-${month}-${day}` && checkD == today;
     },
     isChoose(y, m, d) {
-      let checkD = y + "-" + m + "-" + d;
+      let checkD = y + '-' + m + '-' + d;
       return this.choose == checkD;
     },
     // 展开收起
@@ -358,8 +358,8 @@ export default {
       let selectD = new Date(date).getTime();
       let curTime = new Date().getTime();
       let week = new Date(date).getDay();
-      let weekText = ["日", "一", "二", "三", "四", "五", "六"];
-      let formatWeek = "星期" + weekText[week];
+      let weekText = ['日', '一', '二', '三', '四', '五', '六'];
+      let formatWeek = '星期' + weekText[week];
       let response = {
         date: date,
         week: formatWeek,
@@ -376,12 +376,12 @@ export default {
       // }
       console.log(i.month, this.m);
       if (i.year > this.y || (i.year == this.y && i.month > this.m)) {
-        this.changeMonth("next");
+        this.changeMonth('next');
       } else if (i.year < this.y || (i.year == this.y && i.month < this.m)) {
-        this.changeMonth("pre");
+        this.changeMonth('pre');
       }
-      this.$emit("onDayClick", response);
-      this.$emit("setDate", response);
+      this.$emit('onDayClick', response);
+      this.$emit('setDate', response);
       //   console.log(response);
     },
     //改变年月
@@ -391,13 +391,13 @@ export default {
       this.m = m;
     },
     changYear(type) {
-      type == "pre" ? this.y-- : this.y++;
+      type == 'pre' ? this.y-- : this.y++;
       this.dates = this.monthDay(this.y, this.m);
       this.showDays();
       console.log(this.dates);
     },
     changeMonth(type) {
-      if (type == "pre") {
+      if (type == 'pre') {
         this.leaveRight = true;
         setTimeout(() => {
           this.leaveRight = false;
@@ -473,6 +473,7 @@ export default {
   user-select: none;
   padding: 20px 0;
   width: 90%;
+  height: 355px;
   text-align: center;
   background-color: #fff;
   box-shadow: 0px 6px 10px 0px rgba(131, 134, 163, 0.12);
@@ -629,6 +630,7 @@ export default {
   gap: 5px;
   display: grid;
   transform: scale(1.5);
+  opacity: 0;
   visibility: hidden;
   pointer-events: none;
   .month-item {
@@ -636,9 +638,11 @@ export default {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    font-size: 20px;
   }
   &.show {
     z-index: 1005;
+    opacity: 1;
     transform: scale(1);
     visibility: visible;
     pointer-events: visible;

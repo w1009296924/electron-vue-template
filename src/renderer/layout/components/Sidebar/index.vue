@@ -10,7 +10,7 @@
       <div class="account">
         <el-dropdown trigger="click">
           <div class="account-inner">
-            <el-image :src="userImage" class="avatar">
+            <el-image :src="userImage" class="avatar" draggable="false">
               <div slot="error" class="image-slot">
                 <i class="el-icon-picture-outline"></i>
               </div>
@@ -48,20 +48,20 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import SidebarItem from "./SidebarItem";
-import ScrollBar from "@/components/ScrollBar";
-import Logo from "./logo";
+import { mapGetters } from 'vuex';
+import SidebarItem from './SidebarItem';
+import ScrollBar from '@/components/ScrollBar';
+import Logo from './logo';
 
 export default {
   components: { SidebarItem, ScrollBar, Logo },
   data: () => ({
-    userImage: require("@/assets/userW.png"),
-    name: "又又不leng",
+    userImage: require('@/assets/userW.png'),
+    name: '又又不leng',
     routeMap: [],
   }),
   computed: {
-    ...mapGetters(["sidebar", "permission_routes"]),
+    ...mapGetters(['sidebar', 'permission_routes']),
     isCollapse() {
       console.log(this.$store.getters);
       return !this.sidebar.opened;
@@ -70,7 +70,7 @@ export default {
       console.log(this.$route.path);
       let index;
       for (index = 0; index < this.routeMap.length; index++) {
-        if (this.$route.path.indexOf(this.routeMap[index].path + "/") === 0) {
+        if (this.$route.path.indexOf(this.routeMap[index].path + '/') === 0) {
           break;
         }
         if (index == this.routeMap.length - 1) {
@@ -79,15 +79,21 @@ export default {
         }
       }
       console.log(index);
-      return index == -1 ? "display:none;" : `top:${144 + 94 * index}px;`;
+      return index == -1 ? 'display:none;' : `top:${144 + 94 * index}px;`;
     },
   },
   mounted() {
-    this.routeMap = require("@/router/constantRouterMap").default;
+    this.routeMap = require('@/router/constantRouterMap').default;
   },
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+.scroll-container {
+  user-select: none;
+  ::v-deep a {
+    -webkit-user-drag: none;
+  }
+}
 .title {
   text-align: center;
   line-height: 64px;
