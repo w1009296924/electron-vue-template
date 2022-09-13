@@ -3,6 +3,7 @@
     <div class="title">
       <div class="title-line"></div>
       <div class="title-text">{{ title }}</div>
+      <slot name="header"></slot>
     </div>
     <slot></slot>
   </div>
