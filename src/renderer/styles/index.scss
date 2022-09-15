@@ -21,7 +21,11 @@ html {
   box-sizing: border-box;
 
   ::-webkit-scrollbar {
-    display: none;
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb{
+    background: rgba(0,60,200,0.16);
+    border-radius: 4px;
   }
 }
 

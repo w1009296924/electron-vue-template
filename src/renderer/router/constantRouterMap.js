@@ -38,13 +38,13 @@ export default [
     ]
   },
   {
-    path: '/table',
+    path: '/task',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: '表格',
-        component: () => import('@/views/table/index'),
+        name: '任务',
+        component: () => import('@/views/task/index'),
         meta: { title: '任务', icon: 'task' }
       }
     ]
