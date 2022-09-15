@@ -37,7 +37,7 @@ export default {
     },
   },
   data() {
-    return { showList: false };
+    return { showList: true };
   },
   methods: {
     showTask() {},
@@ -74,6 +74,7 @@ export default {
     padding: 0 20px 0 40px;
     margin-top: -2px;
     .task-item {
+      transition: all 0.2s ease-in-out;
       box-sizing: border-box;
       height: 34px;
       padding: 6px 0;
