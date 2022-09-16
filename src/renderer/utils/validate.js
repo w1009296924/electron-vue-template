@@ -30,3 +30,22 @@ export function validatAlphabets (str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
 }
+
+/* 时间格式化 */
+export const formatDateTime = (date) => {
+  var date = new Date(date);
+  var timeStr = date.getFullYear() + '-';
+  if(date.getMonth() < 9) {
+    //月份从0开始的
+    timeStr += '0';
+  }
+  timeStr += date.getMonth() + 1 + '-';
+  timeStr += date.getDay() < 10 ? ('0' + date.getDay()) : date.getDay();
+  timeStr += ' ';
+  timeStr += date.getHours() < 10 ? ('0' + date.getHours()) : date.getHours();
+  timeStr += ':';
+  timeStr += date.getMinutes() < 10 ? ('0' + date.getMinutes()) : date.getMinutes();
+  timeStr += ':';
+  timeStr += date.getSeconds() < 10 ? ('0' + date.getSeconds()) : date.getSeconds();
+  return timeStr;
+}

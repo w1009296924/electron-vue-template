@@ -23,6 +23,7 @@
             <router-link to="/">
               <el-dropdown-item>返回首页</el-dropdown-item>
             </router-link>
+            <el-dropdown-item @click.native="showSettings">设置</el-dropdown-item>
             <el-dropdown-item @click.native="logout">
               <span>切换账号</span>
             </el-dropdown-item>
@@ -32,6 +33,7 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
+      <Settings ref="settings" />
       <sidebar-item
         v-for="route in permission_routes"
         :key="route.name"
@@ -50,15 +52,17 @@
 <script>
 import { mapGetters } from 'vuex';
 import SidebarItem from './SidebarItem';
+import Settings from './settings'
 import ScrollBar from '@/components/ScrollBar';
 import Logo from './logo';
 
 export default {
-  components: { SidebarItem, ScrollBar, Logo },
+  components: { SidebarItem, ScrollBar, Logo, Settings},
   data: () => ({
     userImage: require('@/assets/userW.png'),
     name: '又又不leng',
     routeMap: [],
+    settings: false
   }),
   computed: {
     ...mapGetters(['sidebar', 'permission_routes']),
@@ -85,6 +89,12 @@ export default {
   mounted() {
     this.routeMap = require('@/router/constantRouterMap').default;
   },
+  methods: {
+    showSettings(){
+      console.log(1111111);
+      this.$refs.settings.show();
+    }
+  }
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>

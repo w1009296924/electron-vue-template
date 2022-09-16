@@ -1,25 +1,28 @@
 <template>
-<div class="container" v-if="detail.children&&firstDetail.date" :class="backgroudcolor">
-  <div class="left">
+<div class="container" v-if="detail.children&&firstDetail.date" >
+  <div v-if="!isFromTask&&!isFromHome" class="left" :class="backgroudcolor">
     <div class="missionName" :class="{'ellipsis':!clickFlag}">
-      <i v-if="detail.children[0].pendingName != '其他'" class="el-icon-arrow-right" :class="[clickFlag?'rightArrow':'downArrow']" @click="expandList" />
+      <i v-if="detail.children[0].pendingType != '其他'" class="el-icon-arrow-right" :class="[clickFlag?'rightArrow':'downArrow']" @click="expandList" />
       {{detail.missionName}}
     </div>
   </div>
-  <div v-if="!clickFlag" class="right">
+  <div v-if="isFromHome" class="left" :class="backgroudcolor">
+    ssss
+  </div>
+  <div v-if="!clickFlag" class="right" :class="backgroudcolor">
     <div v-if="firstDetail.date" :class="[firstDetail.date.length==10?'date':'dateSmall']">{{firstDetail.date}}</div>
-    <div class="pendingName">{{firstDetail.pendingName}}</div>
+    <div class="pendingType">{{firstDetail.pendingType}}</div>
     <el-checkbox v-model="firstDetail.status" class="checkbox" @change="changeChildren($event,0)" />
   </div>
-  <div v-else>
+  <div v-else :class="backgroudcolor">
     <div v-for="(item,index) of detail.children" v-if="!item.status" :key="index+'a'" class="children">
       <div class="date">{{item.date}}</div>
-      <div class="pendingName">{{item.pendingName}}</div>
+      <div class="pendingType">{{item.pendingType}}</div>
       <el-checkbox v-model="item.status" class="checkbox" @change="changeChildren($event,index)" />
     </div>
     <div v-for="(item,index) of detail.children" v-if="item.status" :key="index+'b'" class="children">
-      <div class="date">{{item.date}}</div>
-      <div class="pendingName">{{item.pendingName}}</div>
+      <div :class="[item.date.length==10?'date':'dateSmall']">{{item.date}}</div>
+      <div class="pendingType">{{item.pendingType}}</div>
       <el-checkbox v-model="item.status" class="checkbox" @change="changeChildren($event,index)" />
     </div>
   </div>
@@ -29,7 +32,11 @@
 <script>
 export default {
   name: "PendingList",
-  props: ['detail'],
+  props: {
+    detail: {type: Object},
+    isFromTask: {type: Boolean,default: false},
+    isFromHome: {type: Boolean,default: false},
+  },
   data() {
     return {
       clickFlag: false,
@@ -39,11 +46,6 @@ export default {
     }
   },
   computed: {
-    //   firstDetail() {
-    //     var index = this.detail.children.findIndex(item => !item.status);
-    //     return this.detail.children[index == -1 ? 0 : index];
-    //   }
-
     //灰色+删除线-已完成 红色-过期  绿色-5天 蓝色-0~5天
     backgroudcolor() {
       return this.doneFlag ?'gray' : new Date(this.firstDetail.date) < this.today ? 'red' : this.getDaysBetween(new Date(this.firstDetail.date), this.today) > 5 ? 'green' : 'blue';
@@ -81,7 +83,6 @@ export default {
 <style lang="scss" scoped>
 .container {
   display: flex;
-  width: 900px;
   margin-top: 4px;
   border-radius: 4px;
   font-family: PingFangSC-Regular;
@@ -120,6 +121,7 @@ export default {
 .children {
   display: flex;
   align-items: center;
+  height: 48px;
 }
 
 .date {
@@ -157,12 +159,12 @@ export default {
   text-overflow: ellipsis;
 }
 
-.pendingName {
+.pendingType {
   display: flex;
   align-items: center;
   padding: 0 16px;
   width: 130px;
-  height: 48px;
+  height: 100%;
   border-right: 1px solid #F3F9FF;
 }
 
