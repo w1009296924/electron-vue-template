@@ -83,6 +83,8 @@
               :style="copyStyle"
             ></i
           ></transition>
+          <WorkSpace></WorkSpace>
+          <TodoSpace></TodoSpace>
         </div>
       </div>
     </div>
@@ -91,9 +93,11 @@
 
 <script>
 import TaskListBox from "./components/TaskListBox";
+import WorkSpace from "./components/WorkSpace";
+import TodoSpace from "./components/TodoSpace";
 import { mapGetters } from "vuex";
 export default {
-  components: { TaskListBox },
+  components: { TaskListBox, WorkSpace, TodoSpace },
   data() {
     return {
       showCopy: false,
@@ -164,6 +168,7 @@ export default {
       padding: 0 24px 24px 24px;
       position: relative;
       display: flex;
+      flex-wrap: wrap;
       gap: 12px;
       .task-info {
         width: 100%;

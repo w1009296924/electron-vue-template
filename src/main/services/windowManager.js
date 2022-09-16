@@ -46,7 +46,8 @@ function createMainWindow() {
       devTools: process.env.NODE_ENV === 'development' || config.build.openDevTools,
       // devTools: true,
       // 在macos中启用橡皮动画
-      scrollBounce: process.platform === 'darwin'
+      scrollBounce: process.platform === 'darwin',
+      enableRemoteModule: true,   // 打开remote模块
     }
   })
   // 这里设置只有开发环境才注入显示开发者模式
@@ -81,6 +82,8 @@ function createMainWindow() {
     mainWindow = null
     app.quit();
   })
+  require('@electron/remote/main').initialize()
+  require("@electron/remote/main").enable(mainWindow.webContents)
 }
 
 function loadingWindow() {

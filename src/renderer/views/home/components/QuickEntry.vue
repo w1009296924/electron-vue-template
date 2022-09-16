@@ -6,6 +6,7 @@
 </template>
 <script>
 import { shell } from "electron";
+const path = require("path");
 export default {
   name: "quick-entry",
   components: {},
@@ -39,6 +40,7 @@ export default {
         shell.openExternal(arg);
       } else if (type === "app") {
         shell.openPath(arg);
+        shell.openPath(path.join(arg, "/"));
       }
     },
   },
