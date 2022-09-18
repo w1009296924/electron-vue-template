@@ -23,7 +23,7 @@
             <router-link to="/">
               <el-dropdown-item>返回首页</el-dropdown-item>
             </router-link>
-            <el-dropdown-item @click.native="showSettings">设置</el-dropdown-item>
+            <el-dropdown-item @click.native="showSettings" style="text-align:center">设&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置</el-dropdown-item>
             <el-dropdown-item @click.native="logout">
               <span>切换账号</span>
             </el-dropdown-item>

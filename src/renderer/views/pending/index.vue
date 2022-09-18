@@ -22,7 +22,7 @@
           <i class="el-icon-circle-plus-outline" @click="dialogVisible = true " />
         </div>
         <div class="maxHeight">
-          <PendingList v-for="(item,key) of tableData2" :key="key" :detail="item" />
+          <PendingList v-for="(item,key) of tableData2" :key="key" :showCheck="false" :detail="item" />
         </div>
       </el-tab-pane>
     </el-tabs>

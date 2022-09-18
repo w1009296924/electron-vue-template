@@ -54,6 +54,21 @@ export default {
         arg.message
       )
     })
+    ipcMain.on('openDirectory', function(event,p) {
+      dialog.showOpenDialog({
+        title:'请选择文件夹',
+        buttonLabel:'选择文件夹',
+        defaultPath:'D:\\',
+        properties: ['openDirectory']
+        }).then(files => {
+          if (files.filePaths[0]){// 如果有选中
+          // 发送选择的对象给子进程
+          event.sender.send('selectedItem', files.filePaths[0])
+          }
+        }).catch(err => {
+          console.log(err)
+      })
+    })
     ipcMain.handle('statr-server', async () => {
       try {
         const serveStatus = await Server.StatrServer()

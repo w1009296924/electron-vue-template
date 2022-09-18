@@ -12,18 +12,18 @@
   <div v-if="!clickFlag" class="right" :class="backgroudcolor">
     <div v-if="firstDetail.date" :class="[firstDetail.date.length==10?'date':'dateSmall']">{{firstDetail.date}}</div>
     <div class="pendingType">{{firstDetail.pendingType}}</div>
-    <el-checkbox v-model="firstDetail.status" class="checkbox" @change="changeChildren($event,0)" />
+    <el-checkbox v-if="showCheck" v-model="firstDetail.status" class="checkbox" @change="changeChildren($event,0)" />
   </div>
   <div v-else :class="backgroudcolor">
     <div v-for="(item,index) of detail.children" v-if="!item.status" :key="index+'a'" class="children">
       <div class="date">{{item.date}}</div>
       <div class="pendingType">{{item.pendingType}}</div>
-      <el-checkbox v-model="item.status" class="checkbox" @change="changeChildren($event,index)" />
+      <el-checkbox v-if="showCheck" v-model="item.status" class="checkbox" @change="changeChildren($event,index)" />
     </div>
     <div v-for="(item,index) of detail.children" v-if="item.status" :key="index+'b'" class="children">
       <div :class="[item.date.length==10?'date':'dateSmall']">{{item.date}}</div>
       <div class="pendingType">{{item.pendingType}}</div>
-      <el-checkbox v-model="item.status" class="checkbox" @change="changeChildren($event,index)" />
+      <el-checkbox v-if="showCheck" v-model="item.status" class="checkbox" @change="changeChildren($event,index)" />
     </div>
   </div>
 </div>
@@ -34,6 +34,7 @@ export default {
   name: "PendingList",
   props: {
     detail: {type: Object},
+    showCheck: {type: Boolean,default: true},
     isFromTask: {type: Boolean,default: false},
     isFromHome: {type: Boolean,default: false},
   },
