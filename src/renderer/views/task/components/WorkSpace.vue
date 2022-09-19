@@ -8,7 +8,7 @@
       class="work-space-content-box"
       @drop.prevent="handleDrop"
       @dragenter.prevent=""
-      @dragover.prevent=""
+      @dragover.prevent="handleDover"
     >
       <div
         v-for="(item, index) in fileArray"
@@ -75,15 +75,26 @@ export default {
       menuVisible: false,
       menuLeft: 0,
       menuTop: 0,
+      allowDrop: true,
     };
   },
   mounted() {
     this.update();
   },
   methods: {
+    handleDover(e) {
+      if (this.timeout !== null) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = setTimeout(() => {
+        this.allowDrop = true;
+        this.timeout = null;
+      }, 200);
+    },
     async handleDrag(e, item) {
       console.log(e);
       e.preventDefault();
+      this.allowDrop = false;
       // 发送IPC
       await ipcRenderer.send(
         "drag-start",
@@ -93,6 +104,9 @@ export default {
       );
     },
     handleDrop(e) {
+      if (!this.allowDrop) {
+        return;
+      }
       let files = e.dataTransfer.files;
       // console.log(e);
       // console.log(e.dataTransfer.dropEffect);
