@@ -51,28 +51,36 @@
           <div class="title-text">任务详情面板</div>
         </div>
         <div class="task-detail-content-box">
-          <div class="task-info">
-            <div v-for="item in taskInfoMap" :key="item" class="task-info-item">
+          <div class="task-info" v-if="nowTask">
+            <div
+              v-for="(item, key) in taskInfoMap"
+              :key="key"
+              class="task-info-item"
+            >
               <div v-if="item != '任务名'" class="task-info-item-label">
                 {{ item }}
               </div>
               <div
-                v-if="item != '任务名'"
                 class="task-info-item-value"
+                :class="[
+                  item == '任务名' ? 'first' : '',
+                  key.substr(-4) == 'Time' ? 'left-time' : '',
+                ]"
                 @click="clickText"
                 @mouseenter="enterText"
                 @mouseleave="leaveText"
               >
-                {{ nowTask }}
+                {{ nowTask[key] }}
               </div>
               <div
-                v-else
-                class="task-info-item-value first"
+                v-if="key.substr(-4) == 'Time'"
+                class="task-info-item-value"
+                :class="{ 'empty-time': !nowTask[key + 'Real'] }"
                 @click="clickText"
                 @mouseenter="enterText"
                 @mouseleave="leaveText"
               >
-                {{ nowTask }}
+                {{ nowTask[key + "Real"] }}
               </div>
             </div>
           </div>
@@ -103,8 +111,8 @@ export default {
       showCopy: false,
       copyStyle: "",
       taskInfoMap: {
-        name: "任务名",
-        demand: "需求编号",
+        taskName: "任务名",
+        demandNo: "需求编号",
         application: "涉及应用",
         branch: "开发分支",
         fdevUnit: "研发单元（FDEV单元）",
@@ -114,7 +122,7 @@ export default {
         uatTime: "提交业测日期（计划/实际）",
         uatFinishTime: "用户测试完成日期（计划/实际）",
         fireTime: "投产日期（计划/实际）",
-        workload: "工作量",
+        workload: "工作量（人月）",
       },
     };
   },
@@ -174,18 +182,19 @@ export default {
         width: 100%;
         .task-info-item {
           margin-top: -1px;
+          padding: 0 20px;
           width: 100%;
           height: 40px;
           border: 1px solid #b2cef4;
           display: flex;
           align-items: center;
+          justify-content: space-between;
           &:first-child {
             margin-top: 0;
             justify-content: center;
           }
           .task-info-item-label {
             width: 38%;
-            padding-left: 24px;
             font-family: PingFangSC-Regular;
             font-size: 14px;
             color: rgba(0, 0, 0, 0.65);
@@ -212,6 +221,13 @@ export default {
             //   default;
             &.first {
               max-width: 90%;
+            }
+            &.left-time {
+              margin-left: 20%;
+            }
+            &.empty-time {
+              height: 0;
+              width: 88.69px;
             }
             &:hover {
               background-color: #edf5ff;
@@ -264,7 +280,7 @@ export default {
   gap: 8px;
   margin-top: 16px;
   max-height: calc(100% - 64px);
-  overflow-y: auto;
+  overflow-y: overlay;
   &:has(div) {
     background: red;
     overflow-y: none;
