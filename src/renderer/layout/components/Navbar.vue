@@ -4,13 +4,15 @@
     mode="horizontal"
   >
     <div class="sys-btn" @click="sysBtnClick('window-mini')">
-      <svg-icon icon-class="sys_mini"></svg-icon>
+      <i class="el-icon-minus"></i>
+      <!-- <svg-icon icon-class="sys_mini"></svg-icon> -->
     </div>
     <div class="sys-btn" @click="sysBtnClick('window-max')">
       <svg-icon icon-class="sys_max"></svg-icon>
     </div>
     <div class="sys-btn" @click="sysBtnClick('window-close')">
-      <svg-icon icon-class="sys_close"></svg-icon>
+      <i class="el-icon-close"></i>
+      <!-- <svg-icon icon-class="sys_close"></svg-icon> -->
     </div>
     <!-- <div class="top-right">
       <div class="hb-bd">
@@ -119,10 +121,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  .svg-icon {
-    height: 16px;
-    width: 16px;
-  }
+  // .svg-icon {
+  //   height: 16px;
+  //   width: 16px;
+  // }
 }
 .navbar-header-fixed {
   -webkit-app-region: drag; //设置可拖拽

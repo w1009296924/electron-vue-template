@@ -2,8 +2,18 @@
   <div class="app-container">
     <div class="main-box">
       <HomeCard width="728" height="430" title="近期待办">
-        {{ noteArray }}
+        <div class="mission-box">
+          <PendingList
+            v-for="item of missionArray"
+            :key="item.missionName"
+            :detail="item"
+          />
+        </div>
+        <!-- {{ noteArray }}
         <div v-for="(item, index) in noteArray" :key="index">s{{ item }}dd</div>
+        <div v-for="(item, index) in missionArray" :key="index + 'd'">
+          {{ item }}dd
+        </div> -->
       </HomeCard>
       <HomeCard width="544" height="430" title="工时日历">
         <div class="calendar-box">
@@ -55,12 +65,14 @@ import HomeCard from "./components/HomeCard";
 import QucikEntry from "./components/QuickEntry";
 import Calendar from "./components/Calendar";
 import Note from "./components/Note";
+import PendingList from "@/components/PendingList";
 import draggable from "vuedraggable";
 import BScroll from "@better-scroll/core";
 import MouseWheel from "@better-scroll/mouse-wheel";
+import { mapGetters } from "vuex";
 BScroll.use(MouseWheel);
 export default {
-  components: { HomeCard, QucikEntry, Calendar, Note, draggable },
+  components: { HomeCard, QucikEntry, Calendar, Note, PendingList, draggable },
   data() {
     return {
       quickEntryArray: [
@@ -104,6 +116,9 @@ export default {
       updatingNote: false, //用于Note的重新渲染
     };
   },
+  computed: {
+    ...mapGetters(["missionArray"]),
+  },
   created() {
     console.log("created");
   },
@@ -143,6 +158,21 @@ export default {
       }
     },
     addNote() {
+      // this.$store.dispatch("setMissionData", [
+      //   this.missionArray[0],
+      //   {
+      //     missionName: "???" + new Date(),
+      //     children: [],
+      //     // status: !this.missionArray[0].status,
+      //     // children: [
+      //     //   {
+      //     //     pendingType: "上传资料",
+      //     //     date: "2016-05-08",
+      //     //     status: false,
+      //     //   },
+      //     // ],
+      //   },
+      // ]);
       this.noteArray.push({ content: "" });
       this.$nextTick(() => {
         const element =
@@ -201,6 +231,10 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+}
+
+.mission-box {
+  padding: 10px;
 }
 .calendar-box {
   display: flex;
