@@ -1,12 +1,44 @@
 <template>
-<el-dialog title="系统设置" :modal="false" :close-on-click-modal="false" :visible.sync="dialogVisible" width="80%">
+<el-dialog title="系统设置" :modal="false" :close-on-click-modal="false" :append-to-body="true" :visible.sync="dialogVisible" width="60%">
   <div class="dialogContent">
     <div class="line" style="margin-bottom:20px">归档目录：
       <el-input placeholder="请选择" readonly style="height:32px;width:180px;margin-right:16px;" v-model="fileDirectory" />
       <el-button style="padding:5px 8px;color:#005BD2" size="mini" @click="btnChange">浏览</el-button>
       <input type="file" id="file" hidden @change="fileChange" webkitdirectory="" directory="">
     </div>
-    <div class="line" style="margin-bottom:20px">自定义待办规则：</div>
+    <div>
+      <div class="line" style="margin-bottom:20px">自定义待办规则：</div>
+      <el-table :data="ruleList" border style="width:590px;margin-left: 88px;">
+        <el-table-column fixed prop="pendingName" label="待办名称" width="150">
+          <template slot-scope="scope">
+            <el-input size="mini" v-if="scope.row.isOK" v-model="scope.row.pendingName" style="width:100%;hight:100%"></el-input>
+            <span size="mini" v-else>{{scope.row.pendingName}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="rule" label="生成规则" width="320">
+          <template slot-scope="scope">
+            <div v-if="scope.row.isOK" class="ruleInfo">
+              <el-select v-model="status" style="width:120px;" placeholder="请选择">
+                <el-option v-for="item in statusList" :key="item.value" :value="item.value" />
+              </el-select>
+              <el-select v-model="isBefore" style="width:65px;">
+                <el-option label="前" :value="true" />
+                <el-option label="后" :value="false" />
+              </el-select>
+              <el-input-number v-model="days" style="width:90px;" controls-position="right" :max="30" :min="0" />天
+            </div>
+            <span size="mini" v-else>{{scope.row.rule}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" @click="editclick(scope.row,scope.$index)">{{scope.row.isOK?'保存':'编辑'}}</el-button>
+            <el-button type="text" size="small" @click.native.prevent="deleteRow(scope.$index)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-button style="padding:9px 16px;color:#005BD2;margin:16px 0 32px 334px;" size="small" @click="increaseRule">新增</el-button>
+    </div>
     <div class="line" style="margin-bottom:20px">待办授权：<div class="subText">对用户
         <el-input placeholder="请输入" style="height:32px;width:100px;margin:0 8px;" v-model="pengdingUser" />授予
         <el-select v-model="auth" style="width:80px;margin:0 8px;" placeholder="请选择">
@@ -14,22 +46,19 @@
         </el-select>权限。</div>
     </div>
     <div class="line" style="margin-bottom:20px">待办提醒：<div class="subText">每天自动提醒待办事项
-      <el-switch v-model="remindDaysSwitch" style="margin:0 76px 0 12px" />提醒时间
-      <el-time-select
-        v-model="remindDaysTime"
-        style="width:120px;margin-left:8px"
-        :picker-options="{
+        <el-switch v-model="remindDaysSwitch" style="margin:0 76px 0 12px" />提醒时间
+        <el-time-select v-model="remindDaysTime" style="width:120px;margin-left:8px" :picker-options="{
           start: '08:30',
           step: '00:15',
           end: '21:30'
-        }"
-        placeholder="选择时间">
-      </el-time-select></div>
+        }" placeholder="选择时间">
+        </el-time-select>
+      </div>
     </div>
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button @click="hide">取 消</el-button>
-    <el-button type="primary" @click="saveSettings">确 定</el-button>
+    <el-button type="primary" @click="saveSettings">保 存</el-button>
   </span>
 </el-dialog>
 </template>
@@ -44,11 +73,34 @@ export default {
     return {
       dialogVisible: false,
       fileDirectory: 'D:\\',
-      pengdingUser:'',
-      auth:'readonly',
-      authList:[{label:'只读',value:'readonly'},{label:'新增',value:'insert'}],
-      remindDaysSwitch:true,
-      remindDaysTime:''
+      pengdingUser: '',
+      auth: 'readonly',
+      authList: [{
+        label: '只读',
+        value: 'readonly'
+      }, {
+        label: '新增',
+        value: 'insert'
+      }],
+      remindDaysSwitch: true,
+      remindDaysTime: '',
+      status: '',
+      statusList: [{
+        value: '提交内测'
+      }, {
+        value: '提交业测'
+      },{
+        value: '上传投产材料'
+      }],
+      isBefore: true,
+      days: 3,
+      ruleList: [{
+        pendingName: '提交代码审核',
+        rule: '提内测前2天'
+      }, {
+        pendingName: '挂载投产窗口',
+        rule: '业测完成后3天'
+      }]
     }
   },
   methods: {
@@ -74,11 +126,49 @@ export default {
       ipcRenderer.send('openDirectory');
       ipcRenderer.on('selectedItem', this.getPath);
     },
-    getPath(e,path) {
+    getPath(e, path) {
       if (path == null) {
         alert('请选择一个文件/文件夹');
       } else {
         this.fileDirectory = path;
+      }
+    },
+    increaseRule() {
+      if (JSON.stringify(this.ruleList[this.ruleList.length - 1]) == '{}') {
+        this.$message({
+          message: '请先输入待办规则信息',
+          type: 'warning',
+          offset: 280
+        });
+      } else {
+        this.ruleList.push({});
+      }
+    },
+    deleteRow(index) {
+      this.ruleList.splice(index, 1);
+    },
+    editclick(row, index) {
+      if (row.isOK) {
+        if (!this.ruleList[index].pendingName) {
+          this.$message({
+            message: '请先输入待办名称',
+            type: 'warning',
+            offset: 280
+          });
+          return;
+        } else if (!this.status) {
+          this.$message({
+            message: '请先选择待办状态',
+            type: 'warning',
+            offset: 280
+          });
+          return;
+        } else {
+          this.ruleList[index].rule = `${this.status}${this.isBefore?'前':'后'}${this.days}天`;
+          this.$set(row, 'isOK', false);
+        }
+      } else {
+        this.$set(row, 'isOK', true);
       }
     },
   },
@@ -89,6 +179,7 @@ export default {
 .dialogContent {
   height: 458px;
   padding: 24px 0 32px 24px;
+  overflow: scroll;
   background-color: #F3F9FF;
 }
 
@@ -111,6 +202,11 @@ export default {
   font-weight: 500;
 }
 
+.ruleInfo {
+  display: flex;
+  align-items: center;
+}
+
 ::v-deep .el-input__inner {
   height: 32px;
   line-height: 32px;
@@ -118,6 +214,10 @@ export default {
 
 ::v-deep .el-dialog__body {
   padding: 20px 24px;
+}
+
+::v-deep .el-table th.el-table__cell {
+  background: #749EE5;
 }
 
 ::v-deep .el-dialog__header {
@@ -131,15 +231,34 @@ export default {
   line-height: 24px;
   font-weight: 700;
 }
-::v-deep .el-input__suffix{
+
+::v-deep .el-table thead {
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #FFFFFF;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+::v-deep .el-input__suffix {
   display: flex;
   align-items: center;
 }
+
 ::v-deep .el-input__icon {
   line-height: 32px;
 }
 
 ::v-deep .el-dialog__footer {
   border-top: 1px solid #E4E7ED;
+}
+::v-deep .el-input-number {
+  line-height: 30px;
+}
+::v-deep .el-input-number__increase{
+  line-height: 16px !important;
+}
+::v-deep .el-input-number__decrease{
+  line-height: 16px !important;
 }
 </style>

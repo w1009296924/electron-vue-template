@@ -20,8 +20,8 @@
       </div>
       <div class="midLine">
         自定义提示话术
-        <el-input v-model="inputWord" style="width:500px;margin-left:16px" @change="wordChange" />
-        <div class="append-text" style="margin:12px 0 0 158px">可用%代表设定的时间</div>
+          <el-input v-model="inputWord" style="width:500px;margin-left:16px" @change="wordChange" />
+          <div class="append-text" style="margin:12px 0 0 158px">可用%代表设定的时间</div>
       </div>
     </div>
   </div>
@@ -119,5 +119,19 @@ export default {
   color: rgba(0, 0, 0, 0.45);
   letter-spacing: 0;
   font-weight: 400;
+}
+::v-deep .el-input__inner {
+  height: 32px;
+  line-height: 32px;
+}
+
+::v-deep .el-input-number {
+  line-height: 30px;
+}
+::v-deep .el-input-number__increase{
+  line-height: 16px !important;
+}
+::v-deep .el-input-number__decrease{
+  line-height: 16px !important;
 }
 </style>

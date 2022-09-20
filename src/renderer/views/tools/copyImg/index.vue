@@ -99,4 +99,18 @@ export default {
   letter-spacing: 0;
   font-weight: 400;
 }
+::v-deep .el-input__inner {
+  height: 32px;
+  line-height: 32px;
+}
+
+::v-deep .el-input-number {
+  line-height: 30px;
+}
+::v-deep .el-input-number__increase{
+  line-height: 16px !important;
+}
+::v-deep .el-input-number__decrease{
+  line-height: 16px !important;
+}
 </style>

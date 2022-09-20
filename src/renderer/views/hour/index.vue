@@ -282,7 +282,23 @@ export default {
 .rotate {
   animation: turn 1.5s linear infinite;
 }
+::v-deep .el-input__inner {
+  height: 32px;
+  line-height: 32px;
+}
 
+::v-deep .el-input-number {
+  line-height: 30px;
+}
+::v-deep .el-input-number__increase{
+  line-height: 16px !important;
+}
+::v-deep .el-input-number__decrease{
+  line-height: 16px !important;
+}
+::v-deep .el-input__icon {
+  line-height: 32px;
+}
 @keyframes turn {
   0% {
     -webkit-transform: rotate(0deg);

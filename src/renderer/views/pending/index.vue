@@ -68,7 +68,7 @@
 import {
   formatDateTime
 } from '@/utils/validate.js'
-import PendingList from './components/pendingList2.vue';
+import PendingList from './components/pendingList.vue';
 import {
   mapGetters
 } from "vuex";
@@ -194,7 +194,7 @@ export default {
           missionName: '会议室2801开会',
           status: false,
           children: [{
-            pendingType: '其他',
+            pendingType: '',
             date: '2028-03-05 10:33:00',
             status: false
           }]
@@ -437,5 +437,22 @@ export default {
 }
 ::v-deep .el-dialog__footer{
   border-top: 1px solid #E4E7ED;
+}
+::v-deep .el-input__inner {
+  height: 32px;
+  line-height: 32px;
+}
+
+::v-deep .el-input-number {
+  line-height: 30px;
+}
+::v-deep .el-input-number__increase{
+  line-height: 16px !important;
+}
+::v-deep .el-input-number__decrease{
+  line-height: 16px !important;
+}
+::v-deep .el-input__icon {
+  line-height: 32px;
 }
 </style>

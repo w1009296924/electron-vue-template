@@ -22,7 +22,8 @@
       >
         {{ firstDetail.date }}
       </div>
-      <div class="pendingType">{{ firstDetail.pendingType }}</div>
+      <div class="blank"></div>
+      <div class="pendingType" :class="{'border': firstDetail.pendingType}">{{ firstDetail.pendingType }}</div>
       <el-checkbox
         v-if="showCheck"
         v-model="firstDetail.status"
@@ -38,7 +39,8 @@
         class="children"
       >
         <div class="date">{{ item.date }}</div>
-        <div class="pendingType">{{ item.pendingType }}</div>
+        <div class="blank"></div>
+        <div class="pendingType border">{{ item.pendingType }}</div>
         <el-checkbox
           v-if="showCheck"
           v-model="item.status"
@@ -55,7 +57,8 @@
         <div :class="[item.date.length == 10 ? 'date' : 'dateSmall']">
           {{ item.date }}
         </div>
-        <div class="pendingType">{{ item.pendingType }}</div>
+        <div class="blank"></div>
+        <div class="pendingType border">{{ item.pendingType }}</div>
         <el-checkbox
           v-if="showCheck"
           v-model="item.status"
@@ -154,13 +157,17 @@ export default {
 
 .left {
   display: flex;
-  width: calc(100% - 300px);
-  align-items: flex-start;
+  width: 408px;
+  position: absolute;
+  left: 261px;
+}
+.blank{
+  width: 409px;
+  height: 48px;
 }
 
 .right {
   display: flex;
-  width: 300px;
   align-items: center;
 }
 
@@ -175,7 +182,6 @@ export default {
   height: 48px;
   line-height: 48px;
   border-right: 1px solid #f3f9ff;
-  border-left: 1px solid #f3f9ff;
 }
 
 .dateSmall {
@@ -195,8 +201,7 @@ export default {
 
 .missionName {
   display: flex;
-  width: 100%;
-  text-align: justify;
+  width: 408px;
   padding: 13px 16px 0 16px;
   .icon-box {
     min-width: 24px;
@@ -223,7 +228,9 @@ export default {
   height: 100%;
   border-right: 1px solid #f3f9ff;
 }
-
+.border {
+  border-left: 1px solid #f3f9ff;
+}
 .checkbox {
   padding: 0 16px;
   height: 48px;
