@@ -1,70 +1,68 @@
 <template>
-  <div class="container" v-if="detail.children && firstDetail.date">
-    <div v-if="showTaskName" class="left" :class="backgroudcolor">
-      <div class="missionName">
-        <div class="icon-box">
-          <i
-            v-if="detail.children.length > 1"
-            class="el-icon-arrow-right"
-            :class="[clickFlag ? 'rightArrow' : 'downArrow']"
+  <div class="todo-main-box" :class="backgroudcolor">
+    <div class="todo-main-line" :class="{ smallMode: !showTaskName }">
+      <div
+        class="todo-date"
+        :class="{ 'small-date': firstDetail.date.length > 10 }"
+      >
+        {{ firstDetail.date.substr(5) }}
+      </div>
+      <div v-if="showTaskName" class="todo-name">
+        <div class="arrow-box">
+          <div
+            class="arrow-inner"
+            v-if="todo.children.length > 1"
             @click="expandList"
+          >
+            <i
+              class="el-icon-arrow-right"
+              :class="[clickFlag ? 'rightArrow' : 'downArrow']"
+            />
+          </div>
+        </div>
+        <div class="text-box">
+          <div :class="[clickFlag ? '' : 'ellipsis']">
+            {{ todo.missionName }}
+          </div>
+        </div>
+      </div>
+      <div class="todo-type">
+        {{ firstDetail.pendingType }}
+      </div>
+      <div class="todo-check">
+        <el-checkbox
+          v-if="showCheck"
+          v-model="firstDetail.status"
+          class="checkbox"
+          @change="changeChildren($event, 0)"
+        />
+      </div>
+    </div>
+    <div v-if="clickFlag" class="todo-children-box">
+      <div
+        v-for="(item, index) of todo.children"
+        :key="inedx"
+        v-if="index != 0"
+        class="todo-main-line"
+      >
+        <div
+          class="todo-date"
+          :class="{ 'small-date': firstDetail.date.length > 10 }"
+        >
+          {{ item.date.substr(5) }}
+        </div>
+        <div class="todo-name"></div>
+        <div class="todo-type">
+          {{ item.pendingType }}
+        </div>
+        <div class="todo-check">
+          <el-checkbox
+            v-if="showCheck"
+            v-model="item.status"
+            class="checkbox"
+            @change="changeChildren($event, 0)"
           />
         </div>
-        <div class="text-box" :class="{ ellipsis: !clickFlag }">
-          {{ detail.missionName }}
-        </div>
-      </div>
-    </div>
-    <div v-if="!clickFlag" class="right" :class="backgroudcolor">
-      <div
-        v-if="firstDetail.date"
-        :class="[firstDetail.date.length == 10 ? 'date' : 'dateSmall']"
-      >
-        {{ firstDetail.date }}
-      </div>
-      <div class="blank"></div>
-      <div class="pendingType" :class="{'border': firstDetail.pendingType}">{{ firstDetail.pendingType }}</div>
-      <el-checkbox
-        v-if="showCheck"
-        v-model="firstDetail.status"
-        class="checkbox"
-        @change="changeChildren($event, 0)"
-      />
-    </div>
-    <div v-else :class="backgroudcolor">
-      <div
-        v-for="(item, index) of detail.children"
-        v-if="!item.status"
-        :key="index + 'a'"
-        class="children"
-      >
-        <div class="date">{{ item.date }}</div>
-        <div class="blank"></div>
-        <div class="pendingType border">{{ item.pendingType }}</div>
-        <el-checkbox
-          v-if="showCheck"
-          v-model="item.status"
-          class="checkbox"
-          @change="changeChildren($event, index)"
-        />
-      </div>
-      <div
-        v-for="(item, index) of detail.children"
-        v-if="item.status"
-        :key="index + 'b'"
-        class="children"
-      >
-        <div :class="[item.date.length == 10 ? 'date' : 'dateSmall']">
-          {{ item.date }}
-        </div>
-        <div class="blank"></div>
-        <div class="pendingType border">{{ item.pendingType }}</div>
-        <el-checkbox
-          v-if="showCheck"
-          v-model="item.status"
-          class="checkbox"
-          @change="changeChildren($event, index)"
-        />
       </div>
     </div>
   </div>
@@ -74,7 +72,7 @@
 export default {
   name: "PendingList",
   props: {
-    detail: { type: Object },
+    todo: { type: Object },
     showCheck: { type: Boolean, default: true },
     showTaskName: { type: Boolean, default: true },
   },
@@ -98,12 +96,12 @@ export default {
         : "blue";
     },
   },
-  mounted() {
+  created() {
     this.freshFirstLine();
   },
   methods: {
     freshFirstLine() {
-      this.firstDetail = this.detail.children[0];
+      this.firstDetail = this.todo.children[0];
       this.hasDone = this.firstDetail.status;
     },
     expandList() {
@@ -112,7 +110,7 @@ export default {
     changeChildren(value, index) {
       console.log(value);
       setTimeout(() => {
-        this.$store.dispatch("setMissionData", [this.detail, { children: [] }]);
+        this.$store.dispatch("setMissionData", [this.todo, { children: [] }]);
         this.freshFirstLine();
       }, 500);
     },
@@ -126,18 +124,99 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  display: flex;
-  margin-top: 4px;
+.todo-main-box {
+  width: 100%;
   border-radius: 4px;
+  margin-top: 4px;
   font-family: PingFangSC-Regular;
   font-size: 16px;
   color: rgba(0, 0, 0, 0.65);
-  letter-spacing: 0;
-  font-weight: 400;
-  div {
-    transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 1px 1px 1px 1px #eeeeee;
+  .todo-main-line {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    line-height: 24px;
+    &.smallMode {
+      height: 38px;
+    }
+    > * {
+      padding: 0 10px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .todo-date {
+      justify-content: center;
+      text-align: center;
+      width: 90px;
+      border-right: 1px solid #f3f9ff;
+      &.small-date {
+        font-size: 13px;
+        line-height: 16px;
+      }
+    }
+    .todo-name {
+      width: 0;
+      flex: 1;
+      border-right: 1px solid #f3f9ff;
+      // align-items: flex-start !important;
+      .arrow-box {
+        min-width: 20px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        margin-right: 5px;
+        .arrow-inner {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          cursor: pointer;
+        }
+        .el-icon-arrow-right {
+          font-size: 15px;
+          margin-right: 5px;
+        }
+      }
+      .text-box {
+        display: flex;
+        align-items: flex-start;
+        height: 24px;
+        line-height: 24px;
+        flex: 1;
+        width: 0;
+      }
+    }
+    .todo-type {
+      width: 135px;
+      border-right: 1px solid #f3f9ff;
+    }
+    .todo-check {
+      justify-content: center;
+      width: 46px;
+    }
   }
+}
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rightArrow {
+  transition: 0.2s;
+  transform-origin: center;
+  transform: rotate(90deg);
+}
+
+.downArrow {
+  transition: 0.2s;
+  transform-origin: center;
+  transform: rotate(0deg);
 }
 .red {
   background: #ffe9e8;
@@ -153,102 +232,5 @@ export default {
 .gray {
   opacity: 0.7;
   text-decoration: line-through; //删除线
-}
-
-.left {
-  display: flex;
-  width: 408px;
-  position: absolute;
-  left: 261px;
-}
-.blank{
-  width: 409px;
-  height: 48px;
-}
-
-.right {
-  display: flex;
-  align-items: center;
-}
-
-.children {
-  display: flex;
-  align-items: center;
-  height: 48px;
-}
-
-.date {
-  padding: 0 16px;
-  height: 48px;
-  line-height: 48px;
-  border-right: 1px solid #f3f9ff;
-}
-
-.dateSmall {
-  display: flex;
-  justify-content: center;
-  width: 123px;
-  padding: 0 16px;
-  border-right: 1px solid #f3f9ff;
-  border-left: 1px solid #f3f9ff;
-}
-
-.el-icon-arrow-right {
-  cursor: pointer;
-  font-size: 15px;
-  margin-right: 5px;
-}
-
-.missionName {
-  display: flex;
-  width: 408px;
-  padding: 13px 16px 0 16px;
-  .icon-box {
-    min-width: 24px;
-    width: 24px;
-  }
-  text-box {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-.ellipsis {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.pendingType {
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  width: 130px;
-  height: 100%;
-  border-right: 1px solid #f3f9ff;
-}
-.border {
-  border-left: 1px solid #f3f9ff;
-}
-.checkbox {
-  padding: 0 16px;
-  height: 48px;
-  line-height: 48px;
-}
-
-.rightArrow {
-  transition: 0.2s;
-  transform-origin: center;
-  transform: rotate(90deg);
-}
-
-.downArrow {
-  transition: 0.2s;
-  transform-origin: center;
-  transform: rotate(0deg);
-}
-::v-deep .vue-contextmenu-listWrapper {
-  padding-left: 0;
 }
 </style>

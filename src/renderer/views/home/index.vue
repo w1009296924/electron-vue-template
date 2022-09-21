@@ -6,7 +6,7 @@
           <PendingList
             v-for="item of missionArray"
             :key="item.missionName"
-            :detail="item"
+            :todo="item"
           />
         </div>
         <!-- {{ noteArray }}
@@ -234,7 +234,10 @@ export default {
 }
 
 .mission-box {
-  padding: 10px;
+  padding: 0 14px 2px 14px;
+  margin-top: 10px;
+  height: calc(100% - 76px);
+  overflow-y: overlay;
 }
 .calendar-box {
   display: flex;

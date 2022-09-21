@@ -50,8 +50,8 @@
           <div class="title-line"></div>
           <div class="title-text">任务详情面板</div>
         </div>
-        <div class="task-detail-content-box">
-          <div class="task-info" v-if="nowTask">
+        <div v-if="nowTask" class="task-detail-content-box">
+          <div class="task-info">
             <div
               v-for="(item, key) in taskInfoMap"
               :key="key"
@@ -93,6 +93,15 @@
           ></transition>
           <WorkSpace></WorkSpace>
           <TodoSpace></TodoSpace>
+        </div>
+        <div v-else class="task-detail-content-box">
+          <div class="no-task-tip">
+            <img
+              :src="require('@/assets/暂无相关信息.png')"
+              :draggable="false"
+            />
+            -请选择一个任务-
+          </div>
         </div>
       </div>
     </div>
@@ -241,6 +250,18 @@ export default {
       .el-icon-document-copy {
         position: absolute;
         z-index: 1006;
+      }
+      .no-task-tip {
+        width: 100%;
+        margin-top: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: PingFangSC-Regular;
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.45);
+        letter-spacing: 0;
+        font-weight: 400;
       }
     }
   }

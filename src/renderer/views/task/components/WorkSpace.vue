@@ -198,6 +198,7 @@ export default {
   position: relative;
   background: #f3f9ff;
   border-radius: 8px;
+  width: 0;
   flex: 1;
   height: 303px;
   .context-menu {
