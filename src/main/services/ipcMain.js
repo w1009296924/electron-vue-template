@@ -11,7 +11,7 @@ export default {
     ipcMain.handle("IsUseSysTitle", async () => {
       return IsUseSysTitle;
     });
-    ipcMain.handle("windows-mini", (event, args) => {
+    ipcMain.handle("window-mini", (event, args) => {
       BrowserWindow.fromWebContents(event.sender)?.minimize();
     });
     ipcMain.handle("window-max", async (event, args) => {
@@ -22,6 +22,9 @@ export default {
         BrowserWindow.fromWebContents(event.sender)?.maximize();
         return { status: true };
       }
+    });
+    ipcMain.handle("notice-close", (event, args) => {
+      BrowserWindow.fromWebContents(event.sender).close();
     });
     ipcMain.handle("window-close", (event, args) => {
       BrowserWindow.fromWebContents(event.sender)?.close();

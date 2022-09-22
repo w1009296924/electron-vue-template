@@ -70,6 +70,7 @@ import draggable from "vuedraggable";
 import BScroll from "@better-scroll/core";
 import MouseWheel from "@better-scroll/mouse-wheel";
 import { mapGetters } from "vuex";
+import myNotification from "@/tools/myNotification";
 BScroll.use(MouseWheel);
 export default {
   components: { HomeCard, QucikEntry, Calendar, Note, PendingList, draggable },
@@ -158,6 +159,21 @@ export default {
       }
     },
     addNote() {
+      let option = {
+        title: "test",
+        body: "body",
+        icon: "",
+        href: "",
+      };
+      // let noc = new window.Notification(option.title, option);
+      // myNotification.DesktopMsg(option);
+      myNotification.createTipsWindow();
+      // let data = {
+      //   url: "/notice",
+      //   resizable: false,
+      // };
+      // ipcRenderer.invoke("open-notice", data);
+
       // this.$store.dispatch("setMissionData", [
       //   this.missionArray[0],
       //   {
@@ -173,13 +189,14 @@ export default {
       //     // ],
       //   },
       // ]);
-      this.noteArray.push({ content: "" });
-      this.$nextTick(() => {
-        const element =
-          document.querySelectorAll(".note-class")[this.noteArray.length - 1];
-        console.log(element);
-      });
-      this.refreshNote();
+
+      // this.noteArray.push({ content: "" });
+      // this.$nextTick(() => {
+      //   const element =
+      //     document.querySelectorAll(".note-class")[this.noteArray.length - 1];
+      //   console.log(element);
+      // });
+      // this.refreshNote();
     },
     deleteNote(index) {
       const element = document.querySelectorAll(".note-class")[index];

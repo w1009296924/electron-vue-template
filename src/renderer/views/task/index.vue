@@ -14,6 +14,7 @@
                 return item.state == 'dev';
               })
             "
+            @clickTask="clickTask"
           >
           </task-list-box>
           <task-list-box
@@ -23,6 +24,7 @@
                 return item.state == 'sit';
               })
             "
+            @clickTask="clickTask"
           >
           </task-list-box>
           <task-list-box
@@ -32,6 +34,7 @@
                 return item.state == 'uat';
               })
             "
+            @clickTask="clickTask"
           >
           </task-list-box>
           <task-list-box
@@ -41,6 +44,7 @@
                 return item.state == 'rel';
               })
             "
+            @clickTask="clickTask"
           >
           </task-list-box>
         </div>
@@ -50,7 +54,7 @@
           <div class="title-line"></div>
           <div class="title-text">任务详情面板</div>
         </div>
-        <div v-if="nowTask" class="task-detail-content-box">
+        <div v-if="nowTask" class="task-detail-content-box" v-loading="loading">
           <div class="task-info">
             <div
               v-for="(item, key) in taskInfoMap"
@@ -94,7 +98,7 @@
           <WorkSpace></WorkSpace>
           <TodoSpace></TodoSpace>
         </div>
-        <div v-else class="task-detail-content-box">
+        <div v-else class="task-detail-content-box" v-loading="loading">
           <div class="no-task-tip">
             <img
               :src="require('@/assets/暂无相关信息.png')"
@@ -118,6 +122,7 @@ export default {
   data() {
     return {
       showCopy: false,
+      loading: false,
       copyStyle: "",
       taskInfoMap: {
         taskName: "任务名",
@@ -163,6 +168,12 @@ export default {
       clipboard.writeText(element.innerText);
       setTimeout(() => {
         element.classList.remove("click");
+      }, 200);
+    },
+    clickTask() {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
       }, 200);
     },
   },
@@ -306,6 +317,10 @@ export default {
     background: red;
     overflow-y: none;
   }
+}
+
+::v-deep .el-loading-spinner {
+  transform: translateY(-70px);
 }
 
 .content-box:has(div) {

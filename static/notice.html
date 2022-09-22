@@ -1,0 +1,12 @@
+<html>
+    <body>
+        <input type = "button" onclick = "btnRst_Click()" value = "重置" >
+                        <script>
+                            function btnRst_Click() {
+                                const { ipcRenderer } = require('electron');
+ 				                ipcRenderer.send('notice-close')
+                            }
+                        </script>                   
+                </input>
+    </body>
+</html>

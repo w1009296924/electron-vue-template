@@ -1,20 +1,24 @@
 <!--  -->
 <template>
-  <div class="window-title" v-if="!IsUseSysTitle&&isNotMac&&!IsWeb">
+  <div class="window-title" v-if="!IsUseSysTitle && isNotMac && !IsWeb">
     <!-- 软件logo预留位置 -->
-    <div style="-webkit-app-region: drag;" class="logo">
+    <div style="-webkit-app-region: drag" class="logo">
       <svg-icon icon-class="electron-logo"></svg-icon>
     </div>
     <!-- 菜单栏位置 -->
     <div></div>
     <!-- 中间标题位置 -->
-    <div style="-webkit-app-region: drag;" class="title"></div>
+    <div style="-webkit-app-region: drag" class="title"></div>
     <div class="controls-container">
       <div class="windows-icon-bg" @click="Mini">
         <svg-icon icon-class="mini" class-name="icon-size"></svg-icon>
       </div>
       <div class="windows-icon-bg" @click="MixOrReduction">
-        <svg-icon v-if="mix" icon-class="reduction" class-name="icon-size"></svg-icon>
+        <svg-icon
+          v-if="mix"
+          icon-class="reduction"
+          class-name="icon-size"
+        ></svg-icon>
         <svg-icon v-else icon-class="mix" class-name="icon-size"></svg-icon>
       </div>
       <div class="windows-icon-bg close-icon" @click="Close">
@@ -31,41 +35,41 @@ export default {
     mix: false,
     IsUseSysTitle: false,
     isNotMac: process.platform !== "darwin",
-    IsWeb: process.env.IS_WEB
+    IsWeb: process.env.IS_WEB,
   }),
 
   components: {},
   created() {
-    ipcRenderer.invoke("IsUseSysTitle").then(res => {
+    ipcRenderer.invoke("IsUseSysTitle").then((res) => {
       this.IsUseSysTitle = res;
     });
   },
 
   mounted() {
-      ipcRenderer.on("w-max",(event,state)=>{
-        this.mix = state
-      })
+    ipcRenderer.on("w-max", (event, state) => {
+      this.mix = state;
+    });
   },
 
   methods: {
     Mini() {
-      ipcRenderer.invoke("windows-mini");
+      ipcRenderer.invoke("window-mini");
     },
     MixOrReduction() {
-      ipcRenderer.invoke("window-max").then(res=>{
-        this.mix = res.status
-      })
+      ipcRenderer.invoke("window-max").then((res) => {
+        this.mix = res.status;
+      });
     },
     Close() {
       ipcRenderer.invoke("window-close");
-    }
+    },
   },
   destroyed() {
     ipcRenderer.removeAllListeners("w-max");
-  }
+  },
 };
 </script>
-<style rel='stylesheet/scss' lang='scss' scoped>
+<style rel="stylesheet/scss" lang="scss" scoped>
 .window-title {
   width: 100%;
   height: 30px;

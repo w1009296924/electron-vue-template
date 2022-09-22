@@ -42,7 +42,10 @@ export default {
   methods: {
     showTask() {},
     selectTask(index) {
-      this.$store.commit("SET_NOWTASK", this.taskArray[index]);
+      this.$emit("clickTask");
+      setTimeout(() => {
+        this.$store.commit("SET_NOWTASK", this.taskArray[index]);
+      }, 200);
       // console.log(this.$store.getters.taskArray);
     },
   },
