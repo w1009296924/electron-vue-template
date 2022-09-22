@@ -41,7 +41,7 @@
     <div v-if="clickFlag" class="todo-children-box">
       <div
         v-for="(item, index) of todo.children"
-        :key="inedx"
+        :key="index"
         v-if="index != 0"
         class="todo-main-line"
       >
@@ -103,6 +103,7 @@ export default {
     freshFirstLine() {
       this.firstDetail = this.todo.children[0];
       this.hasDone = this.firstDetail.status;
+      if(this.hasDone) this.clickFlag = false;//全部事项完成收起
     },
     expandList() {
       this.clickFlag = !this.clickFlag;

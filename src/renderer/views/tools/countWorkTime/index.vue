@@ -8,6 +8,7 @@
         v-model="dataRange"
         ref="picker"
         type="daterange"
+        align="center"
         style="margin:0 32px 0 16px"
         :picker-options="pickerOptions"
         range-separator="至"

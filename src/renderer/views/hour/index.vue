@@ -24,7 +24,7 @@
         </div>
         <div class="flexCenter" style="margin-bottom:20px">
           填报日期
-          <el-date-picker v-model="date" type="date" style="margin-left:8px" placeholder="选择日期" />
+          <el-date-picker v-model="date" align="center" type="date" style="margin-left:8px" placeholder="选择日期" />
         </div>
         <div class="flexCenter" style="margin-bottom:20px">
           填报工时
@@ -32,7 +32,7 @@
           小时
         </div>
         <div class="flexCenter">
-          <el-popover placement="top-start" width="250" trigger="hover" content="开启智能填报后会默认填报剩余工时最多的实施单元。">
+          <el-popover :placement="'top-start'" width="250" trigger="hover" content="开启智能填报后会默认填报剩余工时最多的实施单元。">
             <div slot="reference">智能填报</div>
           </el-popover>
           <el-select v-model="smartChoose" style="margin-left:8px" @change="checkSmarkChoose">
@@ -60,7 +60,7 @@
         </div>
         <div class="flexCenter" style="margin-bottom:20px">
           填报日期
-          <el-date-picker v-model="date" type="date" style="margin-left:8px" placeholder="选择日期" />
+          <el-date-picker v-model="date" align="center" type="date" style="margin-left:8px" placeholder="选择日期" />
         </div>
         <div class="flexCenter">
           填报工时
@@ -73,7 +73,7 @@
       自动填报
       <el-switch v-model="autoCommit" style="margin:0 32px 0 8px" />
       自动填报时间
-      <el-time-select v-model="autoCommitTime" :picker-options="{
+      <el-time-select v-model="autoCommitTime" align="center" :picker-options="{
         start: '08:30',
         step: '00:15',
         end: '18:30'
