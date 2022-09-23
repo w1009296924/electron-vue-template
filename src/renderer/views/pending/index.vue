@@ -1,164 +1,221 @@
 <template>
-<div class="app-container">
-  <div class="pending-container">
-    <el-tabs v-model="activeName">
-      <el-tab-pane name="first">
-        <span slot="label" class="title">我的待办</span>
-        <div class="titleCenter">
-          <el-input placeholder="请输入内容" prefix-icon="el-icon-search" class="searchInput" v-model="searchInput" />
-          <i class="el-icon-circle-plus-outline" @click="showDialog" />
-        </div>
-        <div class="maxHeight">
-          <PendingList v-for="(item,key) of missionArray" style="width:1000px"  :key="key" :todo="item" />
-        </div>
-      </el-tab-pane>
-      <el-tab-pane name="second">
-        <span slot="label" class="title">授权的待办</span>
-        <div class="titleCenter">
-          <el-select v-model="queryInvestor" style="width:130px" placeholder="请选择">
-            <el-option v-for="item in investorList" :key="item.investorNo" :label="item.investorName" :value="item.investorNo"></el-option>
-          </el-select>
-          <el-input placeholder="请输入内容" prefix-icon="el-icon-search" class="searchInput" v-model="searchInput" />
-          <i class="el-icon-circle-plus-outline" @click="showDialog" />
-        </div>
-        <div class="maxHeight">
-          <PendingList v-for="(item,key) of tableData2" style="width:1000px" :key="key" :showCheck="false" :todo="item" />
-        </div>
-      </el-tab-pane>
-    </el-tabs>
-    <IncreaseDialog ref="increaseDialog" @increasePending="increasePending" />
+  <div class="app-container">
+    <div class="pending-container">
+      <el-tabs v-model="activeName">
+        <el-tab-pane name="first">
+          <span slot="label" class="title">我的待办</span>
+          <div class="titleCenter">
+            <el-input
+              placeholder="请输入内容"
+              prefix-icon="el-icon-search"
+              class="searchInput"
+              v-model="searchInput"
+            />
+            <i class="el-icon-circle-plus-outline" @click="showDialog" />
+          </div>
+          <div class="maxHeight">
+            <PendingList
+              v-for="(item, key) of missionArray"
+              style="width: 1000px"
+              :key="key"
+              :todo="item"
+            />
+          </div>
+        </el-tab-pane>
+        <el-tab-pane name="second">
+          <span slot="label" class="title">授权的待办</span>
+          <div class="titleCenter">
+            <el-select
+              v-model="queryInvestor"
+              style="width: 130px"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in investorList"
+                :key="item.investorNo"
+                :label="item.investorName"
+                :value="item.investorNo"
+              ></el-option>
+            </el-select>
+            <el-input
+              placeholder="请输入内容"
+              prefix-icon="el-icon-search"
+              class="searchInput"
+              v-model="searchInput"
+            />
+            <i class="el-icon-circle-plus-outline" @click="showDialog" />
+          </div>
+          <div class="maxHeight">
+            <PendingList
+              v-for="(item, key) of tableData2"
+              style="width: 1000px"
+              :key="key"
+              :showCheck="false"
+              :todo="item"
+            />
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+      <IncreaseDialog ref="increaseDialog" @increasePending="increasePending" />
+    </div>
   </div>
-</div>
 </template>
 
 <script>
-import PendingList from '@/components/PendingList';
-import IncreaseDialog from '@/components/increaseDialog';
-import {
-  mapGetters
-} from "vuex";
+import PendingList from "@/components/PendingList";
+import IncreaseDialog from "@/components/IncreaseDialog";
+import { mapGetters } from "vuex";
 export default {
   name: "tools",
   components: {
     PendingList,
-    IncreaseDialog
+    IncreaseDialog,
   },
   data() {
     return {
-      activeName: 'first',
-      searchInput: '',
-      queryInvestor: '12066391', //查询key
-      investorList: [{
-        investorNo: '12066391',
-        investorName: '本人'
-      }, {
-        investorNo: '12066390',
-        investorName: '李亚威'
-      }, ],
-      tableData2: [{
+      activeName: "first",
+      searchInput: "",
+      queryInvestor: "12066391", //查询key
+      investorList: [
+        {
+          investorNo: "12066391",
+          investorName: "本人",
+        },
+        {
+          investorNo: "12066390",
+          investorName: "李亚威",
+        },
+      ],
+      tableData2: [
+        {
           id: 1,
-          missionNo: 'UT-WLJR-2022-0575',
-          missionName: 'UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits',
+          missionNo: "UT-WLJR-2022-0575",
+          missionName:
+            "UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits",
           status: false,
-          children: [{
-            pendingType: '提交内测',
-            date: '2016-05-05',
-            status: false
-          }, {
-            pendingType: '上传资料',
-            date: '2016-05-06',
-            status: false
-          }, {
-            pendingType: '提交业测',
-            date: '2016-05-07',
-            status: false
-          }, {
-            pendingType: 'rel代码审核',
-            date: '2016-05-07',
-            status: false
-          }, {
-            pendingType: '投产',
-            date: '2016-05-10',
-            status: false
-          }]
-        }, {
-          id: 2,
-          missionNo: '',
-          missionName: 'UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits',
-          status: false,
-          children: [{
-            pendingType: '提交内测',
-            date: '2016-05-05',
-            status: false
-          }, {
-            pendingType: '上传资料',
-            date: '2016-05-06',
-            status: false
-          }, {
-            pendingType: '提交业测',
-            date: '2016-05-07',
-            status: false
-          }, {
-            pendingType: 'rel代码审核',
-            date: '2016-05-07',
-            status: false
-          }, {
-            pendingType: '投产',
-            date: '2016-05-10',
-            status: false
-          }]
-        }, {
-          id: 3,
-          missionNo: '',
-          missionName: 'UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits',
-          status: false,
-          children: [{
-            pendingType: '提交内测',
-            date: '2022-09-14',
-            status: false
-          }, {
-            pendingType: '上传资料',
-            date: '2022-09-14',
-            status: false
-          }, {
-            pendingType: '提交业测',
-            date: '2022-09-14',
-            status: false
-          }, {
-            pendingType: 'rel代码审核',
-            date: '2022-09-14',
-            status: false
-          }, {
-            pendingType: '投产',
-            date: '2022-09-14',
-            status: false
-          }]
+          children: [
+            {
+              pendingType: "提交内测",
+              date: "2016-05-05",
+              status: false,
+            },
+            {
+              pendingType: "上传资料",
+              date: "2016-05-06",
+              status: false,
+            },
+            {
+              pendingType: "提交业测",
+              date: "2016-05-07",
+              status: false,
+            },
+            {
+              pendingType: "rel代码审核",
+              date: "2016-05-07",
+              status: false,
+            },
+            {
+              pendingType: "投产",
+              date: "2016-05-10",
+              status: false,
+            },
+          ],
         },
         {
           id: 2,
-          missionNo: '',
-          missionName: '会议室2801开会',
+          missionNo: "",
+          missionName:
+            "UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits",
           status: false,
-          children: [{
-            pendingType: '其他',
-            date: '2028-03-05 10:33:00',
-            status: false
-          }]
-        }
-      ]
-    }
+          children: [
+            {
+              pendingType: "提交内测",
+              date: "2016-05-05",
+              status: false,
+            },
+            {
+              pendingType: "上传资料",
+              date: "2016-05-06",
+              status: false,
+            },
+            {
+              pendingType: "提交业测",
+              date: "2016-05-07",
+              status: false,
+            },
+            {
+              pendingType: "rel代码审核",
+              date: "2016-05-07",
+              status: false,
+            },
+            {
+              pendingType: "投产",
+              date: "2016-05-10",
+              status: false,
+            },
+          ],
+        },
+        {
+          id: 3,
+          missionNo: "",
+          missionName:
+            "UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits",
+          status: false,
+          children: [
+            {
+              pendingType: "提交内测",
+              date: "2022-09-14",
+              status: false,
+            },
+            {
+              pendingType: "上传资料",
+              date: "2022-09-14",
+              status: false,
+            },
+            {
+              pendingType: "提交业测",
+              date: "2022-09-14",
+              status: false,
+            },
+            {
+              pendingType: "rel代码审核",
+              date: "2022-09-14",
+              status: false,
+            },
+            {
+              pendingType: "投产",
+              date: "2022-09-14",
+              status: false,
+            },
+          ],
+        },
+        {
+          id: 2,
+          missionNo: "",
+          missionName: "会议室2801开会",
+          status: false,
+          children: [
+            {
+              pendingType: "其他",
+              date: "2028-03-05 10:33:00",
+              status: false,
+            },
+          ],
+        },
+      ],
+    };
   },
   computed: {
     ...mapGetters(["missionArray"]),
   },
   methods: {
-    showDialog(){
+    showDialog() {
       this.$refs.increaseDialog.show();
     },
-    increasePending(obj){
+    increasePending(obj) {
       this.tableData.push(obj);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -220,7 +277,7 @@ export default {
 
 .el-icon-circle-plus-outline:hover {
   cursor: pointer;
-  color: #409EFF;
+  color: #409eff;
   font-weight: 100;
   font-size: 35px;
 }

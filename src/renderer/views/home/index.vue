@@ -2,12 +2,17 @@
   <div class="app-container">
     <div class="main-box">
       <HomeCard width="728" height="430" title="近期待办">
+        <template v-slot:header>
+          <button @click="addTodo">B</button>
+        </template>
         <div class="mission-box">
-          <PendingList
+          <div
             v-for="item of missionArray"
             :key="item.missionName"
-            :todo="item"
-          />
+            @contextmenu.prevent="openMenu([$event, item])"
+          >
+            <PendingList :todo="item" />
+          </div>
         </div>
         <!-- {{ noteArray }}
         <div v-for="(item, index) in noteArray" :key="index">s{{ item }}dd</div>
@@ -17,7 +22,7 @@
       </HomeCard>
       <HomeCard width="544" height="430" title="工时日历">
         <div class="calendar-box">
-          <Calendar />
+          <Calendar @openMenu="openMenu" />
         </div>
       </HomeCard>
       <HomeCard width="728" height="433" title="便签">
@@ -58,6 +63,28 @@
         </draggable>
       </HomeCard>
     </div>
+
+    <transition name="fade">
+      <div
+        v-show="todoMenuVisible"
+        class="context-menu"
+        :style="`left:${menuLeft}px;top:${menuTop}px;`"
+      >
+        <div class="context-menu-item" @click="deleteTodo(nowItem)">
+          删除待办
+        </div>
+      </div></transition
+    >
+    <transition name="fade">
+      <div
+        v-show="calendarMenuVisible"
+        class="context-menu"
+        :style="`left:${menuLeft}px;top:${menuTop}px;`"
+      >
+        <div class="context-menu-item" @click="addTodo(nowItem)">添加待办</div>
+      </div></transition
+    >
+    <IncreaseDialog ref="addTodo"></IncreaseDialog>
   </div>
 </template>
 <script>
@@ -66,6 +93,7 @@ import QucikEntry from "./components/QuickEntry";
 import Calendar from "./components/Calendar";
 import Note from "./components/Note";
 import PendingList from "@/components/PendingList";
+import IncreaseDialog from "@/components/IncreaseDialog";
 import draggable from "vuedraggable";
 import BScroll from "@better-scroll/core";
 import MouseWheel from "@better-scroll/mouse-wheel";
@@ -73,9 +101,22 @@ import { mapGetters } from "vuex";
 import myNotification from "@/tools/myNotification";
 BScroll.use(MouseWheel);
 export default {
-  components: { HomeCard, QucikEntry, Calendar, Note, PendingList, draggable },
+  components: {
+    HomeCard,
+    QucikEntry,
+    Calendar,
+    Note,
+    PendingList,
+    IncreaseDialog,
+    draggable,
+  },
   data() {
     return {
+      updatingNote: false, //用于Note的重新渲染
+      menuLeft: 0,
+      menuTop: 0,
+      todoMenuVisible: false,
+      calendarMenuVisible: false,
       quickEntryArray: [
         {
           name: "归档目录",
@@ -114,7 +155,6 @@ export default {
         { content: "" },
         { content: "" },
       ],
-      updatingNote: false, //用于Note的重新渲染
     };
   },
   computed: {
@@ -158,6 +198,13 @@ export default {
           .firstChild.dispatchEvent(eventClone);
       }
     },
+    addTodo(item = null) {
+      // if(item){
+
+      // }
+      this.$refs.addTodo.show(item);
+    },
+    deleteTodo(item) {},
     addNote() {
       let option = {
         title: "test",
@@ -236,6 +283,24 @@ export default {
         });
       });
     },
+    openMenu([e, item]) {
+      console.log(e);
+      console.log(item);
+      this.menuLeft = e.clientX;
+      this.menuTop = e.clientY;
+      if (item.children) {
+        this.todoMenuVisible = true;
+      } else {
+        this.calendarMenuVisible = true;
+      }
+      this.nowItem = item;
+      document.body.addEventListener("click", this.closeMenu);
+    },
+    closeMenu() {
+      this.todoMenuVisible = false;
+      this.calendarMenuVisible = false;
+      document.body.removeEventListener("click", this.closeMenu);
+    },
   },
 };
 </script>
@@ -290,6 +355,37 @@ export default {
   }
 }
 
+.context-menu {
+  position: absolute;
+  background-color: #fff;
+  width: 70px;
+  font-size: 12px;
+  color: #444040;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  white-space: nowrap;
+  z-index: 1000;
+  .context-menu-item {
+    display: block;
+    line-height: 24px;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    &:hover {
+      cursor: pointer;
+      background: #66b1ff;
+      border-color: #66b1ff;
+      color: #fff;
+    }
+  }
+}
+
 .note-class.note-fade {
   animation: fade 0.4s ease-in-out;
 }
@@ -301,5 +397,15 @@ export default {
     opacity: 0;
     transform: translateY(40px);
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.12s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

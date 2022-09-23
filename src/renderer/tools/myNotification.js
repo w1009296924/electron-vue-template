@@ -54,8 +54,8 @@ export default {
   createTipsWindow() {
     const { BrowserWindow, screen } = require("@electron/remote");
     const win = new BrowserWindow({
-      width: 800,
-      height: 600,
+      width: 430,
+      height: 230,
       frame: false, // 无边框窗口
       show: false,
       y: 0,

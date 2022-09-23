@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div class="todo-type">
+      <div v-if="firstDetail.pendingType" class="todo-type">
         {{ firstDetail.pendingType }}
       </div>
       <div class="todo-check">
@@ -103,7 +103,7 @@ export default {
     freshFirstLine() {
       this.firstDetail = this.todo.children[0];
       this.hasDone = this.firstDetail.status;
-      if(this.hasDone) this.clickFlag = false;//全部事项完成收起
+      if (this.hasDone) this.clickFlag = false; //全部事项完成收起
     },
     expandList() {
       this.clickFlag = !this.clickFlag;

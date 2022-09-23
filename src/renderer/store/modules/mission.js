@@ -615,7 +615,7 @@ const mission = {
     ],
   },
   mutations: {
-    ADD_MISSIONDATA: (state,missionObj) => {
+    ADD_MISSIONDATA: (state, missionObj) => {
       state.missionArray.push(missionObj);
     },
     SET_MISSIONARRAY: (state, missionArray) => {
@@ -682,6 +682,27 @@ const mission = {
       });
       console.log("更新后结果：");
       console.log(state.missionArray);
+    },
+    INIT_MISSIONARRAY: (state) => {
+      state.missionArray.forEach((todo, index) => {
+        if (todo.children.length > 1) {
+          todo.children = todo.children.sort((a, b) => {
+            if (a.status != b.status) {
+              return a.status ? 1 : -1;
+            }
+            return new Date(Date.parse(a.date)) - new Date(Date.parse(b.date));
+          });
+        }
+      });
+      state.missionArray = state.missionArray.sort((a, b) => {
+        if (a.status != b.status) {
+          return a.status ? 1 : -1;
+        }
+        return (
+          new Date(Date.parse(a.children[0].date)) -
+          new Date(Date.parse(b.children[0].date))
+        );
+      });
     },
   },
   actions: {

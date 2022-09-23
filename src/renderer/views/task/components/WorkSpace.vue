@@ -33,7 +33,6 @@
     </div>
     <transition name="fade">
       <div
-        id="contextmenu"
         v-show="menuVisible"
         class="context-menu"
         :style="`left:${menuLeft}px;top:${menuTop}px;`"

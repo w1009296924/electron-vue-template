@@ -9,20 +9,23 @@
 
 <script>
 import CHeader from "./components/title";
-import '@/assets/font.css';
+import "@/assets/font.css";
 export default {
-  components: { CHeader }
+  components: { CHeader },
+  mounted() {
+    this.$store.commit("INIT_MISSIONARRAY");
+  },
 };
 </script>
 
 <style>
 /* CSS */
-*{
+* {
   /* font-family: PingFangSC-Regular;
   font-weight: 400; */
 }
 
-body .el-tooltip__popper{
+body .el-tooltip__popper {
   display: none;
 }
 </style>
