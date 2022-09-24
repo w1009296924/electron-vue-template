@@ -31,7 +31,7 @@
       </div>
       <div class="todo-check">
         <el-checkbox
-          v-if="showCheck"
+          disabled="showCheck"
           v-model="firstDetail.status"
           class="checkbox"
           @change="changeChildren($event, 0)"
@@ -57,7 +57,7 @@
         </div>
         <div class="todo-check">
           <el-checkbox
-            v-if="showCheck"
+            disabled="showCheck"
             v-model="item.status"
             class="checkbox"
             @change="changeChildren($event, 0)"

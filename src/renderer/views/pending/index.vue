@@ -287,6 +287,9 @@ export default {
   overflow: scroll;
 }
 
+::v-deep .el-input__icon {
+  line-height: 32px;
+}
 ::v-deep .el-input__inner {
   height: 32px;
   line-height: 32px;
