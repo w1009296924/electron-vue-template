@@ -616,7 +616,26 @@ const mission = {
   },
   mutations: {
     ADD_MISSIONDATA: (state, missionObj) => {
-      state.missionArray.push(missionObj);
+      let newArray;
+      [...newArray] = state.missionArray;
+      if(missionObj.isBindMission) {
+        let missionIdx = newArray.findIndex(item => {
+          if (item.missionName== missionObj.missionName){
+              return true
+          }
+        });
+        newArray[missionIdx].children.push(missionObj.children[0]);
+        newArray[missionIdx].children = newArray[missionIdx].children.sort((a, b) => {
+            if (a.status != b.status) {
+              return a.status ? 1 : -1;
+            }
+            return new Date(Date.parse(a.date)) - new Date(Date.parse(b.date));
+          });
+      }else {
+        newArray.push(missionObj);
+      }
+      //   console.log(newArray);
+      state.missionArray = newArray;
     },
     SET_MISSIONARRAY: (state, missionArray) => {
       state.missionArray = missionArray;

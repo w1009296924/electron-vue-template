@@ -40,12 +40,14 @@ export const formatDateTime = (date) => {
     timeStr += '0';
   }
   timeStr += date.getMonth() + 1 + '-';
-  timeStr += date.getDay() < 10 ? ('0' + date.getDay()) : date.getDay();
-  timeStr += ' ';
-  timeStr += date.getHours() < 10 ? ('0' + date.getHours()) : date.getHours();
-  timeStr += ':';
-  timeStr += date.getMinutes() < 10 ? ('0' + date.getMinutes()) : date.getMinutes();
-  timeStr += ':';
-  timeStr += date.getSeconds() < 10 ? ('0' + date.getSeconds()) : date.getSeconds();
+  timeStr += date.getDate() < 10 ? ('0' + date.getDate()) : date.getDate();
+  if(Number(date.getHours()) + Number(date.getMinutes()) + Number(date.getSeconds()) != 0){
+    timeStr += ' ';
+    timeStr += date.getHours() < 10 ? ('0' + date.getHours()) : date.getHours();
+    timeStr += ':';
+    timeStr += date.getMinutes() < 10 ? ('0' + date.getMinutes()) : date.getMinutes();
+    timeStr += ':';
+    timeStr += date.getSeconds() < 10 ? ('0' + date.getSeconds()) : date.getSeconds();
+  }
   return timeStr;
 }

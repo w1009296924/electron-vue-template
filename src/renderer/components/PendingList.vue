@@ -31,7 +31,7 @@
       </div>
       <div class="todo-check">
         <el-checkbox
-          disabled="showCheck"
+          :disabled="!showCheck"
           v-model="firstDetail.status"
           class="checkbox"
           @change="changeChildren($event, 0)"
@@ -57,7 +57,7 @@
         </div>
         <div class="todo-check">
           <el-checkbox
-            disabled="showCheck"
+            :disabled="!showCheck"
             v-model="item.status"
             class="checkbox"
             @change="changeChildren($event, 0)"
@@ -113,6 +113,7 @@ export default {
       setTimeout(() => {
         this.$store.dispatch("setMissionData", [this.todo, { children: [] }]);
         this.freshFirstLine();
+        this.$emit('refresh');
       }, 500);
     },
     getDaysBetween(date1, date2) {

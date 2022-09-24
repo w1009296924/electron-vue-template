@@ -11,7 +11,7 @@
       <el-table :data="ruleList" border style="width:590px;margin-left: 88px;">
         <el-table-column fixed prop="pendingName" label="待办名称" width="150">
           <template slot-scope="scope">
-            <el-input size="mini" v-if="scope.row.isOK" v-model="scope.row.pendingName" style="width:100%;hight:100%"></el-input>
+            <el-input size="mini" v-if="scope.row.isOK" v-model="scope.row.pendingName" style="width:100%;height:100%"></el-input>
             <span size="mini" v-else>{{scope.row.pendingName}}</span>
           </template>
         </el-table-column>
@@ -86,20 +86,22 @@ export default {
       remindDaysTime: '',
       status: '',
       statusList: [{
+        value: '任务启动'
+      }, {
         value: '提交内测'
       }, {
         value: '提交业测'
       },{
-        value: '上传投产材料'
+        value: '投产'
       }],
       isBefore: true,
       days: 3,
       ruleList: [{
         pendingName: '提交代码审核',
-        rule: '提内测前2天'
+        rule: '提内测前3天'
       }, {
-        pendingName: '挂载投产窗口',
-        rule: '业测完成后3天'
+        pendingName: '上传说明书、需规',
+        rule: '提内测前0天'
       }]
     }
   },

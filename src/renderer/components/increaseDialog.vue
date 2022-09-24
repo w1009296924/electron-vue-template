@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增待办 " :visible.sync="dialogVisible" width="30%">
+  <el-dialog title="新增待办 " :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%">
     <div class="dialogContent">
       <div class="dialogLine" style="margin-bottom: 8px">
         <div class="dialogText">待办时间</div>
@@ -20,12 +20,12 @@
           @change="test"
         />
       </div>
-      <!-- <div class="dialogLine" style="margin-bottom: 8px">
-          <div class="dialogText">需求编号</div>
-          <el-select v-model="missionNo" style="margin: 0 8px;width:224px" placeholder="请选择（可为空）">
-            <el-option v-for="item in missionList" :key="item.missionNo" :label="item.missionName" :value="item.missionNo" ></el-option>
-          </el-select>
-        </div> -->
+      <div v-if="taskArray" class="dialogLine" style="margin-bottom: 8px">
+        <div class="dialogText">绑定任务</div>
+        <el-select v-model="selectMisson" clearable style="margin: 0 8px;width:224px" placeholder="请选择（可为空）">
+          <el-option v-for="(item,index) in taskArray" :key="index" :value="item.taskName" />
+        </el-select>
+      </div>
       <div class="dialogLine" style="margin-bottom: 8px">
         <div class="dialogText">待办人</div>
         <el-select
@@ -66,14 +66,25 @@
 
 <script>
 import { formatDateTime } from "@/utils/validate.js";
+import { mapGetters } from "vuex";
 export default {
   name: "IncreaseDialog",
+  props:{
+    defaultVal: { type: String, default: '000000' },
+  },
+  watch: {
+    defaultVal: {
+      handler:function () {
+          this.investor = this.defaultVal
+      }
+    }
+  },
   data() {
     return {
       dialogVisible: false,
       pendingTime: "",
       pengingSth: "",
-      missionNo: "",
+      selectMisson: "",
       missionList: [
         {
           missionNo: "UT-WLJR-2022-0575",
@@ -92,20 +103,27 @@ export default {
           missionName: "测试1",
         },
       ],
-      investor: "12066391", //新增key
+      investor: '000000', //新增key
       investorList: [
         {
-          investorNo: "12066391",
+          investorNo: "000000",
           investorName: "本人",
         },
         {
           investorNo: "12066390",
           investorName: "李亚威",
         },
+        {
+          investorNo: "12066392",
+          investorName: "文天阳",
+        },
       ],
       remindSwitch: false,
       inputMin: 15,
     };
+  },
+  computed: {
+    ...mapGetters(["taskArray"]),
   },
   methods: {
     show(info = null) {
@@ -119,7 +137,6 @@ export default {
     },
     test() {},
     addPending() {
-      console.log(this.pendingTime);
       if (!this.pendingTime) {
         this.$message({
           message: "请选择待办时间",
@@ -131,7 +148,21 @@ export default {
           type: "warning",
         });
       } else {
-        let pushObj = {
+        let pushObj = this.selectMisson ? 
+        {
+          isBindMission: true,
+          missionName: this.selectMisson,
+          status: false,
+          children: [
+            {
+              pendingType: this.pengingSth,
+              date: formatDateTime(this.pendingTime),
+              status: false,
+            },
+          ],
+        }:
+        {
+          isBindMission: false,
           missionName: this.pengingSth,
           status: false,
           children: [
@@ -143,6 +174,8 @@ export default {
           ],
         };
         this.$store.dispatch("addMissionData", pushObj);
+        this.$forceUpdate();
+        this.$emit('refresh');
         this.dialogVisible = false;
       }
     },

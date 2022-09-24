@@ -13,12 +13,13 @@
             />
             <i class="el-icon-circle-plus-outline" @click="showDialog" />
           </div>
-          <div class="maxHeight">
+          <div v-if="refreshFlag" class="maxHeight">
             <PendingList
               v-for="(item, key) of missionArray"
               style="width: 1000px"
               :key="key"
               :todo="item"
+              @refresh="refresh"
             />
           </div>
         </el-tab-pane>
@@ -45,18 +46,19 @@
             />
             <i class="el-icon-circle-plus-outline" @click="showDialog" />
           </div>
-          <div class="maxHeight">
+          <div v-if="refreshFlag" class="maxHeight">
             <PendingList
               v-for="(item, key) of tableData2"
               style="width: 1000px"
               :key="key"
               :showCheck="false"
               :todo="item"
+              @refresh="refresh"
             />
           </div>
         </el-tab-pane>
       </el-tabs>
-      <IncreaseDialog ref="increaseDialog" @increasePending="increasePending" />
+      <IncreaseDialog ref="increaseDialog" :defaultVal="defaultVal" @refresh="refresh"/>
     </div>
   </div>
 </template>
@@ -75,17 +77,18 @@ export default {
     return {
       activeName: "first",
       searchInput: "",
-      queryInvestor: "12066391", //查询key
+      queryInvestor: "12066392", //查询key
       investorList: [
         {
-          investorNo: "12066391",
-          investorName: "本人",
+          investorNo: "12066392",
+          investorName: "文天阳",
         },
         {
           investorNo: "12066390",
           investorName: "李亚威",
         },
       ],
+      refreshFlag:true,
       tableData2: [
         {
           id: 1,
@@ -207,14 +210,20 @@ export default {
   },
   computed: {
     ...mapGetters(["missionArray"]),
+    defaultVal() {
+      return this.activeName == 'first' ? '000000' : this.queryInvestor;
+    }
   },
   methods: {
     showDialog() {
       this.$refs.increaseDialog.show();
     },
-    increasePending(obj) {
-      this.tableData.push(obj);
-    },
+    refresh() {
+      this.refreshFlag = false;
+      this.$nextTick(() => {
+        this.refreshFlag = true;
+      },500);
+    }
   },
 };
 </script>
