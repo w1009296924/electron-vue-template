@@ -14,7 +14,7 @@
           @click="selectTask(index)"
         >
           <i class="el-icon-caret-right"></i>
-          <div>{{ item.taskName }}</div>
+          <div class="ellipsis">{{ item.taskName }}</div>
         </div>
       </div></transition
     >
@@ -99,6 +99,11 @@ export default {
       &.selected {
         // opacity: 0.4;
         background: #d9e8fb;
+      }
+      .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
