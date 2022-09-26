@@ -47,7 +47,7 @@
     </div>
     <div class="line" style="margin-bottom:20px">待办提醒：<div class="subText">每天自动提醒待办事项
         <el-switch v-model="remindDaysSwitch" style="margin:0 76px 0 12px" />提醒时间
-        <el-time-select v-model="remindDaysTime" style="width:120px;margin-left:8px" :picker-options="{
+        <el-time-select v-model="remindDaysTime" align="center" style="width:120px;margin-left:8px" :picker-options="{
           start: '08:30',
           step: '00:15',
           end: '21:30'
@@ -67,6 +67,7 @@
 import {
   ipcRenderer
 } from 'electron';
+import { init } from 'events';
 export default {
   name: "Settings",
   data() {
@@ -91,7 +92,7 @@ export default {
         value: '提交内测'
       }, {
         value: '提交业测'
-      },{
+      }, {
         value: '投产'
       }],
       isBefore: true,
@@ -105,7 +106,41 @@ export default {
       }]
     }
   },
+  created() {
+    const fs = require('fs');
+    fs.readFile('./settings.ini', 'utf-8', (err, data) => {
+      console.log(err);
+      if (err) {
+        console.log("读取错误");
+        this.writeFile({
+          fileDirectory: 'D:\\',
+          ruleList: [{
+            pendingName: '提交代码审核',
+            rule: '提内测前3天'
+          }, {
+            pendingName: '上传说明书、需规',
+            rule: '提内测前0天'
+          }],
+          pengdingUser: '',
+          auth: 'readonly',
+          remindDaysSwitch: true,
+          remindDaysTime: ''
+        });
+        this.init(JSON.parse(data));
+        return;
+      };
+      this.init(JSON.parse(data));
+    })
+  },
   methods: {
+    init(data) {
+      this.fileDirectory = data.fileDirectory,
+      this.ruleList = data.ruleList,
+      this.pengdingUser = data.pengdingUser,
+      this.auth = data.auth,
+      this.remindDaysSwitch = data.remindDaysSwitch,
+      this.remindDaysTime = data.remindDaysTime
+    },
     show() {
       this.dialogVisible = true;
     },
@@ -113,7 +148,34 @@ export default {
       this.dialogVisible = false;
     },
     saveSettings() {
+      if (this.ruleList[this.ruleList.length - 1].isOK) {
+        this.$message({
+          message: '请先输入待办规则信息',
+          type: 'warning',
+          offset: 280
+        });
+        return;
+      }
       this.dialogVisible = false;
+      const settingObj = {
+        fileDirectory: this.fileDirectory,
+        ruleList: this.ruleList,
+        pengdingUser: this.pengdingUser,
+        auth: this.auth,
+        remindDaysSwitch: this.remindDaysSwitch,
+        remindDaysTime: this.remindDaysTime
+      };
+      this.writeFile(settingObj);
+    },
+    writeFile(settingObj) {
+      console.log('创建文件', settingObj);
+      const fs = require('fs');
+      fs.writeFile('./settings.ini', JSON.stringify(settingObj), (err) => {
+        if (err) {
+          console.log(err);
+          return
+        }
+      });
     },
     fileChange(e) {
       try {
@@ -136,7 +198,7 @@ export default {
       }
     },
     increaseRule() {
-      if (JSON.stringify(this.ruleList[this.ruleList.length - 1]) == '{}') {
+      if (this.ruleList[this.ruleList.length - 1].isOK) {
         this.$message({
           message: '请先输入待办规则信息',
           type: 'warning',
@@ -144,6 +206,7 @@ export default {
         });
       } else {
         this.ruleList.push({});
+        this.$set(this.ruleList[this.ruleList.length - 1], 'isOK', true);
       }
     },
     deleteRow(index) {
@@ -254,13 +317,16 @@ export default {
 ::v-deep .el-dialog__footer {
   border-top: 1px solid #E4E7ED;
 }
+
 ::v-deep .el-input-number {
   line-height: 30px;
 }
-::v-deep .el-input-number__increase{
+
+::v-deep .el-input-number__increase {
   line-height: 16px !important;
 }
-::v-deep .el-input-number__decrease{
+
+::v-deep .el-input-number__decrease {
   line-height: 16px !important;
 }
 </style>
