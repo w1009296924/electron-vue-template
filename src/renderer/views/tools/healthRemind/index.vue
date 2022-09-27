@@ -5,7 +5,7 @@
     <div class="set-healthRemind">
       <div class="topLine">
         健康提醒
-        <el-switch v-model="healthRemindSwitch" style="margin-left:16px" />
+        <el-switch v-model="healthRemindSwitch" @change="healthRemindSwitchChange" style="margin-left:16px" />
       </div>
       <div class="midLine">
         间隔时间
@@ -16,7 +16,7 @@
     <div class="set-voice">
       <div class="topLine">
         提示气泡音
-        <el-switch v-model="voiceSwitch" style="margin-left:16px" />
+        <el-switch v-model="voiceSwitch" @change="voiceSwitchChange" style="margin-left:16px" />
       </div>
       <div class="midLine">
         自定义提示话术
@@ -33,6 +33,7 @@ import {
   mapGetters
 } from "vuex";
 import ToolTitle from "../components/toolTitle"
+import fileTool from "@/utils/fileTool.js";
 export default {
   name: "healthRemind",
   components: {
@@ -43,13 +44,33 @@ export default {
       healthRemindSwitch: true, //健康提醒开关
       voiceSwitch: true, //提示音开关
       inputTime: 45, //提醒默认间隔
-      inputWord: '您已经连续工作了%分钟了，休息一会吧~' //提醒默认话术
+      inputWord: '您已经连续工作了%分钟了，休息一会吧~', //提醒默认话术
+      settings:{},
     };
   },
   computed: {
     ...mapGetters(["name", "roles"]),
   },
+  mounted() {
+    this.init();
+  },
   methods: {
+    init() {
+      //从本地配置中读取上次选择的时间范围
+      this.settings = fileTool.readSettingFile();
+      this.healthRemindSwitch = this.settings.tools.healthRemindSwitch;
+      this.voiceSwitch = this.settings.tools.voiceSwitch;
+      this.inputTime = this.settings.tools.inputTime;
+      this.inputWord = this.settings.tools.inputWord;
+    },
+    voiceSwitchChange(){
+      this.settings.tools.healthRemindSwitch = this.healthRemindSwitch;
+      fileTool.writeSettingFile(this.settings);
+    },
+    healthRemindSwitchChange(){
+      this.settings.tools.voiceSwitch = this.voiceSwitch;
+      fileTool.writeSettingFile(this.settings);
+    },
     timeChange(args) {
       if (args > 120) {
         this.$message({
@@ -64,6 +85,8 @@ export default {
         });
         this.inputTime = 5;
       }
+      this.settings.tools.inputTime = this.inputTime;
+      fileTool.writeSettingFile(this.settings);
     },
     wordChange(args) {
       if (!args) {
@@ -73,6 +96,8 @@ export default {
         });
         this.inputWord = '您已经连续工作了%分钟了，休息一会吧~';
       }
+      this.settings.tools.inputWord = this.inputWord;
+      fileTool.writeSettingFile(this.settings);
     }
   }
 };

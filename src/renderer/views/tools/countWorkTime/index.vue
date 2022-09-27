@@ -5,7 +5,7 @@
     <div class="set-timeRage">
       时间范围
       <el-date-picker
-        v-model="dataRange"
+        v-model="dateRange"
         ref="picker"
         type="daterange"
         align="center"
@@ -47,6 +47,7 @@
 import {
   mapGetters
 } from "vuex";
+import fileTool from "@/utils/fileTool.js";
 import ToolTitle from "../components/toolTitle"
 export default {
   name: "countWorkTime",
@@ -82,7 +83,8 @@ export default {
           }
         }]
       },
-      dataRange: '', //时间选择范围
+      dateRange: '', //时间选择范围
+      settings:{},
       workLoads: '', //统计的工作量
       tableData: [{
         date: '2016-05-02',
@@ -113,7 +115,8 @@ export default {
   },
   mounted() {
     //从本地配置中读取上次选择的时间范围
-    this.dataRange = [new Date(), new Date()];
+    this.settings = fileTool.readSettingFile();
+    this.dateRange = this.settings.tools.dateRange ? this.settings.tools.dateRange: [new Date(), new Date()];
     this.workLoads = 3.5;
   },
   computed: {
@@ -122,6 +125,9 @@ export default {
   methods: {
     //todo 查询统计数据
     async query() {
+      //将时间范围记录本地
+      this.settings.tools.dateRange = this.dateRange;
+      fileTool.writeSettingFile(this.settings);
       // this.tableData = await queryWorkLoad().data;
       this.workLoads = 4.2;
     },

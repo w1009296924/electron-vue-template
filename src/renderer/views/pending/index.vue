@@ -14,13 +14,13 @@
             <i class="el-icon-circle-plus-outline" @click="showDialog" />
           </div>
           <div v-if="refreshFlag" class="maxHeight">
-            <PendingList
-              v-for="(item, key) of missionArray"
-              style="width: 1000px"
-              :key="key"
-              :todo="item"
-              @refresh="refresh"
-            />
+            <transition-group  name="todo-trans" tag="div">
+              <div
+                v-for="item of missionArray"
+                :key="item.missionName"
+              >
+                <PendingList style="width: 1000px" :todo="item" /></div
+            ></transition-group>
           </div>
         </el-tab-pane>
         <el-tab-pane name="second">
@@ -302,5 +302,8 @@ export default {
 ::v-deep .el-input__inner {
   height: 32px;
   line-height: 32px;
+}
+.todo-trans-move {
+  transition: transform 0.4s ease;
 }
 </style>

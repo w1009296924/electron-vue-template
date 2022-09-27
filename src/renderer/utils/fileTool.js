@@ -1,3 +1,4 @@
+import { path } from '@/utils/constans.js' 
 const fs = require("fs");
 const remote = require("@electron/remote");
 
@@ -101,8 +102,20 @@ function getAllfiles(path, arr) {
     }
   });
 }
-
+function readSettingFile() {
+  const data = fs.readFileSync(`${path}\\settings.ini`, 'utf-8')
+  return JSON.parse(data);
+}
+function writeSettingFile(settingObj) {
+  fs.writeFile(`${path}\\settings.ini`, JSON.stringify(settingObj,null,2), (err) => {
+    if (err) {
+      return;
+    }
+  });
+}
 export default {
   getAllfiles,
   getIcon,
+  readSettingFile,
+  writeSettingFile
 };

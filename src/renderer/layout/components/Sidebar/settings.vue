@@ -67,13 +67,17 @@
 import {
   ipcRenderer
 } from 'electron';
+import fs from 'fs';
+import { path, savePath, defaultVal } from '@/utils/constans.js'
+import fileTool from "@/utils/fileTool.js";
 import { init } from 'events';
 export default {
   name: "Settings",
   data() {
     return {
+      settings: {},
       dialogVisible: false,
-      fileDirectory: 'D:\\',
+      fileDirectory: savePath,
       pengdingUser: '',
       auth: 'readonly',
       authList: [{
@@ -107,39 +111,39 @@ export default {
     }
   },
   created() {
-    const fs = require('fs');
-    fs.readFile('./settings.ini', 'utf-8', (err, data) => {
-      console.log(err);
-      if (err) {
-        console.log("读取错误");
-        this.writeFile({
-          fileDirectory: 'D:\\',
-          ruleList: [{
-            pendingName: '提交代码审核',
-            rule: '提内测前3天'
-          }, {
-            pendingName: '上传说明书、需规',
-            rule: '提内测前0天'
-          }],
-          pengdingUser: '',
-          auth: 'readonly',
-          remindDaysSwitch: true,
-          remindDaysTime: ''
-        });
-        this.init(JSON.parse(data));
-        return;
-      };
-      this.init(JSON.parse(data));
-    })
+    //判断有无文件夹,没有则创建文件夹
+    fs.stat(path, (error) => {
+      if (error) {
+        fs.mkdir(path,function(){});
+      }
+    });
+    //判断有无归档目录
+    fs.stat(savePath, (error) => {
+      if (error) {
+        //创建默认归档目录
+        fs.mkdir(savePath,function(){});
+      }
+    });
+    //判断有无配置文件,没有则创建配置文件
+    fs.stat(`${path}\\settings.ini`, (error) => {
+      if (error) {
+        fileTool.writeSettingFile(defaultVal);
+      }
+    });
+    setTimeout(()=>{//生成配置文件为异步方法,会先执行init导致报错
+      this.init();
+    },1000);
   },
   methods: {
-    init(data) {
-      this.fileDirectory = data.fileDirectory,
-      this.ruleList = data.ruleList,
-      this.pengdingUser = data.pengdingUser,
-      this.auth = data.auth,
-      this.remindDaysSwitch = data.remindDaysSwitch,
-      this.remindDaysTime = data.remindDaysTime
+    init() {
+      const data = fileTool.readSettingFile();
+      this.settings = data;
+      this.fileDirectory = data.settings.fileDirectory,
+      this.ruleList = data.settings.ruleList,
+      this.pengdingUser = data.settings.pengdingUser,
+      this.auth = data.settings.auth,
+      this.remindDaysSwitch = data.settings.remindDaysSwitch,
+      this.remindDaysTime = data.settings.remindDaysTime
     },
     show() {
       this.dialogVisible = true;
@@ -157,7 +161,7 @@ export default {
         return;
       }
       this.dialogVisible = false;
-      const settingObj = {
+      this.settings.settings = {
         fileDirectory: this.fileDirectory,
         ruleList: this.ruleList,
         pengdingUser: this.pengdingUser,
@@ -165,17 +169,7 @@ export default {
         remindDaysSwitch: this.remindDaysSwitch,
         remindDaysTime: this.remindDaysTime
       };
-      this.writeFile(settingObj);
-    },
-    writeFile(settingObj) {
-      console.log('创建文件', settingObj);
-      const fs = require('fs');
-      fs.writeFile('./settings.ini', JSON.stringify(settingObj), (err) => {
-        if (err) {
-          console.log(err);
-          return
-        }
-      });
+      fileTool.writeSettingFile(this.settings);
     },
     fileChange(e) {
       try {
