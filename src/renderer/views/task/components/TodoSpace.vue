@@ -4,14 +4,19 @@
       <i class="el-icon-finished"></i>
       <div class="title-text">待办列表</div>
     </div>
-    <div class="todo-space-content-box">
+    <transition-group
+      class="todo-space-content-box"
+      name="todo-trans"
+      tag="div"
+    >
       <PendingList
-        v-for="item of missionArray"
-        :key="item.missionName"
+        v-for="item of nowTaskMission.children"
+        :key="nowTask.taskName + item.pendingType"
         :todo="item"
+        :parent="nowTaskMission"
         :showTaskName="false"
       />
-    </div>
+    </transition-group>
   </div>
 </template>
 
@@ -26,15 +31,22 @@ export default {
       type: String,
       default: "",
     },
-    taskArray: {
-      type: Array,
-      default: function () {
-        return [];
-      },
-    },
   },
   computed: {
     ...mapGetters(["missionArray"]),
+    ...mapGetters(["taskArray"]),
+    nowTask() {
+      return this.taskArray.find((task) => {
+        return task.selected;
+      });
+    },
+    nowTaskMission() {
+      let mi =
+        this.missionArray.find((item) => {
+          return item.missionName == this.nowTask.taskName;
+        }) || {};
+      return mi;
+    },
   },
 };
 </script>
@@ -75,5 +87,8 @@ export default {
   &::-webkit-scrollbar {
     width: 6px;
   }
+}
+.todo-trans-move {
+  transition: transform 0.4s ease;
 }
 </style>

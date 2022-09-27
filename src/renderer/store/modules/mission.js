@@ -618,20 +618,22 @@ const mission = {
     ADD_MISSIONDATA: (state, missionObj) => {
       let newArray;
       [...newArray] = state.missionArray;
-      if(missionObj.isBindMission) {
-        let missionIdx = newArray.findIndex(item => {
-          if (item.missionName== missionObj.missionName){
-              return true
+      if (missionObj.isBindMission) {
+        let missionIdx = newArray.findIndex((item) => {
+          if (item.missionName == missionObj.missionName) {
+            return true;
           }
         });
         newArray[missionIdx].children.push(missionObj.children[0]);
-        newArray[missionIdx].children = newArray[missionIdx].children.sort((a, b) => {
+        newArray[missionIdx].children = newArray[missionIdx].children.sort(
+          (a, b) => {
             if (a.status != b.status) {
               return a.status ? 1 : -1;
             }
             return new Date(Date.parse(a.date)) - new Date(Date.parse(b.date));
-          });
-      }else {
+          }
+        );
+      } else {
         newArray.push(missionObj);
       }
       //   console.log(newArray);
@@ -702,6 +704,16 @@ const mission = {
       console.log("更新后结果：");
       console.log(state.missionArray);
     },
+    SORT_MISSIONCHILDREN: (state, mission) => {
+      mission.children = mission.children.sort((a, b) => {
+        if (a.status != b.status) {
+          return a.status ? 1 : -1;
+        }
+        return new Date(Date.parse(a.date)) - new Date(Date.parse(b.date));
+      });
+      console.log("更新后结果：");
+      console.log(state.missionArray);
+    },
     INIT_MISSIONARRAY: (state) => {
       state.missionArray.forEach((todo, index) => {
         if (todo.children.length > 1) {
@@ -726,8 +738,11 @@ const mission = {
   },
   actions: {
     setMissionData({ commit }, [mission, change]) {
+      console.log("mission");
+      console.log(mission);
       commit("SET_MISSIONDATA", [mission, change]);
       if (change.status != null || change.children) {
+        commit("SORT_MISSIONCHILDREN", mission);
         commit("SORT_MISSIONARRAY");
       }
     },

@@ -5,15 +5,14 @@
         <template v-slot:header>
           <button @click="addTodo">B</button>
         </template>
-        <div class="mission-box">
+        <transition-group class="mission-box" name="todo-trans" tag="div">
           <div
             v-for="item of missionArray"
             :key="item.missionName"
             @contextmenu.prevent="openMenu([$event, item])"
           >
-            <PendingList :todo="item" />
-          </div>
-        </div>
+            <PendingList :todo="item" /></div
+        ></transition-group>
         <!-- {{ noteArray }}
         <div v-for="(item, index) in noteArray" :key="index">s{{ item }}dd</div>
         <div v-for="(item, index) in missionArray" :key="index + 'd'">
@@ -407,5 +406,9 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.todo-trans-move {
+  transition: transform 0.4s ease;
 }
 </style>

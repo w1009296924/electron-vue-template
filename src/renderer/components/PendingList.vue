@@ -27,7 +27,9 @@
         </div>
       </div>
       <div v-if="firstDetail.pendingType" class="todo-type">
-        {{ firstDetail.pendingType }}
+        <div class="ellipsis">
+          {{ firstDetail.pendingType }}
+        </div>
       </div>
       <div class="todo-check">
         <el-checkbox
@@ -73,6 +75,9 @@ export default {
   name: "PendingList",
   props: {
     todo: { type: Object },
+    parent: {
+      type: Object,
+    },
     showCheck: { type: Boolean, default: true },
     showTaskName: { type: Boolean, default: true },
   },
@@ -101,9 +106,15 @@ export default {
   },
   methods: {
     freshFirstLine() {
-      this.firstDetail = this.todo.children[0];
-      this.hasDone = this.firstDetail.status;
-      if (this.hasDone) this.clickFlag = false; //全部事项完成收起
+      if (this.todo.children && this.todo.children.length > 0) {
+        this.firstDetail = this.todo.children[0];
+        this.hasDone = this.firstDetail.status;
+        if (this.hasDone) this.clickFlag = false; //全部事项完成收起
+      } else {
+        this.firstDetail = this.todo;
+        this.hasDone = this.firstDetail.status;
+        this.clickFlag = false;
+      }
     },
     expandList() {
       this.clickFlag = !this.clickFlag;
@@ -111,9 +122,12 @@ export default {
     changeChildren(value, index) {
       console.log(value);
       setTimeout(() => {
-        this.$store.dispatch("setMissionData", [this.todo, { children: [] }]);
+        this.$store.dispatch("setMissionData", [
+          this.parent || this.todo,
+          { children: [] },
+        ]);
         this.freshFirstLine();
-        this.$emit('refresh');
+        this.$emit("refresh");
       }, 500);
     },
     getDaysBetween(date1, date2) {

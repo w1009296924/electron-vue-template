@@ -174,7 +174,7 @@ export default {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
-      }, 200);
+      }, 500);
     },
   },
 };
@@ -240,7 +240,7 @@ export default {
             // cursor: url("D:/VSCodePro/electron-vue-template/src/renderer/assets/hour.png"),
             //   default;
             &.first {
-              max-width: 90%;
+              max-width: 100%;
             }
             &.left-time {
               margin-left: 20%;

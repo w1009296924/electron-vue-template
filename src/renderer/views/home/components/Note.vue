@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     deleteNote() {
-      this.$emit("deleteNote", 1);
+      this.$emit("deleteNote");
     },
   },
 };
