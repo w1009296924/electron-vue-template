@@ -33,13 +33,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["missionArray"]),
-    ...mapGetters(["taskArray"]),
-    nowTask() {
-      return this.taskArray.find((task) => {
-        return task.selected;
-      });
-    },
+    ...mapGetters(["missionArray", "nowTask"]),
     nowTaskMission() {
       let mi =
         this.missionArray.find((item) => {

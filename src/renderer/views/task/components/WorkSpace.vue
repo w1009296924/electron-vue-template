@@ -46,8 +46,10 @@
 </template>
 
 <script>
-import fileTool from "@/utils/fileTool.js";
+import { getIcon, getAllfiles } from "@/utils/fileTool.js";
+import { getTaskPath } from "@/utils/taskTool.js";
 import { ipcRenderer, shell } from "electron";
+import { mapGetters } from "vuex";
 const path = require("path");
 export default {
   name: "task-list-box",
@@ -62,10 +64,6 @@ export default {
         return [];
       },
     },
-    taskPath: {
-      type: String,
-      default: "D:/test/",
-    },
   },
   data() {
     return {
@@ -75,7 +73,19 @@ export default {
       menuLeft: 0,
       menuTop: 0,
       allowDrop: true,
+      taskPath: "",
     };
+  },
+  watch: {
+    nowTask() {
+      console.log("task changed");
+      console.log(getTaskPath(this.nowTask));
+      this.taskPath = getTaskPath(this.nowTask);
+      this.update();
+    },
+  },
+  computed: {
+    ...mapGetters(["nowTask"]),
   },
   mounted() {
     this.update();
@@ -119,7 +129,7 @@ export default {
       Object.keys(files).forEach((key) => {
         fs.cp(
           files[key].path,
-          this.taskPath + files[key].name,
+          path.join(this.taskPath, files[key].name),
           { recursive: true },
           (err) => {
             if (err) {
@@ -145,14 +155,14 @@ export default {
     },
     async update() {
       let arr = [];
-      fileTool.getAllfiles(this.taskPath, arr);
+      getAllfiles(this.taskPath, arr);
       console.log(arr);
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].type == "dir") {
           continue;
         }
         // console.log(item.path);
-        const icon = await fileTool.getIcon(arr[i].path);
+        const icon = await getIcon(arr[i].path);
         // console.log(icon);
         arr[i].icon = icon.toDataURL();
       }

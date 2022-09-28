@@ -141,14 +141,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["taskArray"]),
-    nowTask: {
-      get() {
-        return this.taskArray.find((item) => {
-          return item.selected;
-        });
-      },
-    },
+    ...mapGetters(["taskArray", "nowTask"]),
+    // nowTask: {
+    //   get() {
+    //     return this.taskArray.find((item) => {
+    //       return item.selected;
+    //     });
+    //   },
+    // },
   },
   methods: {
     enterText(e) {

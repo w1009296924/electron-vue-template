@@ -10,7 +10,7 @@
           v-for="(item, index) in taskArray"
           :key="index"
           class="task-item"
-          :class="{ selected: item.selected }"
+          :class="{ selected: item == nowTask }"
           @click="selectTask(index)"
         >
           <i class="el-icon-caret-right"></i>
@@ -21,6 +21,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "task-list-box",
   components: {},
@@ -38,6 +39,9 @@ export default {
   },
   data() {
     return { showList: true };
+  },
+  computed: {
+    ...mapGetters(["nowTask"]),
   },
   methods: {
     showTask() {},

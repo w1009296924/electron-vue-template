@@ -10,6 +10,7 @@ const getters = {
   roles: (state) => state.user.roles,
   permission_routes: (state) => state.permission.routers,
   taskArray: (state) => state.task.taskArray,
+  nowTask: (state) => state.task.nowTask,
   missionArray: (state) => state.mission.missionArray,
 };
 

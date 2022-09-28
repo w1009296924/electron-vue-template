@@ -1,5 +1,6 @@
 const task = {
   state: {
+    nowTask: null,
     taskArray: [
       {
         state: "dev",
@@ -239,20 +240,22 @@ const task = {
       state.taskArray = taskArray;
     },
     SET_NOWTASK: (state, nowTask) => {
-      let [...newArray] = state.taskArray;
-      newArray.forEach((element) => {
-        element.selected = element == nowTask;
-      });
-      state.taskArray = newArray;
+      // let [...newArray] = state.taskArray;
+      // newArray.forEach((element) => {
+      //   element.selected = element == nowTask;
+      // });
+      // state.taskArray = newArray;
+      state.nowTask = nowTask;
     },
   },
   actions: {
     SelectTask({ commit }, data) {
-      let [...newArray] = state.taskArray;
-      newArray.forEach((element) => {
-        element.selected = element == data;
-      });
-      commit("SET_TASKARRAY", newArray);
+      // let [...newArray] = state.taskArray;
+      // newArray.forEach((element) => {
+      //   element.selected = element == data;
+      // });
+      // commit("SET_TASKARRAY", newArray);
+      commit("SET_NOWTASK", data);
     },
     // GenerateRoutes({ commit }, data) {
     //     return new Promise(resolve => {

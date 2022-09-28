@@ -23,7 +23,11 @@
             <router-link to="/">
               <el-dropdown-item>返回首页</el-dropdown-item>
             </router-link>
-            <el-dropdown-item @click.native="showSettings" style="text-align:center">设&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置</el-dropdown-item>
+            <el-dropdown-item
+              @click.native="showSettings"
+              style="text-align: center"
+              >设&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;置</el-dropdown-item
+            >
             <el-dropdown-item @click.native="logout">
               <span>切换账号</span>
             </el-dropdown-item>
@@ -50,22 +54,22 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import SidebarItem from './SidebarItem';
-import Settings from './settings'
-import ScrollBar from '@/components/ScrollBar';
-import Logo from './logo';
+import { mapGetters } from "vuex";
+import SidebarItem from "./SidebarItem";
+import Settings from "./settings";
+import ScrollBar from "@/components/ScrollBar";
+import Logo from "./logo";
 
 export default {
-  components: { SidebarItem, ScrollBar, Logo, Settings},
+  components: { SidebarItem, ScrollBar, Logo, Settings },
   data: () => ({
-    userImage: require('@/assets/userW.png'),
-    name: '又又不leng',
+    userImage: require("@/assets/userW.png"),
+    name: "又又不leng",
     routeMap: [],
-    settings: false
+    settings: false,
   }),
   computed: {
-    ...mapGetters(['sidebar', 'permission_routes']),
+    ...mapGetters(["sidebar", "permission_routes"]),
     isCollapse() {
       console.log(this.$store.getters);
       return !this.sidebar.opened;
@@ -74,7 +78,7 @@ export default {
       console.log(this.$route.path);
       let index;
       for (index = 0; index < this.routeMap.length; index++) {
-        if (this.$route.path.indexOf(this.routeMap[index].path + '/') === 0) {
+        if (this.$route.path.indexOf(this.routeMap[index].path + "/") === 0) {
           break;
         }
         if (index == this.routeMap.length - 1) {
@@ -83,18 +87,27 @@ export default {
         }
       }
       console.log(index);
-      return index == -1 ? 'display:none;' : `top:${144 + 94 * index}px;`;
+      return index == -1 ? "display:none;" : `top:${144 + 94 * index}px;`;
     },
   },
   mounted() {
-    this.routeMap = require('@/router/constantRouterMap').default;
+    this.routeMap = require("@/router/constantRouterMap").default;
   },
   methods: {
-    showSettings(){
+    showSettings() {
       console.log(1111111);
       this.$refs.settings.show();
-    }
-  }
+    },
+    logout() {
+      this.$store.dispatch("LogOut").then(() => {
+        this.$message({
+          message: "退出成功",
+          type: "success",
+        });
+        this.$router.push("/login");
+      });
+    },
+  },
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
