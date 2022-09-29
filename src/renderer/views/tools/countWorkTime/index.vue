@@ -125,6 +125,14 @@ export default {
   methods: {
     //todo 查询统计数据
     async query() {
+      if(!this.dateRange) {
+        this.$message({
+          type: 'warning',
+          message: '请选择时间范围!',
+          offset: 280,
+        });
+        return;
+      }
       //将时间范围记录本地
       this.settings.tools.dateRange = this.dateRange;
       fileTool.writeSettingFile(this.settings);
@@ -146,12 +154,14 @@ export default {
         //todo 删除数据
         this.$message({
           type: 'success',
-          message: '删除成功!'
+          message: '删除成功!',
+          offset: 280,
         });
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: '已取消删除',
+          offset: 280,
         });
       });
     },

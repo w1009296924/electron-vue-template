@@ -52,7 +52,6 @@ export default [
   {
     path: '/pending',
     component: Layout,
-    meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
@@ -65,7 +64,6 @@ export default [
   {
     path: '/hour',
     component: Layout,
-    meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
@@ -78,7 +76,6 @@ export default [
   {
     path: '/tools',
     component: Layout,
-    meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
@@ -92,7 +89,6 @@ export default [
     path: '/tools/healthRemind',
     hidden: true,
     component: Layout,
-    meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
@@ -105,7 +101,6 @@ export default [
     path: '/tools/copyImg',
     hidden: true,
     component: Layout,
-    meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',
@@ -118,7 +113,6 @@ export default [
     path: '/tools/countWorkTime',
     hidden: true,
     component: Layout,
-    meta: { roles: ['admin'] },
     children: [
       {
         path: 'index',

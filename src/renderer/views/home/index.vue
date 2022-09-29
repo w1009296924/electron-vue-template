@@ -3,7 +3,7 @@
     <div class="main-box">
       <HomeCard width="728" height="430" title="近期待办">
         <template v-slot:header>
-          <button @click="addTodo">B</button>
+          <button @click="() => addTodo()">B</button>
         </template>
         <transition-group class="mission-box" name="todo-trans" tag="div">
           <div

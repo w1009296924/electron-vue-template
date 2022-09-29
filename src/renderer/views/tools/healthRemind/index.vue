@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     init() {
-      //从本地配置中读取上次选择的时间范围
+      //从本地配置中读取上次配置
       this.settings = fileTool.readSettingFile();
       this.healthRemindSwitch = this.settings.tools.healthRemindSwitch;
       this.voiceSwitch = this.settings.tools.voiceSwitch;
@@ -64,11 +64,11 @@ export default {
       this.inputWord = this.settings.tools.inputWord;
     },
     voiceSwitchChange(){
-      this.settings.tools.healthRemindSwitch = this.healthRemindSwitch;
+      this.settings.tools.voiceSwitch = this.voiceSwitch;
       fileTool.writeSettingFile(this.settings);
     },
     healthRemindSwitchChange(){
-      this.settings.tools.voiceSwitch = this.voiceSwitch;
+      this.settings.tools.healthRemindSwitch = this.healthRemindSwitch;
       fileTool.writeSettingFile(this.settings);
     },
     timeChange(args) {

@@ -58,7 +58,7 @@
           </div>
         </el-tab-pane>
       </el-tabs>
-      <IncreaseDialog ref="increaseDialog" :defaultVal="defaultVal" @refresh="refresh"/>
+      <IncreaseDialog ref="increaseDialog" :activeFirstPage="activeFirstPage" @refresh="refresh"/>
     </div>
   </div>
 </template>
@@ -77,17 +77,8 @@ export default {
     return {
       activeName: "first",
       searchInput: "",
-      queryInvestor: "12066392", //查询key
-      investorList: [
-        {
-          investorNo: "12066392",
-          investorName: "文天阳",
-        },
-        {
-          investorNo: "12066390",
-          investorName: "李亚威",
-        },
-      ],
+      queryInvestor: "", 
+      investorList: [],
       refreshFlag:true,
       tableData2: [
         {
@@ -210,9 +201,18 @@ export default {
   },
   computed: {
     ...mapGetters(["missionArray"]),
-    defaultVal() {
-      return this.activeName == 'first' ? '000000' : this.queryInvestor;
+    activeFirstPage() {
+      return this.activeName == 'first';
     }
+  },
+  created(){
+    //todo 从数据库获取授予了权限的人名单 getGrantedList
+    //入参 本人用户名,授予我权限的人名单 grantedList[granted:授予我权限人,permission:授予我权限(只读/新增)]
+    this.investorList = [
+      {granted:'liyw11',permission:'只读',investorNo:'12066390',investorName:'李亚威'},
+      {granted:'wenty',permission:'新增',investorNo:'12066391',investorName:'文天阳'}
+    ];
+    this.queryInvestor = this.investorList?.[0].investorNo;
   },
   methods: {
     showDialog() {

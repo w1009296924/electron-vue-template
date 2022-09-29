@@ -5,6 +5,9 @@
         class="todo-date"
         :class="{ 'small-date': firstDetail.date.length > 10 }"
       >
+        <el-popover v-if="firstDetail.remindSwitch" placement="top-start" width="240" trigger="hover" :content="`提醒时间:${firstDetail.remindTime}`">
+          <i slot="reference" class="el-icon-alarm-clock"/>
+        </el-popover>
         {{ firstDetail.date.substr(5) }}
       </div>
       <div v-if="showTaskName" class="todo-name">
@@ -49,8 +52,11 @@
       >
         <div
           class="todo-date"
-          :class="{ 'small-date': firstDetail.date.length > 10 }"
+          :class="{ 'small-date': item.date.length > 10 }"
         >
+          <el-popover v-if="item.remindSwitch" placement="top-start" width="240" trigger="hover" :content="`提醒时间:${item.remindTime}`">
+            <i slot="reference" class="el-icon-alarm-clock"/>
+          </el-popover>
           {{ item.date.substr(5) }}
         </div>
         <div class="todo-name"></div>
@@ -171,6 +177,10 @@ export default {
       &.small-date {
         font-size: 13px;
         line-height: 16px;
+      }
+      .el-icon-alarm-clock{
+        cursor: pointer;
+        font-size: 16px;
       }
     }
     .todo-name {

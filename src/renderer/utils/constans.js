@@ -3,7 +3,7 @@ import store from "@/store";
 
 export const CONFIG_DIR = `${os.userInfo().homedir}\\electron-vue`;
 export const DOC_DIR = `D:\\${store.state.user.name}归档目录\\`;
-export const defaultVal = {
+export const DEFAULT_VAL = {
   settings: {
     fileDirectory: DOC_DIR,
     ruleList: [
@@ -16,8 +16,7 @@ export const defaultVal = {
         rule: "提内测前0天",
       },
     ],
-    pengdingUser: "",
-    auth: "readonly",
+    grantList: [],
     remindDaysSwitch: true,
     remindDaysTime: "",
   },

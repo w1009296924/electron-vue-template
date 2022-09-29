@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu, app, ipcMain } from "electron";
+import { BrowserWindow, Menu, app, ipcMain, globalShortcut } from "electron";
 import { platform } from "os";
 import menuconfig from "../config/menu";
 import config from "@config";
@@ -85,7 +85,17 @@ function createMainWindow() {
     app.quit();
   });
   require("@electron/remote/main").initialize();
-  require("@electron/remote/main").enable(mainWindow.webContents);
+  require("@electron/remote/main").enable(mainWindow.webContents); 
+  app.whenReady().then(() => {// 注册一个'CommandOrControl+P' 快捷键监听器
+    globalShortcut.register('CommandOrControl+P', () => {
+      // 如果注册成功了，当用户按下该快捷键时，会执行这里的内容
+      mainWindow.webContents.send('turn-copyImgSwitch');
+    })
+  })
+  app.on('will-quit', () => {
+    // 注销所有快捷键
+    globalShortcut.unregisterAll()
+  })
 }
 
 function loadingWindow() {

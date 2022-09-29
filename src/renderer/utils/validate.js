@@ -51,3 +51,11 @@ export const formatDateTime = (date) => {
   }
   return timeStr;
 }
+/* 计算提前x分钟后的时间*/
+export const subTrackTime = (date, min) => {
+  var dateTimeStamp = new Date(date).getTime() - min*60*1000;
+  let a = formatDateTime(dateTimeStamp);
+  console.log(a);
+  return a;
+  // return formatDateTime(dateTimeStamp);
+}

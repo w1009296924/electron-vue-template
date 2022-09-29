@@ -48,7 +48,7 @@ export default {
 }
 
 .blueBlock {
-  line-height: 33px;
+  line-height: 32px;
   height: 20px;
   width: 4px;
   background: #5380DC;
@@ -56,7 +56,7 @@ export default {
 }
 
 .tool-title {
-  line-height: 33px;
+  line-height: 32px;
   margin-left: 8px;
   font-family: PingFangSC-Medium;
   font-size: 24px;

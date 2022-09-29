@@ -65,17 +65,20 @@
 </template>
 
 <script>
-import { formatDateTime } from "@/utils/validate.js";
+import { formatDateTime, subTrackTime } from "@/utils/validate.js";
 import { mapGetters } from "vuex";
 export default {
   name: "IncreaseDialog",
   props:{
-    defaultVal: { type: String, default: '000000' },
+    activeFirstPage: { type: Boolean},
   },
   watch: {
-    defaultVal: {
+    activeFirstPage: {
       handler:function () {
-          this.investor = this.defaultVal
+          this.investor = this.activeFirstPage ? this.investorList[0].investorNo:
+            this.investorList.length > 1 ?
+              this.investorList[1].investorNo :
+              ''
       }
     }
   },
@@ -106,16 +109,15 @@ export default {
       investor: '000000', //新增key
       investorList: [
         {
+          permission:'新增',
           investorNo: "000000",
           investorName: "本人",
         },
         {
-          investorNo: "12066390",
-          investorName: "李亚威",
-        },
-        {
-          investorNo: "12066392",
-          investorName: "文天阳",
+          granted:'wenty',
+          permission:'新增',
+          investorNo:'12066391',
+          investorName:'文天阳'
         },
       ],
       remindSwitch: false,
@@ -141,11 +143,13 @@ export default {
         this.$message({
           message: "请选择待办时间",
           type: "warning",
+          offset: 280,
         });
       } else if (!this.pengingSth) {
         this.$message({
           message: "请输入待办事项",
           type: "warning",
+          offset: 280,
         });
       } else {
         let pushObj = this.selectMisson ? 
@@ -158,8 +162,10 @@ export default {
               pendingType: this.pengingSth,
               date: formatDateTime(this.pendingTime),
               status: false,
+              remindSwitch:this.remindSwitch,
+              remindTime:subTrackTime(this.pendingTime,this.inputMin)
             },
-          ],
+          ]
         }:
         {
           isBindMission: false,
@@ -170,12 +176,12 @@ export default {
               pendingType: "",
               date: formatDateTime(this.pendingTime),
               status: false,
+              remindSwitch:this.remindSwitch,
+              remindTime:subTrackTime(this.pendingTime,this.inputMin),
             },
-          ],
+          ]
         };
         this.$store.dispatch("addMissionData", pushObj);
-        this.$forceUpdate();
-        this.$emit('refresh');
         this.dialogVisible = false;
       }
     },

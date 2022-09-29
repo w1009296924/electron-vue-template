@@ -6,7 +6,7 @@
       <div class="tabLine">
         图片粘贴
         <el-switch v-model="copyImgSwitch" style="margin-left:16px" />
-        <el-popover placement="right-start" width="560" trigger="hover" content="开启本功能后，从新call浦或直接复制图片至word文档中可直接设定为目标大小哦～">
+        <el-popover placement="right-start" width="560" trigger="hover" content="开启本功能后,从新call浦或直接复制图片至word文档中可直接设定为目标大小哦~">
           <i slot="reference" class="el-icon-warning-outline" style="margin-left:8px" />
         </el-popover>
       </div>
@@ -19,12 +19,12 @@
       </div>
       <div class="tabLine">
         目标高度
-        <el-input-number v-model="aimHeight" controls-position="right" style="width:90px;margin-left:16px" :max="30" :min="1" @change="handleChange" />
+        <el-input-number v-model="aimHeight" :disabled="copyImgSwitch" controls-position="right" style="width:90px;margin-left:16px" :max="30" :min="0" @change="handleChange('height')" />
         <span class="append-text">厘米</span>
       </div>
       <div class="tabLine">
         目标宽度
-        <el-input-number v-model="aimWidth" controls-position="right" style="width:90px;margin-left:16px" :max="30" :min="1" @change="handleChange" />
+        <el-input-number v-model="aimWidth" :disabled="copyImgSwitch" controls-position="right" style="width:90px;margin-left:16px" :max="30" :min="0" @change="handleChange('width')" />
         <span class="append-text">厘米</span>
       </div>
     </div>
@@ -36,6 +36,7 @@
 import {
   mapGetters
 } from "vuex";
+import { ipcRenderer } from "electron";
 import ToolTitle from "../components/toolTitle"
 export default {
   name: "copyImg",
@@ -47,14 +48,23 @@ export default {
       copyImgSwitch: false,
       equalRatioSwitch: true,
       aimHeight: 10,
-      aimWidth: 10,
+      aimWidth: 0,
     };
   },
   computed: {
     ...mapGetters(["name", "roles"]),
   },
+  mounted() {
+    ipcRenderer.on("turn-copyImgSwitch", (event, state) => {
+      this.copyImgSwitch = !this.copyImgSwitch;
+    });
+  },
   methods: {
-    handleChange(){}
+    handleChange(type){
+      if(this.equalRatioSwitch) {
+        type == 'height' ? this.aimWidth = 0 : this.aimHeight = 0;
+      }
+    }
   }
 };
 </script>

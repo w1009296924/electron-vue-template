@@ -1,4 +1,4 @@
-import { ipcMain, dialog, BrowserWindow } from "electron";
+import { ipcMain, dialog, BrowserWindow,globalShortcut  } from "electron";
 import Server from "../server/index";
 import { winURL } from "../config/StaticPath";
 import downloadFile from "./downloadFile";

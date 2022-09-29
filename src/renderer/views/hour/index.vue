@@ -96,10 +96,12 @@
 import {
   mapGetters
 } from "vuex";
+import fileTool from "@/utils/fileTool.js";
 export default {
   name: "hour",
   data() {
     return {
+      settings:{},
       hourType: "1",
       unitList: [{
         value: '实施单元213-123UNKJ-2022-1234-代金券哦我我打算的弄啊-啊实打实是哒是法规处是给的原始股大Vu是去外地是武器二不请我大所大所大所奥术大师大所多撒大声地',
@@ -172,7 +174,22 @@ export default {
   computed: {
     ...mapGetters(["name", "roles"]),
   },
+  mounted(){
+    this.init();
+  },
   methods: {
+    init(){
+      //从本地配置中读取上次配置
+      this.settings = fileTool.readSettingFile();
+      this.hourType = this.settings.hour.hourType;
+      this.unit = this.settings.hour.unit;
+      this.smartChoose = this.settings.hour.smartChoose;
+      this.type = this.settings.hour.type;
+      this.category = this.settings.hour.category;
+      this.jobContent = this.settings.hour.jobContent;
+      this.autoCommit = this.settings.hour.autoCommit;
+      this.autoCommitTime = this.settings.hour.autoCommitTime;
+    },
     refreshUnit() {
       if (!this.rotate) {
         this.rotate = true;
@@ -188,6 +205,18 @@ export default {
       }
     },
     commitOrBack() {
+      //保存本次填报配置至本地
+      this.settings.hour = {
+        hourType:this.hourType,
+        unit:this.unit,
+        smartChoose:this.smartChoose,
+        type:this.type,
+        category:this.category,
+        jobContent:this.jobContent,
+        autoCommit:this.autoCommit,
+        autoCommitTime:this.autoCommitTime
+      }
+      fileTool.writeSettingFile(this.settings);//本地保存配置文件
       this.canCommit = !this.canCommit;
     },
     refill() {

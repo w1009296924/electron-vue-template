@@ -88,13 +88,13 @@
               <el-button
                 type="text"
                 size="small"
-                @click="editclick(scope.row, scope.$index)"
+                @click="pendingEditclick(scope.row, scope.$index)"
                 >{{ scope.row.isOK ? "保存" : "编辑" }}</el-button
               >
               <el-button
                 type="text"
                 size="small"
-                @click.native.prevent="deleteRow(scope.$index)"
+                @click.native.prevent="pendingDeleteRow(scope.$index)"
                 >删除</el-button
               >
             </template>
@@ -107,28 +107,71 @@
           >新增</el-button
         >
       </div>
-      <div class="line" style="margin-bottom: 20px">
-        待办授权：
-        <div class="subText">
-          对用户
-          <el-input
-            placeholder="请输入"
-            style="height: 32px; width: 100px; margin: 0 8px"
-            v-model="pengdingUser"
-          />授予
-          <el-select
-            v-model="auth"
-            style="width: 80px; margin: 0 8px"
-            placeholder="请选择"
+      <div>
+        <div class="line" style="margin-bottom: 20px">待办授权：</div>
+        <el-table
+          :data="grantList"
+          border
+          style="width: 421px; margin-left: 88px"
+        >
+          <el-table-column
+            fixed
+            prop="grant"
+            label="授权对象"
+            width="150"
           >
-            <el-option
-              v-for="item in authList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            /> </el-select
-          >权限。
-        </div>
+            <template slot-scope="scope">
+              <el-input
+                size="mini"
+                placeholder="请输入邮箱前缀"
+                v-if="scope.row.isOK"
+                v-model="scope.row.grant"
+                style="width: 100%; height: 100%"
+              ></el-input>
+              <span size="mini" v-else>{{ scope.row.grant }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="permission" label="授予权限" width="150">
+            <template slot-scope="scope">
+              <div v-if="scope.row.isOK" class="ruleInfo">
+                <el-select
+                  v-model="scope.row.permission"
+                  style="width: 120px"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in permissionList"
+                    :key="item.value"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+              <span size="mini" v-else>{{ scope.row.permission }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button
+                type="text"
+                size="small"
+                @click="grantEditclick(scope.row, scope.$index)"
+                >{{ scope.row.isOK ? "保存" : "编辑" }}</el-button
+              >
+              <el-button
+                type="text"
+                size="small"
+                @click.native.prevent="grantDeleteRow(scope.$index)"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-button
+          style="padding: 9px 16px; color: #005bd2; margin: 16px 0 32px 334px"
+          size="small"
+          @click="increaseGrantList"
+          >新增</el-button
+        >
       </div>
       <div class="line" style="margin-bottom: 20px">
         待办提醒：
@@ -163,9 +206,8 @@
 <script>
 import { ipcRenderer } from "electron";
 import fs from "fs";
-import { CONFIG_DIR, DOC_DIR, defaultVal } from "@/utils/constans.js";
+import { CONFIG_DIR, DOC_DIR, DEFAULT_VAL } from "@/utils/constans.js";
 import fileTool from "@/utils/fileTool.js";
-import { init } from "events";
 export default {
   name: "Settings",
   data() {
@@ -173,16 +215,14 @@ export default {
       settings: {},
       dialogVisible: false,
       fileDirectory: DOC_DIR,
-      pengdingUser: "",
-      auth: "readonly",
-      authList: [
+      grantList: [],
+      permission: "readonly",
+      permissionList: [
         {
-          label: "只读",
-          value: "readonly",
+          value: "只读"
         },
         {
-          label: "新增",
-          value: "insert",
+          value: "新增"
         },
       ],
       remindDaysSwitch: true,
@@ -214,6 +254,16 @@ export default {
           rule: "提内测前0天",
         },
       ],
+      ruleList: [
+        {
+          pendingName: "提交代码审核",
+          rule: "提内测前3天",
+        },
+        {
+          pendingName: "上传说明书、需规",
+          rule: "提内测前0天",
+        },
+      ],
     };
   },
   created() {
@@ -233,7 +283,7 @@ export default {
     //判断有无配置文件,没有则创建配置文件
     fs.stat(`${CONFIG_DIR}\\settings.ini`, (error) => {
       if (error) {
-        fileTool.writeSettingFile(defaultVal);
+        fileTool.writeSettingFile(DEFAULT_VAL);
       }
     });
     setTimeout(() => {
@@ -247,8 +297,7 @@ export default {
       this.settings = data;
       (this.fileDirectory = data.settings.fileDirectory),
         (this.ruleList = data.settings.ruleList),
-        (this.pengdingUser = data.settings.pengdingUser),
-        (this.auth = data.settings.auth),
+        (this.grantList = data.settings.grantList),
         (this.remindDaysSwitch = data.settings.remindDaysSwitch),
         (this.remindDaysTime = data.settings.remindDaysTime);
     },
@@ -271,12 +320,14 @@ export default {
       this.settings.settings = {
         fileDirectory: this.fileDirectory,
         ruleList: this.ruleList,
-        pengdingUser: this.pengdingUser,
-        auth: this.auth,
+        grantList: this.grantList,
         remindDaysSwitch: this.remindDaysSwitch,
         remindDaysTime: this.remindDaysTime,
       };
-      fileTool.writeSettingFile(this.settings);
+      fileTool.writeSettingFile(this.settings);//本地保存配置文件
+      //todo 授权列表grantList 存入数据库中
+      //入参 本人用户名 this.$store.state.user.name,授予权限人列表grantList[grant:授予对象,permission:授予权限(只读/新增)]
+      //编号 12066390 姓名 李亚威
     },
     fileChange(e) {
       try {
@@ -310,10 +361,10 @@ export default {
         this.$set(this.ruleList[this.ruleList.length - 1], "isOK", true);
       }
     },
-    deleteRow(index) {
+    pendingDeleteRow(index) {
       this.ruleList.splice(index, 1);
     },
-    editclick(row, index) {
+    pendingEditclick(row, index) {
       if (row.isOK) {
         if (!this.ruleList[index].pendingName) {
           this.$message({
@@ -333,6 +384,38 @@ export default {
           this.ruleList[index].rule = `${this.status}${
             this.isBefore ? "前" : "后"
           }${this.days}天`;
+          this.$set(row, "isOK", false);
+        }
+      } else {
+        this.$set(row, "isOK", true);
+      }
+    },
+    increaseGrantList() {
+      if (this.grantList.length>0 &&
+          this.grantList[this.grantList.length - 1].isOK) {
+        this.$message({
+          message: "请先输入授权对象",
+          type: "warning",
+          offset: 280,
+        });
+      } else {
+        this.grantList.push({permission:'只读'});
+        this.$set(this.grantList[this.grantList.length - 1], "isOK", true);
+      }
+    },
+    grantDeleteRow(index) {
+      this.grantList.splice(index, 1);
+    },
+    grantEditclick(row, index) {
+      if (row.isOK) {
+        if (!this.grantList[index].grant) {
+          this.$message({
+            message: "请先输入授权对象",
+            type: "warning",
+            offset: 280,
+          });
+          return;
+        } else {
           this.$set(row, "isOK", false);
         }
       } else {
