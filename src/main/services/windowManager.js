@@ -4,7 +4,6 @@ import menuconfig from "../config/menu";
 import config from "@config";
 import setIpc from "./ipcMain";
 import { winURL, loadingURL } from "../config/StaticPath";
-
 var loadWindow = null;
 var mainWindow = null;
 setIpc.Mainfunc(config.IsUseSysTitle);
@@ -26,16 +25,21 @@ setIpc.Mainfunc(config.IsUseSysTitle);
 function createMainWindow() {
   /**
    * Initial window options
-   */
+   */ 25;
+  let ccc = require("electron").screen.getPrimaryDisplay().workAreaSize.width;
+  //var scaleFactor = require("electron").screen.getPrimaryDisplay().scaleFactor;
+  let rate = ccc / 1920;
+  // rate = 1;
+  // require("electron").webFrame.setZoomFactor(rate);
   mainWindow = new BrowserWindow({
-    height: 975,
+    height: 975 * rate,
     useContentSize: true,
-    width: 1440,
-    minWidth: 1440,
+    width: 1440 * rate,
+    minWidth: 1440 * rate,
     show: false,
     frame: config.IsUseSysTitle,
-    // frame: false,
-    // titleBarStyle: 'hidden',
+    frame: false,
+    // titleBarStyle: "hidden",
     titleBarStyle: platform().includes("win32") ? "default" : "hidden",
     webPreferences: {
       contextIsolation: false,

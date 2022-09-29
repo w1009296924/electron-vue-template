@@ -67,13 +67,15 @@ export default {
     name: "又又不leng",
     routeMap: [],
     settings: false,
+    isCollapse: true,
   }),
   computed: {
-    ...mapGetters(["sidebar", "permission_routes"]),
-    isCollapse() {
-      console.log(this.$store.getters);
-      return !this.sidebar.opened;
-    },
+    // ...mapGetters(["sidebar", "permission_routes"]),
+    ...mapGetters(["permission_routes"]),
+    // isCollapse() {
+    //   console.log(this.$store.getters);
+    //   return !this.sidebar.opened;
+    // },
     barDy() {
       console.log(this.$route.path);
       let index;

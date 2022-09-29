@@ -98,7 +98,7 @@ export default {
     sysBtnClick(type) {
       var ipc = require("electron").ipcRenderer;
       console.log(type);
-      ipc.send(type);
+      ipc.invoke(type);
     },
   },
   computed: {
