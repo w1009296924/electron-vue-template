@@ -205,8 +205,6 @@
 
 <script>
 import { ipcRenderer } from "electron";
-import fs from "fs";
-import { CONFIG_DIR, DOC_DIR, DEFAULT_VAL } from "@/utils/constans.js";
 import fileTool from "@/utils/fileTool.js";
 export default {
   name: "Settings",
@@ -214,7 +212,7 @@ export default {
     return {
       settings: {},
       dialogVisible: false,
-      fileDirectory: DOC_DIR,
+      fileDirectory: '',
       grantList: [],
       permission: "readonly",
       permissionList: [
@@ -247,49 +245,23 @@ export default {
       ruleList: [
         {
           pendingName: "提交代码审核",
-          rule: "提内测前3天",
+          rule: "提交内测前3天",
+          compareTo:'提交内测',
+          timeInterval:-3,
+          missionType:'全部'
         },
         {
           pendingName: "上传说明书、需规",
-          rule: "提内测前0天",
-        },
-      ],
-      ruleList: [
-        {
-          pendingName: "提交代码审核",
-          rule: "提内测前3天",
-        },
-        {
-          pendingName: "上传说明书、需规",
-          rule: "提内测前0天",
+          rule: "提交内测前0天",
+          compareTo:'提交内测',
+          timeInterval:0,
+          missionType:'全部'
         },
       ],
     };
   },
   created() {
-    //判断有无文件夹,没有则创建文件夹
-    fs.stat(CONFIG_DIR, (error) => {
-      if (error) {
-        fs.mkdir(CONFIG_DIR, function () {});
-      }
-    });
-    //判断有无归档目录
-    fs.stat(DOC_DIR, (error) => {
-      if (error) {
-        //创建默认归档目录
-        fs.mkdir(DOC_DIR, function () {});
-      }
-    });
-    //判断有无配置文件,没有则创建配置文件
-    fs.stat(`${CONFIG_DIR}\\settings.ini`, (error) => {
-      if (error) {
-        fileTool.writeSettingFile(DEFAULT_VAL);
-      }
-    });
-    setTimeout(() => {
-      //生成配置文件为异步方法,会先执行init导致报错
-      this.init();
-    }, 1000);
+    this.init();
   },
   methods: {
     init() {
@@ -381,6 +353,8 @@ export default {
           });
           return;
         } else {
+          this.ruleList[index].compareTo = this.status;
+          this.ruleList[index].timeInterval = (this.isBefore?-1 : 1) * this.days;
           this.ruleList[index].rule = `${this.status}${
             this.isBefore ? "前" : "后"
           }${this.days}天`;

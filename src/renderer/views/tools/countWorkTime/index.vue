@@ -32,8 +32,8 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="handleClick(scope.row)">{{ scope.row.isOK?'确认':'修改' }}</el-button>
-              <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
+              <!-- <el-button type="text" size="small" @click="handleClick(scope.row)">{{ scope.row.isOK?'确认':'修改' }}</el-button> -->
+              <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">本次排除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -90,26 +90,22 @@ export default {
         date: '2016-05-02',
         missionNo: 'UT-WLJR-2022-0575',
         missionName: 'UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits',
-        workLoad: '0.5',
-        isDelete: false
+        workLoad: '0.5'
       }, {
         date: '2016-05-02',
         missionNo: 'UT-WLJR-2022-0575',
         missionName: 'UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits',
-        workLoad: '0.3',
-        isDelete: false
+        workLoad: '0.3'
       }, {
         date: '2016-05-02',
         missionNo: 'UT-WLJR-2022-0575',
         missionName: 'UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits',
-        workLoad: '0.8',
-        isDelete: false
+        workLoad: '0.8'
       }, {
         date: '2016-05-02',
         missionNo: 'UT-WLJR-2022-0575',
         missionName: 'UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits',
-        workLoad: '0.1',
-        isDelete: false
+        workLoad: '0.1'
       }]
     };
   },
@@ -144,26 +140,28 @@ export default {
       //TODO 修改数据
     },
     deleteRow(index, rows) {
-      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        rows.splice(index, 1);
-        rows[index].isDelete = true;
-        //todo 删除数据
-        this.$message({
-          type: 'success',
-          message: '删除成功!',
-          offset: 280,
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除',
-          offset: 280,
-        });
-      });
+      // this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   type: 'warning'
+      // }).then(() => {
+      //   rows.splice(index, 1);
+      //   rows[index].isDelete = true;
+      //   //todo 删除数据
+      //   this.$message({
+      //     type: 'success',
+      //     message: '删除成功!',
+      //     offset: 280,
+      //   });
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '已取消删除',
+      //     offset: 280,
+      //   });
+      // });
+      this.workLoads = (this.workLoads*1000 - rows[index].workLoad*1000)/1000;
+      rows.splice(index, 1);
     },
     enterClick({
       row,

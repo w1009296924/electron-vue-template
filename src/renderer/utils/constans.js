@@ -38,3 +38,59 @@ export const DEFAULT_VAL = {
     dateRange: "", //工作量统计时间范围
   },
 };
+export const BASE_PENDINGRULE = [
+  {
+    pendingName:'提交内测评估',
+    compareTo:'任务启动',
+    timeInterval:3,
+    missionType:'全部'
+  },     
+  {
+    pendingName:'提交内测',
+    compareTo:'提交内测',
+    timeInterval:0,
+    missionType:'全部'
+  },        
+  {
+    pendingName:'提交业测评估',
+    compareTo:'提交业测',
+    timeInterval:-3,
+    missionType:'KEJI'
+  },        
+  {
+    pendingName:'提交业测',
+    compareTo:'提交业测',
+    timeInterval:0,
+    missionType:'全部'
+  },        
+  {
+    pendingName:'投产信息登记',
+    compareTo:'投产',
+    timeInterval:-9,
+    missionType:'全部'
+  },        
+  {
+    pendingName:'提交自测报告',
+    compareTo:'投产',
+    timeInterval:-9,
+    missionType:'KEJI'
+  },        
+  {
+    pendingName:'上线确认书',
+    compareTo:'投产',
+    timeInterval:-7,
+    missionType:'UT-W'
+  },        
+  {
+    pendingName:'登记rel代码审核',
+    compareTo:'投产',
+    timeInterval:-7,
+    missionType:'全部'
+  },        
+  {
+    pendingName:'投产',
+    compareTo:'投产',
+    timeInterval:0,
+    missionType:'全部'
+  }     
+];
