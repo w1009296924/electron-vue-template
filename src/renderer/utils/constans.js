@@ -9,12 +9,18 @@ export const DEFAULT_VAL = {
     ruleList: [
       {
         pendingName: "提交代码审核",
-        rule: "提内测前3天",
+        rule: "提交内测前3天",
+        compareTo:'提交内测',
+        timeInterval:-3,
+        missionType:'全部'
       },
       {
         pendingName: "上传说明书、需规",
-        rule: "提内测前0天",
-      },
+        rule: "提交内测前0天",
+        compareTo:'提交内测',
+        timeInterval:0,
+        missionType:'全部'
+      }
     ],
     grantList: [],
     remindDaysSwitch: true,

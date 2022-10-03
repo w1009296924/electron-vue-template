@@ -34,7 +34,7 @@ export default {
   mixins: [ResizeMixin],
   data: () => ({
     IsUseSysTitle: require("./../../../config").IsUseSysTitle,
-    settings:null,
+    settings:{},
   }),
   computed: {
     ...mapGetters(["taskArray", "nowTask"]),
@@ -52,61 +52,8 @@ export default {
     }
   },
   created(){
+    this.$store.dispatch("initMissionData");
     this.init();
-    //获取任务 生成任务文件夹 加载进vuex
-    this.taskArray.forEach((item,index) => {
-      //判断有无该任务文件夹,没有则创建文件夹
-      fs.stat(this.getDemandPath(item), (error) => {
-        if (error) {
-          fs.mkdir(CONFIG_DIR, function () {});
-        }
-      });
-    });
-    //先生成年月的文件夹
-    this.createDir(this.getSubDemandPath(this.taskArray[0]));
-    //再生成任务文件夹
-    this.createDir(this.getDemandPath(this.taskArray[0]));
-    //生成本地待办文件 基础待办规则BASE_PENDINGRULE 自定义待办规则settings.ruleList
-    let pendingChildren = [];
-    BASE_PENDINGRULE.forEach(item => {
-      if(item.missionType=='全部' || item.missionType==this.taskArray[0].demandNo.substring(0,4)){
-        pendingChildren.push({
-          id:'',
-          pendingType:item.pendingName,
-          date: this.getPendingDate(this.taskArray[0],item),
-          status: false,
-        })
-      }
-    });
-    //todo settings加载不出来,改成watch后触发
-    // console.log(this.settings);
-    // this.settings.settings.ruleList.forEach(item => {
-    //   if(item.missionType=='全部' || item.missionType==this.taskArray[0].demandNo.substring(0,4)){
-    //     pendingChildren.push({
-    //       id:'',
-    //       pendingType:item.pendingName,
-    //       date: this.getPendingDate(this.taskArray[0],item),
-    //       status: false,
-    //     })
-    //   }
-    // });
-    
-    const todoObj = {
-      missionNo: this.taskArray[0].demandNo,
-      missionName: this.taskArray[0].taskName,
-      status: false,
-      children: pendingChildren,
-    }
-    fs.stat(this.getDemandPath(this.taskArray[0])+'\\'+'Todo.txt', (error) => {
-      if (error) {
-        fs.writeFile(
-          this.getDemandPath(this.taskArray[0])+'\\'+'Todo.txt',
-          JSON.stringify(todoObj, null, 2),
-          function () {}
-        );
-      }
-    });
-      //根据设置的授权列表和待办事项id判断是否上传数据库
   },
   methods:{
     async init() {
@@ -114,23 +61,91 @@ export default {
       this.createDir(CONFIG_DIR);
       //创建归档目录
       this.createDir(DOC_DIR);
-      //判断有无配置文件,没有则创建配置文件
-      fs.stat(`${CONFIG_DIR}\\settings.ini`, async (error) => {
+      //创建非绑定任务的待办目录及文件
+      this.createDir(DOC_DIR+'\\'+'global');
+      fs.stat(`${DOC_DIR}\\global\\Todo.txt`, error => {
         if (error) {
-          fileTool.writeSettingFile(DEFAULT_VAL);
-          setTimeout(()=>{
-            this.settings = fileTool.readSettingFile();
-          },1000);
-        } else{
-           this.settings = await fileTool.readSettingFile()
+          fs.writeFile(`${DOC_DIR}\\global\\Todo.txt`,
+            '',
+            function(){}
+          );
         }
       });
+      //创建配置文件
+      fs.stat(`${CONFIG_DIR}\\settings.ini`, error => {
+        if (error) {
+          fileTool.writeSettingFile(DEFAULT_VAL);
+        } 
+        setTimeout(()=>{
+          fs.readFile(`${CONFIG_DIR}\\settings.ini`,"utf-8",(err,data) => {
+            this.settings = JSON.parse(data);
+            this.initMissionDir();
+          });
+        },1000);
+      });
     },
-    initTaskArray() {
-
-    },
-    initMissionArray() {
-
+    initMissionDir() {
+      //获取任务 生成任务文件夹 加载进vuex todo
+      this.taskArray.forEach((item,index) => {
+        //判断有无该任务文件夹,没有则创建文件夹,有则读取todo文件加入vuex
+        fs.stat(this.getDemandPath(item), (error) => {
+          if (error) {
+            //先生成年月的文件夹
+            this.createDir(this.getSubDemandPath(item));
+            //再生成任务文件夹
+            this.createDir(this.getDemandPath(item));
+            //生成本地待办文件 基础待办规则BASE_PENDINGRULE 自定义待办规则settings.ruleList
+            let pendingChildren = [];
+            BASE_PENDINGRULE.forEach(rule => {
+              if(rule.missionType=='全部' || rule.missionType==item.demandNo.substring(0,4)){
+                pendingChildren.push({
+                  id:'',
+                  pendingType:rule.pendingName,
+                  date: this.getPendingDate(item,rule),
+                  status: false,
+                })
+              }
+            });
+            this.settings.settings.ruleList.forEach(rule => {
+              if(rule.missionType=='全部' || rule.missionType==item.demandNo.substring(0,4)){
+                pendingChildren.push({
+                  id:'',
+                  pendingType:rule.pendingName,
+                  date: this.getPendingDate(item,rule),
+                  status: false,
+                })
+              }
+            });
+            const todoObj = {
+              missionNo: item.demandNo,
+              missionName: item.taskName,
+              status: false,
+              children: pendingChildren,
+            }
+            //待办加入vuex
+            this.$store.dispatch("addMissionData", JSON.parse(todoObj));
+            fs.stat(this.getDemandPath(item)+'\\'+'Todo.txt', (error) => {
+              if (error) {
+                fs.writeFile(
+                  this.getDemandPath(item)+'\\'+'Todo.txt',
+                  JSON.stringify(todoObj, null, 2),
+                  function () {}
+                );
+              }
+            });
+          } else {
+            //任务待办加入vuex
+            fs.readFile(this.getDemandPath(item)+'\\'+'Todo.txt',"utf-8",(err,data) => {
+              this.$store.dispatch("addMissionData", JSON.parse(data));
+            });
+          }
+        });
+      });
+      //global里面的待办加入vuex
+      fs.readFile(`${DOC_DIR}\\global\\Todo.txt`,"utf-8",(err,data) => {
+        if(data) this.$store.dispatch("addMissionData", data);
+      });
+        //根据设置的授权列表和待办事项id判断是否上传数据库
     },
     //创建文件夹
     createDir(directory){

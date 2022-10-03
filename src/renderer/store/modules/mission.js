@@ -1,620 +1,623 @@
 const mission = {
   state: {
     missionArray: [
-      {
-        missionNo: "UT-WLJR-2022-1013",
-        missionName:
-          "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(结构性)-mspmk-cli-structdeposits",
-        status: false,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-09-17",
-            status: false,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-10-11",
-            status: false,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-11-12",
-            status: false,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-11-14",
-            status: false,
-          },
-          {
-            pendingType: "上线确认书",
-            date: "2022-11-14",
-            status: false,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-11-22",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionNo: "UT-WLJR-2022-1013",
-        missionName:
-          "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(约定)-mspmk-cli-duedeposit",
-        status: false,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-09-17",
-            status: false,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-10-11",
-            status: false,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-11-12",
-            status: false,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-11-14",
-            status: false,
-          },
-          {
-            pendingType: "上线确认书",
-            date: "2022-11-14",
-            status: false,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-11-22",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionNo: "UT-WLJR-2022-1013",
-        missionName:
-          "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(纪念日)-mspmk-cli-memorialdeposit",
-        status: false,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-09-17",
-            status: false,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-10-11",
-            status: false,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-10-14",
-            status: false,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-11-12",
-            status: false,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-11-14",
-            status: false,
-          },
-          {
-            pendingType: "上线确认书",
-            date: "2022-11-14",
-            status: false,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-11-22",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionNo: "UT-WLJR-2022-0710",
-        missionName:
-          "UT-WLJR-2022-0710-手机银行财富待办微信通知及场景化开通提醒业务需求(约定)-mspmk-cli-duedeposit",
-        status: false,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-08-20",
-            status: false,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-09-09",
-            status: false,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-09-12",
-            status: false,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-09-12",
-            status: false,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-09-28",
-            status: false,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-10-08",
-            status: false,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-10-10",
-            status: false,
-          },
-          {
-            pendingType: "上线确认书",
-            date: "2022-10-10",
-            status: false,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-10-18",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionNo: "KEJI-2022-1550",
-        missionName:
-          "KEJI-2022-1550-UI业务组件交接四阶段-全场景接入改造(约定)-mspmk-cli-duedeposit",
-        status: false,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-09-23",
-            status: false,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-10-10",
-            status: false,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-10-13",
-            status: false,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-10-13",
-            status: false,
-          },
-          {
-            pendingType: "提交业测评估",
-            date: "2022-10-15",
-            status: false,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-10-19",
-            status: false,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-10-29",
-            status: false,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-10-31",
-            status: false,
-          },
-          {
-            pendingType: "提交自测报告",
-            date: "2022-10-31",
-            status: false,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-11-08",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionNo: "UT-WLJR-2022-0761",
-        missionName:
-          "UT-WLJR-2022-0761-手机银行财富产品找类似需求(结构性存款)-mspmk-cli-structdeposits",
-        status: false,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-08-20",
-            status: true,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-09-05",
-            status: true,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-09-08",
-            status: true,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-09-08",
-            status: true,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-09-08",
-            status: true,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-09-17",
-            status: true,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-09-19",
-            status: true,
-          },
-          {
-            pendingType: "上线确认书",
-            date: "2022-09-19",
-            status: true,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-09-27",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionNo: "UT-WLJR-2022-0678",
-        missionName:
-          "UT-WLJR-2022-0678-手机银行存款搜索等业务体验日常优化需求(通知)-mspmk-cli-noticedeposit",
-        status: true,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-07-21",
-            status: true,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-08-14",
-            status: true,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-08-17",
-            status: true,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-08-17",
-            status: true,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-08-17",
-            status: true,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-08-27",
-            status: true,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-08-29",
-            status: true,
-          },
-          {
-            pendingType: "上线确认书",
-            date: "2022-08-29",
-            status: true,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-09-06",
-            status: true,
-          },
-        ],
-      },
-      {
-        missionNo: "KEJI-2022-0752",
-        missionName:
-          "KEJI-2022-0752-A2团队二季度体验优化(约定)-mspmk-cli-duedeposit",
-        status: true,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-07-28",
-            status: true,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-08-09",
-            status: true,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-08-12",
-            status: true,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-08-12",
-            status: true,
-          },
-          {
-            pendingType: "提交业测评估",
-            date: "2022-08-13",
-            status: true,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-08-19",
-            status: true,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-08-28",
-            status: true,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-08-30",
-            status: true,
-          },
-          {
-            pendingType: "提交自测报告",
-            date: "2022-08-30",
-            status: true,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-09-06",
-            status: true,
-          },
-        ],
-      },
-      {
-        missionNo: "KEJI-2022-1682",
-        missionName:
-          "KEJI-2022-1682-手机银行人像认证安全加固场景接入(纪念日)-mspmk-cli-memorialdeposit",
-        status: false,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-08-17",
-            status: true,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-08-27",
-            status: true,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-08-29",
-            status: true,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-08-29",
-            status: true,
-          },
-          {
-            pendingType: "提交业测评估",
-            date: "2022-08-29",
-            status: true,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-09-02",
-            status: true,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-08-30",
-            status: true,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-09-01",
-            status: true,
-          },
-          {
-            pendingType: "提交自测报告",
-            date: "2022-09-01",
-            status: true,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-09-09",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionNo: "KEJI-2022-1839",
-        missionName:
-          "KEJI-2022-1839-路由2.0改造弹窗问题修复(结构性)-mspmk-cli-structdeposits",
-        status: false,
-        children: [
-          {
-            pendingType: "提交内测评估",
-            date: "2022-08-18",
-            status: true,
-          },
-          {
-            pendingType: "提交代码审核",
-            date: "2022-08-25",
-            status: true,
-          },
-          {
-            pendingType: "上传说明书、需规",
-            date: "2022-08-28",
-            status: true,
-          },
-          {
-            pendingType: "提交内测",
-            date: "2022-08-28",
-            status: true,
-          },
-          {
-            pendingType: "提交业测评估",
-            date: "2022-08-25",
-            status: true,
-          },
-          {
-            pendingType: "提交业测",
-            date: "2022-08-28",
-            status: true,
-          },
-          {
-            pendingType: "投产信息登记",
-            date: "2022-09-04",
-            status: true,
-          },
-          {
-            pendingType: "登记rel代码审核",
-            date: "2022-09-06",
-            status: false,
-          },
-          {
-            pendingType: "投产",
-            date: "2022-09-13",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionName: "会议室2801开会",
-        status: false,
-        children: [
-          {
-            pendingType: "",
-            date: "2028-03-05 10:33:00",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionName: "会议室2802开会",
-        status: false,
-        children: [
-          {
-            pendingType: "",
-            date: "2028-03-05 10:33:00",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionName: "会议室2803开会",
-        status: false,
-        children: [
-          {
-            pendingType: "",
-            date: "2028-03-05 10:33:00",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionName: "会议室2804开会",
-        status: false,
-        children: [
-          {
-            pendingType: "",
-            date: "2028-03-05 10:33:00",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionName: "会议室2805开会",
-        status: false,
-        children: [
-          {
-            pendingType: "",
-            date: "2028-03-05 10:33:00",
-            status: false,
-          },
-        ],
-      },
-      {
-        missionName: "会议室2806开会",
-        status: false,
-        children: [
-          {
-            pendingType: "",
-            date: "2028-03-05 10:33:00",
-            status: false,
-          },
-        ],
-      },
+      // {
+      //   missionNo: "UT-WLJR-2022-1013",
+      //   missionName:
+      //     "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(结构性)-mspmk-cli-structdeposits",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-09-17",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-10-11",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-11-12",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-11-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上线确认书",
+      //       date: "2022-11-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-11-22",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "UT-WLJR-2022-1013",
+      //   missionName:
+      //     "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(约定)-mspmk-cli-duedeposit",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-09-17",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-10-11",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-11-12",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-11-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上线确认书",
+      //       date: "2022-11-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-11-22",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "UT-WLJR-2022-1013",
+      //   missionName:
+      //     "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(纪念日)-mspmk-cli-memorialdeposit",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-09-17",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-10-11",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-10-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-11-12",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-11-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上线确认书",
+      //       date: "2022-11-14",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-11-22",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "UT-WLJR-2022-0710",
+      //   missionName:
+      //     "UT-WLJR-2022-0710-手机银行财富待办微信通知及场景化开通提醒业务需求(约定)-mspmk-cli-duedeposit",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-08-20",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-09-09",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-09-12",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-09-12",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-09-28",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-10-08",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-10-10",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上线确认书",
+      //       date: "2022-10-10",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-10-18",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "KEJI-2022-1550",
+      //   missionName:
+      //     "KEJI-2022-1550-UI业务组件交接四阶段-全场景接入改造(约定)-mspmk-cli-duedeposit",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-09-23",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-10-10",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-10-13",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-10-13",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交业测评估",
+      //       date: "2022-10-15",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-10-19",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-10-29",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-10-31",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "提交自测报告",
+      //       date: "2022-10-31",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-11-08",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "UT-WLJR-2022-0761",
+      //   missionName:
+      //     "UT-WLJR-2022-0761-手机银行财富产品找类似需求(结构性存款)-mspmk-cli-structdeposits",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-08-20",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-09-05",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-09-08",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-09-08",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-09-08",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-09-17",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-09-19",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "上线确认书",
+      //       date: "2022-09-19",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-09-27",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "UT-WLJR-2022-0678",
+      //   missionName:
+      //     "UT-WLJR-2022-0678-手机银行存款搜索等业务体验日常优化需求(通知)-mspmk-cli-noticedeposit",
+      //   status: true,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-07-21",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-08-14",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-08-17",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-08-17",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-08-17",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-08-27",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-08-29",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "上线确认书",
+      //       date: "2022-08-29",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-09-06",
+      //       status: true,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "KEJI-2022-0752",
+      //   missionName:
+      //     "KEJI-2022-0752-A2团队二季度体验优化(约定)-mspmk-cli-duedeposit",
+      //   status: true,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-07-28",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-08-09",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-08-12",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-08-12",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交业测评估",
+      //       date: "2022-08-13",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-08-19",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-08-28",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-08-30",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交自测报告",
+      //       date: "2022-08-30",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-09-06",
+      //       status: true,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "KEJI-2022-1682",
+      //   missionName:
+      //     "KEJI-2022-1682-手机银行人像认证安全加固场景接入(纪念日)-mspmk-cli-memorialdeposit",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-08-17",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-08-27",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-08-29",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-08-29",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交业测评估",
+      //       date: "2022-08-29",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-09-02",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-08-30",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-09-01",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交自测报告",
+      //       date: "2022-09-01",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-09-09",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionNo: "KEJI-2022-1839",
+      //   missionName:
+      //     "KEJI-2022-1839-路由2.0改造弹窗问题修复(结构性)-mspmk-cli-structdeposits",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "提交内测评估",
+      //       date: "2022-08-18",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交代码审核",
+      //       date: "2022-08-25",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "上传说明书、需规",
+      //       date: "2022-08-28",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交内测",
+      //       date: "2022-08-28",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交业测评估",
+      //       date: "2022-08-25",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "提交业测",
+      //       date: "2022-08-28",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "投产信息登记",
+      //       date: "2022-09-04",
+      //       status: true,
+      //     },
+      //     {
+      //       pendingType: "登记rel代码审核",
+      //       date: "2022-09-06",
+      //       status: false,
+      //     },
+      //     {
+      //       pendingType: "投产",
+      //       date: "2022-09-13",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionName: "会议室2801开会",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "",
+      //       date: "2028-03-05 10:33:00",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionName: "会议室2802开会",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "",
+      //       date: "2028-03-05 10:33:00",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionName: "会议室2803开会",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "",
+      //       date: "2028-03-05 10:33:00",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionName: "会议室2804开会",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "",
+      //       date: "2028-03-05 10:33:00",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionName: "会议室2805开会",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "",
+      //       date: "2028-03-05 10:33:00",
+      //       status: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   missionName: "会议室2806开会",
+      //   status: false,
+      //   children: [
+      //     {
+      //       pendingType: "",
+      //       date: "2028-03-05 10:33:00",
+      //       status: false,
+      //     },
+      //   ],
+      // },
     ],
   },
   mutations: {
+    INIT_MISSIONDATA: state => {
+      state.missionArray = [];
+    },
     ADD_MISSIONDATA: (state, missionObj) => {
       let newArray;
       [...newArray] = state.missionArray;
@@ -749,6 +752,9 @@ const mission = {
     addMissionData({ commit }, mission) {
       commit("ADD_MISSIONDATA", mission);
       commit("SORT_MISSIONARRAY");
+    },
+    initMissionData({ commit }){
+      commit("INIT_MISSIONDATA");
     },
     // updateMissionDate({ commit }){
 
