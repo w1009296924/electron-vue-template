@@ -62,11 +62,11 @@ export default {
       //创建归档目录
       this.createDir(DOC_DIR);
       //创建非绑定任务的待办目录及文件
-      this.createDir(DOC_DIR+'\\'+'global');
+      this.createDir(DOC_DIR+'global');
       fs.stat(`${DOC_DIR}\\global\\Todo.txt`, error => {
         if (error) {
-          fs.writeFile(`${DOC_DIR}\\global\\Todo.txt`,
-            '',
+          fs.writeFile(`${DOC_DIR}global\\Todo.txt`,
+            JSON.stringify({globalTodoList:[]}, null, 2),
             function(){}
           );
         }
@@ -119,11 +119,12 @@ export default {
             const todoObj = {
               missionNo: item.demandNo,
               missionName: item.taskName,
+              todoDir:this.getDemandPath(item)+'\\'+'Todo.txt',
               status: false,
               children: pendingChildren,
             }
             //待办加入vuex
-            this.$store.dispatch("addMissionData", JSON.parse(todoObj));
+            this.$store.dispatch("addMissionData", [todoObj]);
             fs.stat(this.getDemandPath(item)+'\\'+'Todo.txt', (error) => {
               if (error) {
                 fs.writeFile(
@@ -136,14 +137,19 @@ export default {
           } else {
             //任务待办加入vuex
             fs.readFile(this.getDemandPath(item)+'\\'+'Todo.txt',"utf-8",(err,data) => {
-              this.$store.dispatch("addMissionData", JSON.parse(data));
+              this.$store.dispatch("addMissionData", [JSON.parse(data)]);
             });
           }
         });
       });
       //global里面的待办加入vuex
-      fs.readFile(`${DOC_DIR}\\global\\Todo.txt`,"utf-8",(err,data) => {
-        if(data) this.$store.dispatch("addMissionData", data);
+      fs.readFile(`${DOC_DIR}\\global\\Todo.txt`,"utf-8",(err,globalTodo) => {
+        const globalTodoList = JSON.parse(globalTodo).globalTodoList;
+        if(globalTodoList.length > 0) {
+          globalTodoList.forEach(data => {
+            this.$store.dispatch("addMissionData", [data]);
+          });
+        }
       });
         //根据设置的授权列表和待办事项id判断是否上传数据库
     },

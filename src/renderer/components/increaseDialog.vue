@@ -67,6 +67,7 @@
 <script>
 import { formatDateTime, subTrackTime } from "@/utils/validate.js";
 import { mapGetters } from "vuex";
+import { DOC_DIR } from "@/utils/constans.js";
 export default {
   name: "IncreaseDialog",
   props:{
@@ -88,24 +89,6 @@ export default {
       pendingTime: "",
       pengingSth: "",
       selectMisson: "",
-      missionList: [
-        {
-          missionNo: "UT-WLJR-2022-0575",
-          missionName: "测试4",
-        },
-        {
-          missionNo: "UT-WLJR-2022-0525",
-          missionName: "测试3",
-        },
-        {
-          missionNo: "UT-WLJR-2022-0505",
-          missionName: "测试2",
-        },
-        {
-          missionNo: "KEJI-2022-0575",
-          missionName: "测试1",
-        },
-      ],
       investor: '000000', //新增key
       investorList: [
         {
@@ -170,6 +153,7 @@ export default {
         {
           isBindMission: false,
           missionName: this.pengingSth,
+          todoDir:DOC_DIR+'global\\Todo.txt' ,
           status: false,
           children: [
             {
@@ -181,7 +165,7 @@ export default {
             },
           ]
         };
-        this.$store.dispatch("addMissionData", pushObj);
+        this.$store.dispatch("addMissionData", [ pushObj, true ]);
         this.dialogVisible = false;
       }
     },

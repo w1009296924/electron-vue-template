@@ -1,3 +1,5 @@
+const fs = require("fs");
+import { DOC_DIR } from "@/utils/constans.js";
 const mission = {
   state: {
     missionArray: [
@@ -618,7 +620,7 @@ const mission = {
     INIT_MISSIONDATA: state => {
       state.missionArray = [];
     },
-    ADD_MISSIONDATA: (state, missionObj) => {
+    ADD_MISSIONDATA: (state, [missionObj, increaseFlag]) => {
       let newArray;
       [...newArray] = state.missionArray;
       if (missionObj.isBindMission) {
@@ -636,8 +638,25 @@ const mission = {
             return new Date(Date.parse(a.date)) - new Date(Date.parse(b.date));
           }
         );
+        fs.writeFile(
+          newArray[missionIdx].todoDir,
+          JSON.stringify(newArray[missionIdx], null, 2),
+          function () {}
+        );
       } else {
         newArray.push(missionObj);
+        //新增全局待办时,向global/Todo.txt添加新增待办
+        if(increaseFlag) {
+          fs.readFile(DOC_DIR + 'global\\Todo.txt',"utf-8",(err,data) => {
+            let globalTodo = JSON.parse(data);
+            globalTodo.globalTodoList.push(missionObj);
+            fs.writeFile(
+              DOC_DIR + 'global\\Todo.txt',
+              JSON.stringify(globalTodo, null, 2),
+              function () {}
+            );
+          });
+        }
       }
       //   console.log(newArray);
       state.missionArray = newArray;
@@ -688,6 +707,28 @@ const mission = {
             ...change,
             children: element.children,
           };
+          if(newArray[index].isBindMission === false){
+            fs.readFile(DOC_DIR + 'global\\Todo.txt',"utf-8",(err,data) => {
+              let globalTodo = JSON.parse(data);
+              let globalTodoIdx = globalTodo.globalTodoList.findIndex((item) => {
+                if (item.missionName == newArray[index].missionName) {
+                  return true;
+                }
+              });
+              globalTodo.globalTodoList[globalTodoIdx] = newArray[index];
+              fs.writeFile(
+                DOC_DIR + 'global\\Todo.txt',
+                JSON.stringify(globalTodo, null, 2),
+                function () {}
+              );
+            });
+          }else{
+            fs.writeFile(
+              newArray[index].todoDir,
+              JSON.stringify(newArray[index], null, 2),
+              function () {}
+            );
+          }
           break;
         }
       }
@@ -749,8 +790,8 @@ const mission = {
         commit("SORT_MISSIONARRAY");
       }
     },
-    addMissionData({ commit }, mission) {
-      commit("ADD_MISSIONDATA", mission);
+    addMissionData({ commit }, [mission, increaseFlag = false]) {
+      commit("ADD_MISSIONDATA", [mission, increaseFlag]);
       commit("SORT_MISSIONARRAY");
     },
     initMissionData({ commit }){
