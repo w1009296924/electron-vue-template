@@ -7,19 +7,25 @@ import asyncRouterMap from "./constantRouterMap";
 Vue.use(Router);
 
 export const constantRouterMap = [
+  // {
+  //   path: "/",
+  //   component: Layout,
+  //   redirect: "/dashboard",
+  //   name: "主页",
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: "dashboard",
+  //       name: "总览",
+  //       component: () => import("@/components/LandingPage"),
+  //     },
+  //   ],
+  // },
   {
     path: "/",
-    component: Layout,
-    redirect: "/dashboard",
+    redirect: "/home/index",
     name: "主页",
     hidden: true,
-    children: [
-      {
-        path: "dashboard",
-        name: "总览",
-        component: () => import("@/components/LandingPage"),
-      },
-    ],
   },
   {
     path: "/login",

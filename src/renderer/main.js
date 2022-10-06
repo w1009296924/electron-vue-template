@@ -44,21 +44,5 @@ const vue = new Vue({
   i18n,
   template: "<App/>",
 }).$mount("#app");
-console.log(window.devicePixelRatio);
-console.log(window);
-// if (window.devicePixelRatio != 1) {//检查配置
-const devInnerHeight = 975.0; // 开发时的InnerHeight
-const devDevicePixelRatio = 1.0; // 开发时的devicepixelratio
-const devScaleFactor = 1.0; // 开发时的ScaleFactor
-const zoomFactor =
-  (window.innerHeight / devInnerHeight) *
-  (window.devicePixelRatio / devDevicePixelRatio) *
-  (devScaleFactor / window.devicePixelRatio);
-require("electron").webFrame.setZoomFactor(zoomFactor);
-console.log(window.innerHeight);
-console.log(devInnerHeight);
-console.log(window.devicePixelRatio);
-console.log(zoomFactor);
-// }
 
 export default vue;
