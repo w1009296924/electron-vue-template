@@ -102,7 +102,7 @@
 // import path from "path";
 
 export default {
-  name: "SidebarItem",
+  name: 'SidebarItem',
   props: {
     // route配置json
     item: {
@@ -115,7 +115,7 @@ export default {
     },
     basePath: {
       type: String,
-      default: "",
+      default: '',
     },
     collapse: {
       type: Boolean,
@@ -143,7 +143,7 @@ export default {
       return false;
     },
     resolvePath(...paths) {
-      return this.basePath + "/" + paths[0];
+      return this.basePath + '/' + paths[0];
     },
     OneShowingChild(children) {
       this.onlyOneChild = children;

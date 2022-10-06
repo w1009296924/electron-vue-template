@@ -8,12 +8,12 @@
 </template>
 
 <script>
-import CHeader from "./components/title";
-import "@/assets/font.css";
+import CHeader from './components/title';
+import '@/assets/font.css';
 export default {
   components: { CHeader },
   mounted() {
-    this.$store.commit("INIT_MISSIONARRAY");
+    this.$store.commit('INIT_MISSIONARRAY');
   },
 };
 </script>
@@ -25,7 +25,7 @@ export default {
   font-weight: 400; */
 }
 
-body .el-tooltip__popper {
+body .el-tooltip__popper.is-dark {
   display: none;
 }
 </style>

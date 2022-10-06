@@ -6,29 +6,37 @@
     </div>
     <transition name="list">
       <div class="task-item-box" v-show="showList">
-        <div
+        <el-tooltip
+          effect="light"
+          :content="item.taskName"
+          placement="right"
+          :open-delay="500"
+          :enterable="false"
           v-for="(item, index) in taskArray"
           :key="index"
-          class="task-item"
-          :class="{ selected: item == nowTask }"
-          @click="selectTask(index)"
         >
-          <i class="el-icon-caret-right"></i>
-          <div class="ellipsis">{{ item.taskName }}</div>
-        </div>
+          <div
+            class="task-item"
+            :class="{ selected: item == nowTask }"
+            @click="selectTask(index)"
+          >
+            <i class="el-icon-caret-right"></i>
+            <div class="ellipsis">{{ item.taskName }}</div>
+          </div>
+        </el-tooltip>
       </div></transition
     >
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 export default {
-  name: "task-list-box",
+  name: 'task-list-box',
   components: {},
   props: {
     title: {
       type: String,
-      default: "",
+      default: '',
     },
     taskArray: {
       type: Array,
@@ -41,14 +49,14 @@ export default {
     return { showList: true };
   },
   computed: {
-    ...mapGetters(["nowTask"]),
+    ...mapGetters(['nowTask']),
   },
   methods: {
     showTask() {},
     selectTask(index) {
-      this.$emit("clickTask");
+      this.$emit('clickTask');
       setTimeout(() => {
-        this.$store.commit("SET_NOWTASK", this.taskArray[index]);
+        this.$store.commit('SET_NOWTASK', this.taskArray[index]);
       }, 200);
       // console.log(this.$store.getters.taskArray);
     },
