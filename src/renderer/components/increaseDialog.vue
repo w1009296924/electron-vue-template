@@ -142,6 +142,7 @@ export default {
           status: false,
           children: [
             {
+              id:"",
               pendingType: this.pengingSth,
               date: formatDateTime(this.pendingTime),
               status: false,
@@ -157,6 +158,7 @@ export default {
           status: false,
           children: [
             {
+              id:"",
               pendingType: "",
               date: formatDateTime(this.pendingTime),
               status: false,

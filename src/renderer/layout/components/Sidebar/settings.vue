@@ -206,11 +206,13 @@
 <script>
 import { ipcRenderer } from "electron";
 import fileTool from "@/utils/fileTool.js";
+import { initData } from "@/utils/init.js";
 export default {
   name: "Settings",
   data() {
     return {
       settings: {},
+      doc_dir:'',
       dialogVisible: false,
       fileDirectory: '',
       grantList: [],
@@ -267,6 +269,7 @@ export default {
     init() {
       const data = fileTool.readSettingFile();
       this.settings = data;
+      this.doc_dir = data.settings.fileDirectory;
       (this.fileDirectory = data.settings.fileDirectory),
         (this.ruleList = data.settings.ruleList),
         (this.grantList = data.settings.grantList),
@@ -297,6 +300,10 @@ export default {
         remindDaysTime: this.remindDaysTime,
       };
       fileTool.writeSettingFile(this.settings);//本地保存配置文件
+      if(this.doc_dir!=this.fileDirectory) {
+        initData();
+        location.reload(true);
+      }
       //todo 授权列表grantList 存入数据库中
       //入参 本人用户名 this.$store.state.user.name,授予权限人列表grantList[grant:授予对象,permission:授予权限(只读/新增)]
       //编号 12066390 姓名 李亚威

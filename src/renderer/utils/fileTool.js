@@ -110,10 +110,9 @@ function readSettingFile() {
   return JSON.parse(data);
 }
 function writeSettingFile(settingObj) {
-  fs.writeFile(
+  fs.writeFileSync(
     `${CONFIG_DIR}\\settings.ini`,
-    JSON.stringify(settingObj, null, 2),
-    function () {}
+    JSON.stringify(settingObj, null, 2)
   );
 }
 //创建文件夹
