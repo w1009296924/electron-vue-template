@@ -113,16 +113,21 @@ function writeSettingFile(settingObj) {
   fs.writeFile(
     `${CONFIG_DIR}\\settings.ini`,
     JSON.stringify(settingObj, null, 2),
-    (err) => {
-      if (err) {
-        return;
-      }
-    }
+    function () {}
   );
+}
+//创建文件夹
+function createDir(directory) {
+  fs.stat(directory, (error) => {
+    if (error) {
+      fs.mkdir(directory, function () {});
+    }
+  });
 }
 export default {
   getAllfiles,
   getIcon,
   readSettingFile,
   writeSettingFile,
+  createDir,
 };

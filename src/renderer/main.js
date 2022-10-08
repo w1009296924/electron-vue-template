@@ -61,7 +61,7 @@ if (require("electron").webFrame.getZoomFactor() == 1) {
   // console.log(devInnerHeight);
   // console.log(window.devicePixelRatio);
   // console.log(zoomFactor);
-}
+// }
 // import { ipcRenderer } from "electron";
 // ipcRenderer.on("sdf", (event, [a, b, c]) => {
 //   console.log("sdf");
@@ -70,5 +70,6 @@ if (require("electron").webFrame.getZoomFactor() == 1) {
 //   console.log(c);
 //   // require("electron").webFrame.setZoomFactor(c);
 // });
+}
 
 export default vue;

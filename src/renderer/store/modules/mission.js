@@ -707,15 +707,16 @@ const mission = {
             ...change,
             children: element.children,
           };
+          const submitObj = newArray[index];//读文件异步导致值变化
           if(newArray[index].isBindMission === false){
             fs.readFile(DOC_DIR + 'global\\Todo.txt',"utf-8",(err,data) => {
               let globalTodo = JSON.parse(data);
               let globalTodoIdx = globalTodo.globalTodoList.findIndex((item) => {
-                if (item.missionName == newArray[index].missionName) {
+                if (item.missionName == submitObj.missionName) {
                   return true;
                 }
               });
-              globalTodo.globalTodoList[globalTodoIdx] = newArray[index];
+              globalTodo.globalTodoList[globalTodoIdx] = submitObj;
               fs.writeFile(
                 DOC_DIR + 'global\\Todo.txt',
                 JSON.stringify(globalTodo, null, 2),
