@@ -44,5 +44,31 @@ const vue = new Vue({
   i18n,
   template: "<App/>",
 }).$mount("#app");
+// console.log(window.devicePixelRatio);
+// console.log(window);
+// console.log(require("electron").webFrame.getZoomFactor());
+if (require("electron").webFrame.getZoomFactor() == 0.5) {
+  //检查配置
+  const devInnerHeight = 975.0; // 开发时的InnerHeight
+  const devDevicePixelRatio = 1.0; // 开发时的devicepixelratio
+  const devScaleFactor = 0.5; // 开发时的ScaleFactor
+  const zoomFactor =
+    (window.innerHeight / devInnerHeight) *
+    (window.devicePixelRatio / devDevicePixelRatio) *
+    (devScaleFactor / window.devicePixelRatio);
+  require("electron").webFrame.setZoomFactor(zoomFactor);
+  // console.log(window.innerHeight);
+  // console.log(devInnerHeight);
+  // console.log(window.devicePixelRatio);
+  // console.log(zoomFactor);
+}
+// import { ipcRenderer } from "electron";
+// ipcRenderer.on("sdf", (event, [a, b, c]) => {
+//   console.log("sdf");
+//   console.log(a);
+//   console.log(b);
+//   console.log(c);
+//   // require("electron").webFrame.setZoomFactor(c);
+// });
 
 export default vue;

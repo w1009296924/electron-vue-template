@@ -1,10 +1,9 @@
-import { BrowserWindow, Menu, app, ipcMain } from "electron";
+import { BrowserWindow, Menu, app, ipcMain, globalShortcut } from "electron";
 import { platform } from "os";
 import menuconfig from "../config/menu";
 import config from "@config";
 import setIpc from "./ipcMain";
 import { winURL, loadingURL } from "../config/StaticPath";
-
 var loadWindow = null;
 var mainWindow = null;
 setIpc.Mainfunc(config.IsUseSysTitle);
@@ -26,19 +25,23 @@ setIpc.Mainfunc(config.IsUseSysTitle);
 function createMainWindow() {
   /**
    * Initial window options
-   */
+   */ 25;
+  let ccc = require("electron").screen.getPrimaryDisplay().workAreaSize.width;
+  // var scaleFactor = require("electron").screen.getPrimaryDisplay().scaleFactor;
+  let rate = ccc / 1920;
+  // rate = 1;
+  // require("electron").webFrame.setZoomFactor(rate);
   mainWindow = new BrowserWindow({
-    height: 975,
+    height: 975 * rate,
     useContentSize: true,
-    width: 1440,
-    minWidth: 1440,
+    width: 1440 * rate,
+    minWidth: 1440 * rate,
     show: false,
     frame: config.IsUseSysTitle,
-    // frame: false,
-    // titleBarStyle: 'hidden',
+    frame: false,
+    // titleBarStyle: "hidden",
     titleBarStyle: platform().includes("win32") ? "default" : "hidden",
     webPreferences: {
-      zoomFactorNumber: 3.0,
       contextIsolation: false,
       nodeIntegration: true,
       webSecurity: false,
@@ -71,6 +74,7 @@ function createMainWindow() {
 
   mainWindow.webContents.once("dom-ready", () => {
     mainWindow.show();
+    // mainWindow.webContents.send("sdf", [ccc, scaleFactor, rate]);
     if (process.env.NODE_ENV === "development" || config.build.devTools)
       mainWindow.webContents.openDevTools(true);
     if (config.UseStartupChart) loadWindow.destroy();
@@ -87,6 +91,17 @@ function createMainWindow() {
   });
   require("@electron/remote/main").initialize();
   require("@electron/remote/main").enable(mainWindow.webContents);
+  app.whenReady().then(() => {
+    // 注册一个'CommandOrControl+P' 快捷键监听器
+    globalShortcut.register("CommandOrControl+P", () => {
+      // 如果注册成功了，当用户按下该快捷键时，会执行这里的内容
+      mainWindow.webContents.send("turn-copyImgSwitch");
+    });
+  });
+  app.on("will-quit", () => {
+    // 注销所有快捷键
+    globalShortcut.unregisterAll();
+  });
 }
 
 function loadingWindow() {
