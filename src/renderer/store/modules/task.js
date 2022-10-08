@@ -3,7 +3,7 @@ const task = {
     nowTask: null,
     taskArray: [
       {
-        state: "dev",
+        state: "develop",
         demandNo: "UT-WLJR-2022-0912",
         taskName:
           "UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）",
@@ -24,7 +24,7 @@ const task = {
         workload: "0.4",
       },
       {
-        state: "dev",
+        state: "develop",
         demandNo: "UT-WLJR-2022-1013",
         taskName:
           "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(结构性)-mspmk-cli-structdeposits",
@@ -45,7 +45,7 @@ const task = {
         workload: "0.1",
       },
       {
-        state: "dev",
+        state: "develop",
         demandNo: "UT-WLJR-2022-1013",
         taskName:
           "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(约定)-mspmk-cli-duedeposit",
@@ -66,7 +66,7 @@ const task = {
         workload: "0.1",
       },
       {
-        state: "dev",
+        state: "develop",
         demandNo: "UT-WLJR-2022-1013",
         taskName:
           "UT-WLJR-2022-1013-手机银行存款业务体验优化需求(纪念日)-mspmk-cli-memorialdeposit",

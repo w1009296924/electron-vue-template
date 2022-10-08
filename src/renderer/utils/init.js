@@ -1,13 +1,11 @@
 import { initMission } from "@/utils/missionTool.js";
-import fs from 'fs';
-import {
-  CONFIG_DIR,
-  DOC_DIR,
-  DEFAULT_VAL
-} from '@/utils/constans.js';
-import fileTool from '@/utils/fileTool.js';
+import fs from "fs";
+import { CONFIG_DIR, DOC_DIR, DEFAULT_VAL } from "@/utils/constans.js";
+import fileTool from "@/utils/fileTool.js";
 //登录成功后执行该函数
 export function initData() {
+  console.log("init函数执行---");
+  getTaskTree().then((res) => {});
   new Promise((resolve, reject) => {
     //创建配置文件夹
     fileTool.createDir(CONFIG_DIR);
@@ -20,15 +18,17 @@ export function initData() {
     //创建归档目录
     fileTool.createDir(DOC_DIR);
     //创建非绑定任务的待办目录及文件
-    fileTool.createDir(DOC_DIR + 'global');
+    fileTool.createDir(DOC_DIR + "global");
     fs.stat(`${DOC_DIR}global\\Todo.txt`, (error) => {
       if (error) {
         fs.writeFile(
           `${DOC_DIR}global\\Todo.txt`,
           JSON.stringify({ globalTodoList: [] }, null, 2),
-          function () { resolve(); }
+          function () {
+            resolve();
+          }
         );
-      }else {
+      } else {
         resolve();
       }
     });
@@ -37,4 +37,3 @@ export function initData() {
   });
   // getTaskTree().then((res) => { initMission(); });
 }
-

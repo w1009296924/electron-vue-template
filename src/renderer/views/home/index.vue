@@ -3,7 +3,12 @@
     <div class="main-box">
       <HomeCard width="728" height="430" title="近期待办">
         <template v-slot:header>
-          <button @click="() => addTodo()">B</button>
+          <el-button
+            class="plus-btn"
+            icon="el-icon-plus"
+            @click="() => addTodo()"
+            size="mini"
+          ></el-button>
         </template>
         <transition-group class="mission-box" name="todo-trans" tag="div">
           <div
@@ -26,7 +31,12 @@
       </HomeCard>
       <HomeCard width="728" height="433" title="便签">
         <template v-slot:header>
-          <button @click="addNote">B</button>
+          <el-button
+            class="plus-btn"
+            icon="el-icon-plus"
+            @click="addNote"
+            size="mini"
+          ></el-button>
         </template>
         <div class="note-box wrapper" ref="wrapper">
           <div class="note-content" v-if="!updatingNote">
@@ -41,6 +51,13 @@
         </div>
       </HomeCard>
       <HomeCard width="544" height="433" title="快速入口">
+        <template v-slot:header>
+          <el-button
+            class="plus-btn"
+            icon="el-icon-plus"
+            size="mini"
+          ></el-button>
+        </template>
         <draggable
           v-model="quickEntryArray"
           delay="50"
@@ -149,12 +166,7 @@ export default {
           url: "add",
         },
       ],
-      noteArray: [
-        { content: "" },
-        { content: "" },
-        { content: "" },
-        { content: "" },
-      ],
+      noteArray: [{ content: "" }, { content: "" }],
     };
   },
   computed: {
@@ -385,6 +397,12 @@ export default {
       color: #fff;
     }
   }
+}
+
+.plus-btn {
+  padding: 7px 7px;
+  margin-top: 5px;
+  margin-left: 4px;
 }
 
 .note-class.note-fade {

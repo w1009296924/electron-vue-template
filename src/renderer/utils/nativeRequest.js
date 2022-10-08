@@ -1,10 +1,9 @@
 import axios from "axios";
 import store from "@/store";
-const userName =
-  store.state.user.name == "Super Admin" ? "liuyz14" : store.state.user.name;
+
 const instance = axios.create({
   baseURL: "http://10.134.13.24:8080/learnlab/proxy/paygate",
-  timeout: 5000,
+  timeout: 3000,
   method: "post",
   headers: {
     "Content-type": "application/json",
@@ -20,6 +19,10 @@ export function post(params) {
   });
 }
 export function FdevLogin(name, pwd) {
+  if (name == "admin")
+    return new Promise((resolve) => {
+      resolve();
+    });
   return instance({
     data: {
       Trans: "MODE_FDEV_LOGIN",
@@ -30,6 +33,8 @@ export function FdevLogin(name, pwd) {
 }
 
 export function FdevQueryTask() {
+  const userName =
+    store.state.user.name == "Super Admin" ? "liuyz14" : store.state.user.name;
   return instance({
     data: {
       Trans: "MODE_FDEV_QUERYTASK",
@@ -39,6 +44,8 @@ export function FdevQueryTask() {
 }
 
 export function FdevQueryTaskDetail(taskId) {
+  const userName =
+    store.state.user.name == "Super Admin" ? "liuyz14" : store.state.user.name;
   return instance({
     data: {
       Trans: "MODE_FDEV_QUERYTASKDETAIL",

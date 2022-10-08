@@ -11,7 +11,7 @@
             title="开发中"
             :taskArray="
               taskArray.filter((item) => {
-                return item.state == 'dev';
+                return item.state == 'develop';
               })
             "
             @clickTask="clickTask"
@@ -95,7 +95,7 @@
                 @mouseenter="enterText"
                 @mouseleave="leaveText"
               >
-                {{ nowTask[key + 'Real'] }}
+                {{ nowTask[key + "Real"] }}
               </div>
             </div>
           </div>
@@ -124,35 +124,35 @@
 </template>
 
 <script>
-import TaskListBox from './components/TaskListBox';
-import WorkSpace from './components/WorkSpace';
-import TodoSpace from './components/TodoSpace';
-import { mapGetters } from 'vuex';
+import TaskListBox from "./components/TaskListBox";
+import WorkSpace from "./components/WorkSpace";
+import TodoSpace from "./components/TodoSpace";
+import { mapGetters } from "vuex";
 export default {
   components: { TaskListBox, WorkSpace, TodoSpace },
   data() {
     return {
       showCopy: false,
       loading: false,
-      copyStyle: '',
+      copyStyle: "",
       taskInfoMap: {
-        taskName: '任务名',
-        demandNo: '需求编号',
-        application: '涉及应用',
-        branch: '开发分支',
-        fdevUnit: '研发单元（FDEV单元）',
-        ipmpUnit: 'IPMP实施单元',
-        startTime: '启动日期（计划/实际）',
-        sitTime: '提交内测日期（计划实际）',
-        uatTime: '提交业测日期（计划/实际）',
-        uatFinishTime: '用户测试完成日期（计划/实际）',
-        fireTime: '投产日期（计划/实际）',
-        workload: '工作量（人月）',
+        taskName: "任务名",
+        demandNo: "需求编号",
+        application: "涉及应用",
+        branch: "开发分支",
+        fdevUnit: "研发单元（FDEV单元）",
+        ipmpUnit: "IPMP实施单元",
+        startTime: "启动日期（计划/实际）",
+        sitTime: "提交内测日期（计划实际）",
+        uatTime: "提交业测日期（计划/实际）",
+        uatFinishTime: "用户测试完成日期（计划/实际）",
+        fireTime: "投产日期（计划/实际）",
+        workload: "工作量（人月）",
       },
     };
   },
   computed: {
-    ...mapGetters(['taskArray', 'nowTask']),
+    ...mapGetters(["taskArray", "nowTask"]),
     // nowTask: {
     //   get() {
     //     return this.taskArray.find((item) => {
@@ -174,11 +174,11 @@ export default {
     },
     clickText(e) {
       const element = e.target;
-      element.classList.add('click');
-      const { clipboard } = require('electron');
+      element.classList.add("click");
+      const { clipboard } = require("electron");
       clipboard.writeText(element.innerText);
       setTimeout(() => {
-        element.classList.remove('click');
+        element.classList.remove("click");
       }, 200);
     },
     clickTask() {

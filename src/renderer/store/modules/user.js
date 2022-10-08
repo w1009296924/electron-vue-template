@@ -1,8 +1,8 @@
 const user = {
   state: {
-    token: JSON.parse(localStorage.getItem('token')),
-    name: JSON.parse(localStorage.getItem('name')),
-    roles: JSON.parse(localStorage.getItem('roles'))
+    token: JSON.parse(localStorage.getItem("token")),
+    name: JSON.parse(localStorage.getItem("name")),
+    roles: JSON.parse(localStorage.getItem("roles")),
   },
 
   mutations: {
@@ -27,10 +27,10 @@ const user = {
         if (data.username.includes("admin")) {
           commit("SET_TOKEN", "admin");
           commit("SET_NAME", "Super Admin");
-
         } else {
-          commit("SET_TOKEN", "edit");
-          commit("SET_NAME", "Edit");
+          commit("SET_TOKEN", data.username);
+          commit("SET_NAME", data.username);
+          console.log("SET_NAME");
         }
 
         resolve();
@@ -55,7 +55,7 @@ const user = {
     },
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        console.log(state.name)
+        console.log(state.name);
         if (state.token.includes("admin")) {
           commit("SET_ROLES", ["admin"]);
         } else {

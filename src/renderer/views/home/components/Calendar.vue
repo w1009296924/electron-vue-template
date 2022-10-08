@@ -294,7 +294,14 @@ export default {
             ((lastDateOfMonth + startDay + weekstart + k - 1) % 7 || 7) > 5,
         });
       }
-      // console.log(dates);
+      console.log(dates);
+      for (let ii = 0; ii < dates.length; ii++) {
+        const day = dates[ii];
+        if (day.month == 10) {
+          if (day.date < 8) dates[ii].isRestDay = true;
+          else if (day.date < 10) dates[ii].isRestDay = false;
+        }
+      }
       return dates;
     },
     isFutureDay(y, m, d) {
@@ -591,6 +598,7 @@ export default {
           pointer-events: none;
         }
         .restDay {
+          z-index: 1004;
           font-size: 12px;
           line-height: 12px;
           position: absolute;

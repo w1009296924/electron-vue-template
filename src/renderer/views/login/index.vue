@@ -9,7 +9,7 @@
         ref="loginForm"
         label-position="left"
       >
-        <h3 class="title">后台管理框架</h3>
+        <h3 class="title">Gow</h3>
         <el-form-item prop="username">
           <span class="svg-container svg-container_login">
             <svg-icon icon-class="user" />
@@ -43,10 +43,10 @@
         <div class="login-btn">
           <button type="button" class="btn" @click="handleLogin">登录</button>
         </div>
-        <div class="tips">
-          <span style="margin-right:20px;">用户名: admin或者editor</span>
+        <!-- <div class="tips">
+          <span style="margin-right: 20px">用户名: admin或者editor</span>
           <span>密码：随便什么都行</span>
-        </div>
+        </div> -->
       </el-form>
     </div>
   </div>
@@ -54,6 +54,7 @@
 
 <script>
 import { isvalidUsername } from "@/utils/validate";
+import { FdevLogin } from "@/utils/nativeRequest";
 
 export default {
   name: "login",
@@ -101,14 +102,32 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.$store
-            .dispatch("Login", this.loginForm)
-            .then(() => {
-              this.loading = false;
-              this.$router.push({ path: "/" });
+          FdevLogin(this.loginForm.username, this.loginForm.password)
+            .then((res) => {
+              this.$store
+                .dispatch("Login", this.loginForm)
+                .then(() => {
+                  this.loading = false;
+                  this.$router.push({ path: "/" });
+                })
+                .catch(() => {
+                  this.loading = false;
+                });
             })
-            .catch(() => {
+            .catch((e) => {
+              this.$store
+                .dispatch("Login", this.loginForm)
+                .then(() => {
+                  this.loading = false;
+                  this.$router.push({ path: "/" });
+                })
+                .catch(() => {
+                  this.loading = false;
+                });
+              console.log("error login!!");
+              this.$message.error("登陆失败，请检查用户名、密码是否正确！");
               this.loading = false;
+              return false;
             });
         } else {
           console.log("error submit!!");
@@ -171,12 +190,12 @@ $light_gray: #eee;
       align-items: center;
       color: white;
       backdrop-filter: saturate(180%) blur(20px);
-      background: rgba(0, 0, 0, .65);
+      background: rgba(0, 0, 0, 0.65);
       border-radius: 10px;
       box-shadow: 0 0.4px 0.6px rgba(0, 0, 0, 0.141),
         0 1px 1.3px rgba(0, 0, 0, 0.202), 0 1.9px 2.5px rgba(0, 0, 0, 0.25),
         0 3.4px 4.5px rgba(0, 0, 0, 0.298), 0 6.3px 8.4px rgba(0, 0, 0, 0.359),
-        0 15px 20px rgba(0, 0, 0, .26);
+        0 15px 20px rgba(0, 0, 0, 0.26);
       .login-btn {
         .btn {
           position: relative;

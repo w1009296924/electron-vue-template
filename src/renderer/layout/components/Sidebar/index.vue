@@ -64,14 +64,13 @@ export default {
   components: { SidebarItem, ScrollBar, Logo, Settings },
   data: () => ({
     userImage: require("@/assets/userW.png"),
-    name: "又又不leng",
     routeMap: [],
     settings: false,
     isCollapse: true,
   }),
   computed: {
     // ...mapGetters(["sidebar", "permission_routes"]),
-    ...mapGetters(["permission_routes"]),
+    ...mapGetters(["permission_routes", "name"]),
     // isCollapse() {
     //   console.log(this.$store.getters);
     //   return !this.sidebar.opened;
