@@ -87,17 +87,18 @@
   </div>
 </template>
 <script>
-import HomeCard from './components/HomeCard';
-import QucikEntry from './components/QuickEntry';
-import Calendar from './components/Calendar';
-import Note from './components/Note';
-import PendingList from '@/components/PendingList';
-import IncreaseDialog from '@/components/IncreaseDialog';
-import draggable from 'vuedraggable';
-import BScroll from '@better-scroll/core';
-import MouseWheel from '@better-scroll/mouse-wheel';
-import { mapGetters } from 'vuex';
-import myNotification from '@/tools/myNotification';
+import HomeCard from "./components/HomeCard";
+import QucikEntry from "./components/QuickEntry";
+import Calendar from "./components/Calendar";
+import Note from "./components/Note";
+import PendingList from "@/components/PendingList";
+import IncreaseDialog from "@/components/IncreaseDialog";
+import draggable from "vuedraggable";
+import BScroll from "@better-scroll/core";
+import MouseWheel from "@better-scroll/mouse-wheel";
+import { mapGetters } from "vuex";
+import myNotification from "@/tools/myNotification";
+import { getTaskTree } from "@/utils/taskTool.js";
 BScroll.use(MouseWheel);
 export default {
   components: {
@@ -118,49 +119,49 @@ export default {
       calendarMenuVisible: false,
       quickEntryArray: [
         {
-          name: '归档目录',
-          iconPath: require('@/assets/entry_飞云.png'),
-          url: 'web:https://www.baidu.com',
+          name: "归档目录",
+          iconPath: require("@/assets/entry_飞云.png"),
+          url: "web:https://www.baidu.com",
         },
         {
-          name: '百度',
-          iconPath: require('@/assets/entry_飞云.png'),
-          url: 'app:D:/VSCodePro/electron-vue-template/src/renderer/assets/user.png',
+          name: "百度",
+          iconPath: require("@/assets/entry_飞云.png"),
+          url: "app:D:/VSCodePro/electron-vue-template/src/renderer/assets/user.png",
         },
         {
-          name: 'Fdev',
-          iconPath: require('@/assets/entry_飞云.png'),
-          url: 'web:https://www.baidu.com',
+          name: "Fdev",
+          iconPath: require("@/assets/entry_飞云.png"),
+          url: "web:https://www.baidu.com",
         },
         {
-          name: '飞云',
-          iconPath: require('@/assets/entry_飞云.png'),
-          url: 'web:https://www.baidu.com',
+          name: "飞云",
+          iconPath: require("@/assets/entry_飞云.png"),
+          url: "web:https://www.baidu.com",
         },
         {
-          name: 'IPMP',
-          iconPath: require('@/assets/entry_飞云.png'),
-          url: 'web:https://www.baidu.com',
+          name: "IPMP",
+          iconPath: require("@/assets/entry_飞云.png"),
+          url: "web:https://www.baidu.com",
         },
         {
-          name: '添加',
-          iconPath: require('@/assets/entry_飞云.png'),
-          url: 'add',
+          name: "添加",
+          iconPath: require("@/assets/entry_飞云.png"),
+          url: "add",
         },
       ],
       noteArray: [
-        { content: '' },
-        { content: '' },
-        { content: '' },
-        { content: '' },
+        { content: "" },
+        { content: "" },
+        { content: "" },
+        { content: "" },
       ],
     };
   },
   computed: {
-    ...mapGetters(['missionArray']),
+    ...mapGetters(["missionArray"]),
   },
   created() {
-    console.log('created');
+    console.log("created");
   },
   mounted() {
     this.$nextTick(() => {
@@ -174,9 +175,9 @@ export default {
       });
     });
     setTimeout(() => {
-      document.querySelectorAll('.tox-edit-area__iframe').forEach((element) => {
+      document.querySelectorAll(".tox-edit-area__iframe").forEach((element) => {
         element.contentWindow.document.addEventListener(
-          'mousewheel',
+          "mousewheel",
           this.hander,
           false
         );
@@ -185,15 +186,15 @@ export default {
   },
   methods: {
     onMove(e) {
-      if (e.relatedContext.element.name == '添加') return false;
+      if (e.relatedContext.element.name == "添加") return false;
       return true;
     },
     hander(e) {
-      console.log('handel');
+      console.log("handel");
       if (!e.view.document.hasFocus()) {
         let eventClone = new e.constructor(e.type, e);
         document
-          .querySelector('.note-box')
+          .querySelector(".note-box")
           .firstChild.dispatchEvent(eventClone);
       }
     },
@@ -205,15 +206,16 @@ export default {
     },
     deleteTodo(item) {},
     addNote() {
+      getTaskTree();
       let option = {
-        title: 'test',
-        body: 'body',
-        icon: '',
-        href: '',
+        title: "test",
+        body: "body",
+        icon: "",
+        href: "",
       };
       // let noc = new window.Notification(option.title, option);
       // myNotification.DesktopMsg(option);
-      myNotification.createTipsWindow();
+      // myNotification.createTipsWindow();
       // let data = {
       //   url: "/notice",
       //   resizable: false,
@@ -245,9 +247,9 @@ export default {
       // this.refreshNote();
     },
     deleteNote(index) {
-      const element = document.querySelectorAll('.note-class')[index];
+      const element = document.querySelectorAll(".note-class")[index];
       console.log(element);
-      element.classList.add('note-fade');
+      element.classList.add("note-fade");
       setTimeout(() => {
         this.noteArray.splice(index, 1);
         this.refreshNote();
@@ -262,20 +264,20 @@ export default {
           if (this.noteArray.length > 0) {
             this.timer = setInterval(() => {
               if (
-                document.querySelectorAll('.tox-edit-area__iframe').length > 0
+                document.querySelectorAll(".tox-edit-area__iframe").length > 0
               ) {
                 document
-                  .querySelectorAll('.tox-edit-area__iframe')
+                  .querySelectorAll(".tox-edit-area__iframe")
                   .forEach((element) => {
                     element.contentWindow.document.addEventListener(
-                      'mousewheel',
+                      "mousewheel",
                       this.hander,
                       false
                     );
                   });
                 clearInterval(this.timer);
               } else {
-                console.log('interval');
+                console.log("interval");
               }
             }, 10);
           }
@@ -293,12 +295,12 @@ export default {
         this.calendarMenuVisible = true;
       }
       this.nowItem = item;
-      document.body.addEventListener('click', this.closeMenu);
+      document.body.addEventListener("click", this.closeMenu);
     },
     closeMenu() {
       this.todoMenuVisible = false;
       this.calendarMenuVisible = false;
-      document.body.removeEventListener('click', this.closeMenu);
+      document.body.removeEventListener("click", this.closeMenu);
     },
   },
 };
