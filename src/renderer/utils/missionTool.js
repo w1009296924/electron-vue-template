@@ -78,12 +78,10 @@ export function initMission() {
     });
   });
   //global里面的待办加入vuex
-  console.log('ggggg');
   fs.readFile(
     `${DOC_DIR}global\\Todo.txt`,
     'utf-8',
     (err, globalTodo) => {
-      console.log(globalTodo);
       const globalTodoList = JSON.parse(globalTodo).globalTodoList;
       if (globalTodoList.length > 0) {
         globalTodoList.forEach((data) => {
