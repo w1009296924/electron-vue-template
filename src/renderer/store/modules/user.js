@@ -32,7 +32,7 @@ const user = {
           commit("SET_NAME", data.username);
           console.log("SET_NAME");
         }
-
+        location.reload();
         resolve();
       });
     },

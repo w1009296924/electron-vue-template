@@ -12,9 +12,6 @@ import CHeader from './components/title';
 import '@/assets/font.css';
 export default {
   components: { CHeader },
-  mounted() {
-    this.$store.commit('INIT_MISSIONARRAY');
-  },
 };
 </script>
 

@@ -10,14 +10,14 @@ export const DEFAULT_VAL = {
         pendingName: "提交代码审核",
         rule: "提交内测前3天",
         compareTo: "提交内测",
-        timeInterval: -3,
+        beforeDays: 3,
         missionType: "全部",
       },
       {
         pendingName: "上传说明书、需规",
         rule: "提交内测前0天",
         compareTo: "提交内测",
-        timeInterval: 0,
+        beforeDays: 0,
         missionType: "全部",
       },
     ],
@@ -46,8 +46,12 @@ export const DEFAULT_VAL = {
 let DOC_DIR_TMP;
 try {
   DOC_DIR_TMP =
-    JSON.parse(fs.readFileSync(`${CONFIG_DIR}\\settings.ini`, "utf-8")).settings
-      .fileDirectory + "\\";
+    JSON.parse(
+      fs.readFileSync(
+        `${CONFIG_DIR}\\${store.state.user.name}\\settings.ini`,
+        "utf-8"
+      )
+    ).settings.fileDirectory + "\\";
 } catch (error) {
   DOC_DIR_TMP = DEFAULT_VAL.settings.fileDirectory + "\\";
 }
@@ -56,55 +60,55 @@ export const BASE_PENDINGRULE = [
   {
     pendingName: "提交内测评估",
     compareTo: "任务启动",
-    timeInterval: 3,
+    beforeDays: -3,
     missionType: "全部",
   },
   {
     pendingName: "提交内测",
     compareTo: "提交内测",
-    timeInterval: 0,
+    beforeDays: 0,
     missionType: "全部",
   },
   {
     pendingName: "提交业测评估",
     compareTo: "提交业测",
-    timeInterval: -3,
+    beforeDays: 3,
     missionType: "KEJI",
   },
   {
     pendingName: "提交业测",
     compareTo: "提交业测",
-    timeInterval: 0,
+    beforeDays: 0,
     missionType: "全部",
   },
   {
     pendingName: "投产信息登记",
     compareTo: "投产",
-    timeInterval: -9,
+    beforeDays: 9,
     missionType: "全部",
   },
   {
     pendingName: "提交自测报告",
     compareTo: "投产",
-    timeInterval: -9,
+    beforeDays: 9,
     missionType: "KEJI",
   },
   {
     pendingName: "上线确认书",
     compareTo: "投产",
-    timeInterval: -7,
+    beforeDays: 7,
     missionType: "UT-W",
   },
   {
     pendingName: "登记rel代码审核",
     compareTo: "投产",
-    timeInterval: -7,
+    beforeDays: 7,
     missionType: "全部",
   },
   {
     pendingName: "投产",
     compareTo: "投产",
-    timeInterval: 0,
+    beforeDays: 0,
     missionType: "全部",
   },
 ];

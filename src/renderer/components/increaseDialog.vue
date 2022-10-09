@@ -126,13 +126,15 @@ export default {
         this.$message({
           message: "请选择待办时间",
           type: "warning",
-          offset: 280,
+          offset: 180,
+          duration:1000
         });
       } else if (!this.pengingSth) {
         this.$message({
           message: "请输入待办事项",
           type: "warning",
-          offset: 280,
+          offset: 180,
+          duration:1000
         });
       } else {
         let pushObj = this.selectMisson ? 

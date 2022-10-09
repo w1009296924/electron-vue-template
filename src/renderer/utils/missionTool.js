@@ -8,9 +8,11 @@ export function initMission() {
   store.dispatch("initMissionData");
   //读取本地配置文件
   let settings = JSON.parse(
-    fs.readFileSync(`${CONFIG_DIR}\\settings.ini`, "utf-8")
+    fs.readFileSync(
+      `${CONFIG_DIR}\\${store.state.user.name}\\settings.ini`,
+      "utf-8"
+    )
   );
-  console.log(DOC_DIR);
   //是否有授权列表
   // const hasGrant = settings.settings.grantList.length > 0;
   //需要更新id的待办列表
@@ -53,13 +55,14 @@ export function initMission() {
           }
         });
         //生成本地待办文件
-        const todoObj = {
+        let todoObj = {
           missionNo: item.demandNo,
           missionName: item.taskName,
           todoDir: getDemandPath(item) + "\\" + "Todo.txt",
           status: false,
           children: pendingChildren,
         };
+        store.commit("SORT_MISSIONCHILDREN", todoObj);
         fs.stat(getDemandPath(item) + "\\" + "Todo.txt", (error) => {
           if (error) {
             fs.writeFile(
@@ -77,7 +80,6 @@ export function initMission() {
           getDemandPath(item) + "\\" + "Todo.txt",
           "utf-8",
           (err, data) => {
-            console.log(data);
             store.dispatch("addMissionData", [JSON.parse(data)]);
           }
         );
@@ -106,7 +108,7 @@ function getPendingDate(task, rule) {
       : rule.compareTo == "提交业测"
       ? task.uatTime
       : task.fireTime;
-  return subTrackTime(time, rule.timeInterval * 60 * 24);
+  return subTrackTime(time, rule.beforeDays * 60 * 24);
 }
 //获取归档目录上级的年月目录
 function getSubDemandPath(task) {

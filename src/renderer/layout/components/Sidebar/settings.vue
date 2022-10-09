@@ -249,14 +249,14 @@ export default {
           pendingName: "提交代码审核",
           rule: "提交内测前3天",
           compareTo:'提交内测',
-          timeInterval:-3,
+          beforeDays:3,
           missionType:'全部'
         },
         {
           pendingName: "上传说明书、需规",
           rule: "提交内测前0天",
           compareTo:'提交内测',
-          timeInterval:0,
+          beforeDays:0,
           missionType:'全部'
         },
       ],
@@ -302,7 +302,7 @@ export default {
       fileTool.writeSettingFile(this.settings);//本地保存配置文件
       if(this.doc_dir!=this.fileDirectory) {
         initData();
-        location.reload(true);
+        location.reload();
       }
       //todo 授权列表grantList 存入数据库中
       //入参 本人用户名 this.$store.state.user.name,授予权限人列表grantList[grant:授予对象,permission:授予权限(只读/新增)]
@@ -361,7 +361,7 @@ export default {
           return;
         } else {
           this.ruleList[index].compareTo = this.status;
-          this.ruleList[index].timeInterval = (this.isBefore?-1 : 1) * this.days;
+          this.ruleList[index].beforeDays = (this.isBefore?-1 : 1) * this.days;
           this.ruleList[index].rule = `${this.status}${
             this.isBefore ? "前" : "后"
           }${this.days}天`;
