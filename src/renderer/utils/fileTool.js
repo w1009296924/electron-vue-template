@@ -121,11 +121,11 @@ function writeSettingFile(settingObj) {
 }
 //创建文件夹
 function createDir(directory) {
-  fs.stat(directory, (error) => {
-    if (error) {
-      fs.mkdir(directory, function () {});
-    }
-  });
+  try {
+    fs.statSync(directory);
+  } catch {
+    fs.mkdirSync(directory);
+  }
 }
 export default {
   getAllfiles,
