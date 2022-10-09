@@ -1,5 +1,10 @@
 <template>
-  <el-dialog title="新增待办 " :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%">
+  <el-dialog
+    :title="editFlag ? '修改待办' : '新增待办'"
+    :close-on-click-modal="false"
+    :visible.sync="dialogVisible"
+    width="30%"
+  >
     <div class="dialogContent">
       <div class="dialogLine" style="margin-bottom: 8px">
         <div class="dialogText">待办时间</div>
@@ -17,19 +22,29 @@
           v-model="pengingSth"
           style="margin: 0 8px; width: 224px"
           placeholder="请输入"
-          @change="test"
         />
       </div>
       <div v-if="taskArray" class="dialogLine" style="margin-bottom: 8px">
         <div class="dialogText">绑定任务</div>
-        <el-select v-model="selectMisson" clearable style="margin: 0 8px;width:224px" placeholder="请选择（可为空）">
-          <el-option v-for="(item,index) in taskArray" :key="index" :value="item.taskName" />
+        <el-select
+          v-model="selectMisson"
+          :disabled="editFlag"
+          clearable
+          style="margin: 0 8px; width: 224px"
+          placeholder="请选择（可为空）"
+        >
+          <el-option
+            v-for="(item, index) in taskArray"
+            :key="index"
+            :value="item.taskName"
+          />
         </el-select>
       </div>
       <div class="dialogLine" style="margin-bottom: 8px">
         <div class="dialogText">待办人</div>
         <el-select
           v-model="investor"
+          :disabled="editFlag"
           style="margin: 0 8px; width: 224px"
           placeholder="请选择"
         >
@@ -59,7 +74,9 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="addPending">确 定</el-button>
+      <el-button type="primary" @click="editFlag ? editPending() : addPending()"
+        >确 定</el-button
+      >
     </span>
   </el-dialog>
 </template>
@@ -70,37 +87,41 @@ import { mapGetters } from "vuex";
 import { DOC_DIR } from "@/utils/constans.js";
 export default {
   name: "IncreaseDialog",
-  props:{
-    activeFirstPage: { type: Boolean},
+  props: {
+    activeFirstPage: { type: Boolean },
   },
   watch: {
     activeFirstPage: {
-      handler:function () {
-          this.investor = this.activeFirstPage ? this.investorList[0].investorNo:
-            this.investorList.length > 1 ?
-              this.investorList[1].investorNo :
-              ''
-      }
-    }
+      handler: function () {
+        this.investor = this.activeFirstPage
+          ? this.investorList[0].investorNo
+          : this.investorList.length > 1
+          ? this.investorList[1].investorNo
+          : "";
+      },
+    },
   },
   data() {
     return {
       dialogVisible: false,
+      editFlag: false,
+      editMission: {},
+      editIndex: 0,
       pendingTime: "",
       pengingSth: "",
       selectMisson: "",
-      investor: '000000', //新增key
+      investor: "000000", //新增key
       investorList: [
         {
-          permission:'新增',
+          permission: "新增",
           investorNo: "000000",
           investorName: "本人",
         },
         {
-          granted:'wenty',
-          permission:'新增',
-          investorNo:'12066391',
-          investorName:'文天阳'
+          granted: "wenty",
+          permission: "新增",
+          investorNo: "12066391",
+          investorName: "文天阳",
         },
       ],
       remindSwitch: false,
@@ -112,6 +133,7 @@ export default {
   },
   methods: {
     show(info = null) {
+      this.editFlag = false;
       if (info) {
         this.pendingTime = info;
       }
@@ -120,58 +142,109 @@ export default {
     hide() {
       this.dialogVisible = false;
     },
-    test() {},
+    showEdit(mission, pendingType) {
+      this.editFlag = true;
+      this.editMission = mission;
+      this.editIndex = Boolean(pendingType)
+        ? mission.children.findIndex((item) => {
+            if (item.pendingType == pendingType) {
+              return true;
+            }
+          })
+        : 0;
+      this.pendingTime =
+        mission.children[this.editIndex].date.length > 10
+          ? mission.children[this.editIndex].date
+          : mission.children[this.editIndex].date + " 00:00:00";
+      this.pengingSth = mission.missionNo
+        ? mission.children[this.editIndex].pendingType
+        : mission.missionName;
+      (this.selectMisson = mission.missionNo ? mission.missionName : ""),
+        (this.investor = "000000");
+      this.remindSwitch = Boolean(
+        mission.children[this.editIndex].remindSwitch
+      );
+      this.inputMin = mission.children[this.editIndex].remindTime
+        ? (new Date(this.pendingTime).getTime() -
+            new Date(mission.children[this.editIndex].remindTime).getTime()) /
+          60000
+        : 15;
+      this.dialogVisible = true;
+    },
     addPending() {
       if (!this.pendingTime) {
         this.$message({
           message: "请选择待办时间",
           type: "warning",
           offset: 180,
-          duration:1000
+          duration: 1000,
         });
       } else if (!this.pengingSth) {
         this.$message({
           message: "请输入待办事项",
           type: "warning",
           offset: 180,
-          duration:1000
+          duration: 1000,
         });
       } else {
-        let pushObj = this.selectMisson ? 
-        {
-          isBindMission: true,
-          missionName: this.selectMisson,
-          status: false,
-          children: [
-            {
-              id:"",
-              pendingType: this.pengingSth,
-              date: formatDateTime(this.pendingTime),
+        let pushObj = this.selectMisson
+          ? {
+              isBindMission: true,
+              missionName: this.selectMisson,
               status: false,
-              remindSwitch:this.remindSwitch,
-              remindTime:subTrackTime(this.pendingTime,this.inputMin)
-            },
-          ]
-        }:
-        {
-          isBindMission: false,
-          missionName: this.pengingSth,
-          todoDir:DOC_DIR+'global\\Todo.txt' ,
-          status: false,
-          children: [
-            {
-              id:"",
-              pendingType: "",
-              date: formatDateTime(this.pendingTime),
+              children: [
+                {
+                  id: "",
+                  pendingType: this.pengingSth,
+                  date: formatDateTime(this.pendingTime),
+                  status: false,
+                  remindSwitch: this.remindSwitch,
+                  remindTime: subTrackTime(this.pendingTime, this.inputMin),
+                },
+              ],
+            }
+          : {
+              isBindMission: false,
+              missionName: this.pengingSth,
+              todoDir: DOC_DIR + "global\\Todo.txt",
               status: false,
-              remindSwitch:this.remindSwitch,
-              remindTime:subTrackTime(this.pendingTime,this.inputMin),
-            },
-          ]
-        };
-        this.$store.dispatch("addMissionData", [ pushObj, true ]);
+              children: [
+                {
+                  id: "",
+                  pendingType: "",
+                  date: formatDateTime(this.pendingTime),
+                  status: false,
+                  remindSwitch: this.remindSwitch,
+                  remindTime: subTrackTime(this.pendingTime, this.inputMin),
+                },
+              ],
+            };
+        this.$store.dispatch("addMissionData", [pushObj, true]);
         this.dialogVisible = false;
       }
+    },
+    editPending() {
+      this.editMission.children[this.editIndex].date = formatDateTime(
+        this.pendingTime
+      );
+      if (this.editMission.missionNo) {
+        //绑定任务的待办 修改待办名称
+        this.editMission.children[this.editIndex].pendingType = this.pengingSth;
+      } else {
+        //全局待办修改待办名称
+        this.editMission.missionName = this.pengingSth;
+      }
+      this.editMission.children[this.editIndex].remindSwitch =
+        this.remindSwitch;
+      this.editMission.children[this.editIndex].remindTime = subTrackTime(
+        this.pendingTime,
+        this.inputMin
+      );
+      this.$store.dispatch("setMissionData", [
+        this.editMission,
+        { children: [this.editMission.children[this.editIndex]] },
+      ]);
+      this.dialogVisible = false;
     },
   },
 };

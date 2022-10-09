@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-main-box" :class="backgroudcolor">
+  <div class="todo-main-box" id="a" :class="backgroudcolor">
     <div
       class="todo-main-line"
       :class="{ smallMode: !showTaskName }"
@@ -98,13 +98,16 @@
         class="context-menu"
         :style="`left:${menuLeft}px;top:${menuTop}px;`"
       >
+        <div class="context-menu-item" @click="editTodo()">编辑待办</div>
         <div class="context-menu-item" @click="deleteTodo()">删除待办</div>
       </div></transition
     >
+    <IncreaseDialog ref="addTodoList"></IncreaseDialog>
   </div>
 </template>
 
 <script>
+import IncreaseDialog from "@/components/IncreaseDialog";
 export default {
   name: "PendingList",
   props: {
@@ -114,6 +117,9 @@ export default {
     },
     showCheck: { type: Boolean, default: true },
     showTaskName: { type: Boolean, default: true },
+  },
+  components: {
+    IncreaseDialog,
   },
   data() {
     return {
@@ -174,8 +180,9 @@ export default {
       return (startDate - endDate) / (24 * 60 * 60 * 1000);
     },
     openMenu([e, item]) {
-      console.log(e);
-      console.log(item);
+      // console.log(e);
+      // console.log(item);
+      document.getElementById("a").click();
       this.nowItem = item;
       this.menuLeft = e.clientX;
       this.menuTop = e.clientY;
@@ -196,6 +203,9 @@ export default {
           this.nowItem.pendingType,
         ]);
       }
+    },
+    editTodo() {
+      this.$refs.addTodoList.showEdit(this.todo, this.nowItem.pendingType);
     },
   },
 };

@@ -53,9 +53,9 @@ const mission = {
       state.missionArray = missionArray;
     },
     SET_MISSIONDATA: (state, [mission, change]) => {
-      //   console.log("in");
-      //   console.log(mission);
-      //   console.log(change);
+      // console.log("in");
+      // console.log(mission);
+      // console.log(change);
       let newArray;
       [...newArray] = state.missionArray;
       for (let index = 0; index < newArray.length; index++) {
@@ -68,7 +68,6 @@ const mission = {
                 if (item.pendingType == changeItem.pendingType) {
                   element.children[index] = { ...item, ...changeItem };
                 }
-                console.log(element.children[index]);
               });
             }
             element.children = element.children.sort((a, b) => {
@@ -79,7 +78,6 @@ const mission = {
                 new Date(Date.parse(a.date)) - new Date(Date.parse(b.date))
               );
             });
-            console.log(element.children);
           }
           let flag = true;
           for (let i = 0; i < element.children.length; i++) {
@@ -123,7 +121,6 @@ const mission = {
           break;
         }
       }
-      //   console.log(newArray);
       state.missionArray = newArray;
     },
     SORT_MISSIONARRAY: (state) => {
@@ -188,13 +185,13 @@ const mission = {
   },
   actions: {
     setMissionData({ commit }, [mission, change]) {
-      console.log("mission");
-      console.log(mission);
+      // console.log("mission");
+      // console.log(mission);
       commit("SET_MISSIONDATA", [mission, change]);
-      if (change.status != null || change.children) {
-        commit("SORT_MISSIONCHILDREN", mission);
-        commit("SORT_MISSIONARRAY");
-      }
+      // if (change.status != null || change.children) {
+      commit("SORT_MISSIONCHILDREN", mission);
+      commit("SORT_MISSIONARRAY");
+      // }
     },
     addMissionData({ commit }, [mission, increaseFlag = false]) {
       commit("ADD_MISSIONDATA", [mission, increaseFlag]);
