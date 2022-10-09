@@ -63,6 +63,6 @@ export default {
 }
 
 .tool-box:hover {
-  background-color: #a2acb6;
+  background-color: #ecf5ff;
 }
 </style>

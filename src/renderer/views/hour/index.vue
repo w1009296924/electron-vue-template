@@ -19,7 +19,7 @@
           </el-select>
           <!-- <i slot="reference" class="el-icon-refresh-right" :class="{'rotate' : rotate}" @click="refreshUnit" /> -->
         </div>
-        <div class="flexCenter" style="margin-bottom:20px;line-height: 40px;">
+        <div class="flexCenter" style="margin-bottom:20px;line-height: 32px;">
           剩余可填报工作量: {{ unit }}
         </div>
         <div class="flexCenter" style="margin-bottom:20px">

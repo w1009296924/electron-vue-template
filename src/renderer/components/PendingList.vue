@@ -253,7 +253,7 @@ export default {
 }
 
 .blue {
-  background: #84becc;
+  background: #d9e8fb;
 }
 .gray {
   opacity: 0.7;

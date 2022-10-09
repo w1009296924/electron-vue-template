@@ -28,7 +28,7 @@
           <div class="titleCenter">
             <el-select
               v-model="queryInvestor"
-              style="width: 130px"
+              style="width: 130px;padding-left: 10px;"
               placeholder="请选择"
             >
               <el-option
