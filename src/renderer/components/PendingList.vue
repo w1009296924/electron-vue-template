@@ -1,12 +1,22 @@
 <template>
   <div class="todo-main-box" :class="backgroudcolor">
-    <div class="todo-main-line" :class="{ smallMode: !showTaskName }">
+    <div
+      class="todo-main-line"
+      :class="{ smallMode: !showTaskName }"
+      @contextmenu.prevent="openMenu([$event, todo])"
+    >
       <div
         class="todo-date"
         :class="{ 'small-date': firstDetail.date.length > 10 }"
       >
-        <el-popover v-if="firstDetail.remindSwitch" placement="top-start" width="240" trigger="hover" :content="`提醒时间:${firstDetail.remindTime}`">
-          <i slot="reference" class="el-icon-alarm-clock"/>
+        <el-popover
+          v-if="firstDetail.remindSwitch"
+          placement="top-start"
+          width="240"
+          trigger="hover"
+          :content="`提醒时间:${firstDetail.remindTime}`"
+        >
+          <i slot="reference" class="el-icon-alarm-clock" />
         </el-popover>
         {{ firstDetail.date.substr(5) }}
       </div>
@@ -29,7 +39,13 @@
           </div>
         </div>
       </div>
-      <div v-if="firstDetail.pendingType" class="todo-type">
+      <div
+        v-if="firstDetail.pendingType"
+        class="todo-type"
+        @contextmenu.prevent.stop="
+          openMenu([$event, clickFlag ? todo.children[0] : todo])
+        "
+      >
         <div class="ellipsis">
           {{ firstDetail.pendingType }}
         </div>
@@ -50,17 +66,20 @@
         v-if="index != 0"
         class="todo-main-line"
       >
-        <div
-          class="todo-date"
-          :class="{ 'small-date': item.date.length > 10 }"
-        >
-          <el-popover v-if="item.remindSwitch" placement="top-start" width="240" trigger="hover" :content="`提醒时间:${item.remindTime}`">
-            <i slot="reference" class="el-icon-alarm-clock"/>
+        <div class="todo-date" :class="{ 'small-date': item.date.length > 10 }">
+          <el-popover
+            v-if="item.remindSwitch"
+            placement="top-start"
+            width="240"
+            trigger="hover"
+            :content="`提醒时间:${item.remindTime}`"
+          >
+            <i slot="reference" class="el-icon-alarm-clock" />
           </el-popover>
           {{ item.date.substr(5) }}
         </div>
         <div class="todo-name"></div>
-        <div class="todo-type">
+        <div class="todo-type" @contextmenu.prevent="openMenu([$event, item])">
           {{ item.pendingType }}
         </div>
         <div class="todo-check">
@@ -73,6 +92,15 @@
         </div>
       </div>
     </div>
+    <transition name="fade">
+      <div
+        v-show="todoMenuVisible"
+        class="context-menu"
+        :style="`left:${menuLeft}px;top:${menuTop}px;`"
+      >
+        <div class="context-menu-item" @click="deleteTodo()">删除待办</div>
+      </div></transition
+    >
   </div>
 </template>
 
@@ -93,6 +121,10 @@ export default {
       firstDetail: {},
       today: new Date(),
       hasDone: false,
+      menuLeft: 0,
+      menuTop: 0,
+      todoMenuVisible: false,
+      nowItem: null,
     };
   },
   computed: {
@@ -141,6 +173,30 @@ export default {
       let endDate = Date.parse(date2);
       return (startDate - endDate) / (24 * 60 * 60 * 1000);
     },
+    openMenu([e, item]) {
+      console.log(e);
+      console.log(item);
+      this.nowItem = item;
+      this.menuLeft = e.clientX;
+      this.menuTop = e.clientY;
+      this.todoMenuVisible = true;
+      document.body.addEventListener("click", this.closeMenu);
+    },
+    closeMenu() {
+      this.todoMenuVisible = false;
+      document.body.removeEventListener("click", this.closeMenu);
+    },
+    deleteTodo() {
+      console.log(this.nowItem.pendingType);
+      if (this.nowItem.children) {
+        this.$store.commit("DELETE_MISSION", this.todo);
+      } else {
+        this.$store.commit("DELETE_MISSIONCHILD", [
+          this.todo,
+          this.nowItem.pendingType,
+        ]);
+      }
+    },
   },
 };
 </script>
@@ -178,7 +234,7 @@ export default {
         font-size: 13px;
         line-height: 16px;
       }
-      .el-icon-alarm-clock{
+      .el-icon-alarm-clock {
         cursor: pointer;
         font-size: 16px;
       }
@@ -258,5 +314,35 @@ export default {
 .gray {
   opacity: 0.7;
   text-decoration: line-through; //删除线
+}
+.context-menu {
+  position: absolute;
+  background-color: #fff;
+  width: 70px;
+  font-size: 12px;
+  color: #444040;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  white-space: nowrap;
+  z-index: 1000;
+  .context-menu-item {
+    display: block;
+    line-height: 24px;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    &:hover {
+      cursor: pointer;
+      background: #66b1ff;
+      border-color: #66b1ff;
+      color: #fff;
+    }
+  }
 }
 </style>

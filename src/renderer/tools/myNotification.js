@@ -52,10 +52,13 @@ export default {
     // win.loadURL(`https://github.com`);
   },
   createTipsWindow() {
+    // var scaleFactor = require("electron").screen.getPrimaryDisplay().scaleFactor;
     const { BrowserWindow, screen } = require("@electron/remote");
+    let rate = screen.getPrimaryDisplay().workAreaSize.width / 1920;
+    console.log(rate);
     const win = new BrowserWindow({
-      width: 430,
-      height: 230,
+      width: parseInt(380 * rate),
+      height: parseInt(200 * rate),
       frame: false, // 无边框窗口
       show: false,
       y: 0,
@@ -68,6 +71,7 @@ export default {
       resizable: false, // 禁止窗口手动调整窗口大小
       // fullscreenable: false, // 禁止窗口可以进入全屏状态
       webPreferences: {
+        zoomFactor: rate,
         nodeIntegration: true,
         webSecurity: false,
         //使用webview标签 必须开启
@@ -81,7 +85,11 @@ export default {
       },
     });
     // 加载Tips页面，传入消息通信的事件名称和时间
-    win.loadURL(`http://localhost:9080/#/notice`);
+    const noteUrl =
+      process.env.NODE_ENV === "development"
+        ? `http://localhost:9080/#/notice`
+        : `file://${__dirname}/index.html`;
+    win.loadURL(noteUrl);
     const sizeObj = screen.getPrimaryDisplay().workAreaSize;
     const { width, height } = sizeObj;
     const [cwidth, cheight] = win.getContentSize();

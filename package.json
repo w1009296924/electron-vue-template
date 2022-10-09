@@ -29,7 +29,7 @@
       }
     ],
     "productName": "electron-vue-admin",
-    "appId": "org.Sky.electron-vue",
+    "appId": "Gow",
     "directories": {
       "output": "build"
     },
@@ -71,6 +71,7 @@
     "electron-updater": "^5.0.1",
     "express": "4.17.3",
     "fs-extra": "^10.1.0",
+    "node-notifier": "^10.0.1",
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {

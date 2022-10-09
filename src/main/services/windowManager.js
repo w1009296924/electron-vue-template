@@ -25,7 +25,7 @@ setIpc.Mainfunc(config.IsUseSysTitle);
 function createMainWindow() {
   /**
    * Initial window options
-   */ 25;
+   */
   let ccc = require("electron").screen.getPrimaryDisplay().workAreaSize.width;
   // var scaleFactor = require("electron").screen.getPrimaryDisplay().scaleFactor;
   let rate = ccc / 1920;

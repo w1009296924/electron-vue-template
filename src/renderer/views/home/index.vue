@@ -11,11 +11,7 @@
           ></el-button>
         </template>
         <transition-group class="mission-box" name="todo-trans" tag="div">
-          <div
-            v-for="item of missionArray"
-            :key="item.missionName"
-            @contextmenu.prevent="openMenu([$event, item])"
-          >
+          <div v-for="item of missionArray" :key="item.missionName">
             <PendingList :todo="item" /></div
         ></transition-group>
         <!-- {{ noteArray }}
@@ -45,6 +41,7 @@
               :key="index"
               v-model="item.content"
               class="note-class"
+              @input="changeNote"
               @deleteNote="deleteNote(index)"
             />
           </div>
@@ -56,6 +53,7 @@
             class="plus-btn"
             icon="el-icon-plus"
             size="mini"
+            @click="test"
           ></el-button>
         </template>
         <draggable
@@ -80,7 +78,7 @@
       </HomeCard>
     </div>
 
-    <transition name="fade">
+    <!-- <transition name="fade">
       <div
         v-show="todoMenuVisible"
         class="context-menu"
@@ -90,7 +88,7 @@
           删除待办
         </div>
       </div></transition
-    >
+    > -->
     <transition name="fade">
       <div
         v-show="calendarMenuVisible"
@@ -116,6 +114,8 @@ import MouseWheel from "@better-scroll/mouse-wheel";
 import { mapGetters } from "vuex";
 import myNotification from "@/tools/myNotification";
 import { getTaskTree } from "@/utils/taskTool.js";
+import { DOC_DIR } from "@/utils/constans.js";
+const fs = require("fs");
 BScroll.use(MouseWheel);
 export default {
   components: {
@@ -166,7 +166,7 @@ export default {
           url: "add",
         },
       ],
-      noteArray: [{ content: "" }, { content: "" }],
+      noteArray: [],
     };
   },
   computed: {
@@ -174,6 +174,7 @@ export default {
   },
   created() {
     console.log("created");
+    this.initNote();
   },
   mounted() {
     this.$nextTick(() => {
@@ -197,37 +198,38 @@ export default {
     }, 1000);
   },
   methods: {
-    onMove(e) {
-      if (e.relatedContext.element.name == "添加") return false;
-      return true;
-    },
-    hander(e) {
-      console.log("handel");
-      if (!e.view.document.hasFocus()) {
-        let eventClone = new e.constructor(e.type, e);
-        document
-          .querySelector(".note-box")
-          .firstChild.dispatchEvent(eventClone);
-      }
-    },
-    addTodo(item = null) {
-      // if(item){
-
-      // }
-      this.$refs.addTodo.show(item);
-    },
-    deleteTodo(item) {},
-    addNote() {
-      getTaskTree();
+    test() {
+      // getTaskTree();
       let option = {
         title: "test",
         body: "body",
         icon: "",
         href: "",
       };
+      const WindowsToaster = require("node-notifier").WindowsToaster;
+
+      var notifier = new WindowsToaster({
+        withFallback: false, // Fallback to Growl or Balloons?
+        customPath: undefined, // Relative/Absolute path if you want to use your fork of SnoreToast.exe
+      });
+
       // let noc = new window.Notification(option.title, option);
       // myNotification.DesktopMsg(option);
       // myNotification.createTipsWindow();
+      // const notifier = require("node-notifier");
+      notifier.notify(
+        {
+          title: "健康提醒",
+          message: "您已连续使用电脑45分钟了，要注意休息哦！",
+          // actions: ["OK"],
+
+          appID: " ",
+          // wait: true, // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
+        },
+        function (error, response, metadata) {
+          console.log(response, metadata);
+        }
+      );
       // let data = {
       //   url: "/notice",
       //   resizable: false,
@@ -249,14 +251,39 @@ export default {
       //     // ],
       //   },
       // ]);
+    },
+    onMove(e) {
+      if (e.relatedContext.element.name == "添加") return false;
+      return true;
+    },
+    hander(e) {
+      console.log("handel");
+      if (!e.view.document.hasFocus()) {
+        let eventClone = new e.constructor(e.type, e);
+        document
+          .querySelector(".note-box")
+          .firstChild.dispatchEvent(eventClone);
+      }
+    },
+    addTodo(item = null) {
+      // if(item){
 
-      // this.noteArray.push({ content: "" });
-      // this.$nextTick(() => {
-      //   const element =
-      //     document.querySelectorAll(".note-class")[this.noteArray.length - 1];
-      //   console.log(element);
-      // });
-      // this.refreshNote();
+      // }
+      this.$refs.addTodo.show(item);
+    },
+    deleteTodo(item) {
+      console.log(item);
+      // this.$store.commit("DELETE_MISSION", item);
+    },
+    addNote() {
+      this.noteArray.push({ content: "" });
+      this.$nextTick(() => {
+        const element =
+          document.querySelectorAll(".note-class")[this.noteArray.length - 1];
+        console.log(element);
+      });
+      this.saveNote();
+      this.refreshNote();
     },
     deleteNote(index) {
       const element = document.querySelectorAll(".note-class")[index];
@@ -264,6 +291,7 @@ export default {
       element.classList.add("note-fade");
       setTimeout(() => {
         this.noteArray.splice(index, 1);
+        this.saveNote();
         this.refreshNote();
       }, 400);
     },
@@ -295,6 +323,34 @@ export default {
           }
         });
       });
+    },
+    initNote() {
+      fs.readFile(`${DOC_DIR}global\\Note.txt`, "utf-8", (err, data) => {
+        if (err) {
+          this.noteArray = [{ content: "" }, { content: "" }];
+        } else {
+          // console.log(data);
+          this.noteArray = JSON.parse(data);
+        }
+      });
+    },
+    changeNote() {
+      console.log("change");
+      if (this.timeout !== null) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = setTimeout(() => {
+        this.saveNote();
+        this.timeout = null;
+      }, 3000);
+    },
+    saveNote() {
+      console.log("saved");
+      fs.writeFile(
+        `${DOC_DIR}global\\Note.txt`,
+        JSON.stringify(this.noteArray, null, 2),
+        () => {}
+      );
     },
     openMenu([e, item]) {
       console.log(e);

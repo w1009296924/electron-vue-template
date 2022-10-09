@@ -38,46 +38,10 @@
                 ></path>
                 <path
                   d="M512 512m-263 0a263 263 0 1 0 526 0 263 263 0 1 0-526 0Z"
-                  fill="#377FFC"
+                  :fill="iconColor(item)"
                   p-id="2538"
                 ></path>
               </svg>
-              <!-- <svg
-                t="1665227486084"
-                class="icon"
-                viewBox="0 0 1024 1024"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                p-id="2352"
-                width="18"
-                height="18"
-              >
-                <path
-                  d="M480 480m-288 0a4.5 4.5 0 1 0 576 0 4.5 4.5 0 1 0-576 0Z"
-                  p-id="2213"
-                ></path>
-                <path
-                  d="M512 963.765a451.765 451.765 0 1 1 0-903.53 451.765 451.765 0 0 1 0 903.53z m0-56.47a395.294 395.294 0 1 0 0-790.59 395.294 395.294 0 0 0 0 790.59z"
-                  fill="white"
-                  p-id="2353"
-                ></path>
-              </svg> -->
-              <!-- <svg
-                t="1665223523064"
-                class="icon"
-                viewBox="0 0 1024 1024"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                p-id="2212"
-                width="18"
-                height="18"
-                :fill="iconColor"
-              >
-                <path
-                  d="M480 480m-288 0a4.5 4.5 0 1 0 576 0 4.5 4.5 0 1 0-576 0Z"
-                  p-id="2213"
-                ></path>
-              </svg> -->
             </div>
 
             <div class="ellipsis">{{ item.taskName }}</div>
@@ -108,9 +72,25 @@ export default {
     return { showList: true };
   },
   computed: {
-    ...mapGetters(["nowTask"]),
+    ...mapGetters(["missionArray", "nowTask"]),
     iconColor() {
-      return "rgba(0, 0, 0, 0.45)";
+      return function (task) {
+        let mi =
+          this.missionArray.find((item) => {
+            return item.missionName == task.taskName;
+          }) || {};
+        if (mi.children && mi.children.length > 0 && !mi.children[0].status) {
+          const offDay = this.getDaysBetween(mi.children[0].date, new Date());
+          if (offDay <= 1) {
+            return "#ff4949"; //红色
+          } else if (offDay <= 3) {
+            return "#ffc129"; //橙色
+          } else if (offDay <= 5) {
+            return "#377FFC"; //蓝色
+          }
+        }
+        return "#2bcd24"; //绿色
+      };
     },
   },
   methods: {
@@ -121,6 +101,11 @@ export default {
         this.$store.commit("SET_NOWTASK", this.taskArray[index]);
       }, 200);
       // console.log(this.$store.getters.taskArray);
+    },
+    getDaysBetween(date1, date2) {
+      let startDate = Date.parse(date1);
+      let endDate = Date.parse(date2);
+      return (startDate - endDate) / (24 * 60 * 60 * 1000);
     },
   },
 };
@@ -183,6 +168,10 @@ export default {
         margin-left: 4px;
         height: 18px;
         width: 18px;
+        svg {
+          border-radius: 50%;
+          box-shadow: inset 0 0 1px 2px #0000000f;
+        }
       }
     }
   }

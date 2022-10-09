@@ -168,6 +168,23 @@ const mission = {
         );
       });
     },
+    DELETE_MISSION(state, mission) {
+      state.missionArray = state.missionArray.filter((item) => {
+        return item != mission;
+      });
+    },
+    DELETE_MISSIONCHILD(state, [mission, pendingType]) {
+      console.log(pendingType);
+      let index = state.missionArray.findIndex((item) => {
+        return item == mission;
+      });
+      state.missionArray[index].children = state.missionArray[
+        index
+      ].children.filter((child) => {
+        return child.pendingType != pendingType;
+      });
+      console.log(state.missionArray[index].children);
+    },
   },
   actions: {
     setMissionData({ commit }, [mission, change]) {

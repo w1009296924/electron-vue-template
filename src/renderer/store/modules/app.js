@@ -1,41 +1,41 @@
-
 const app = {
   state: {
     sidebar: {
-      opened: !+localStorage.getItem('sidebarStatus'),
-      withoutAnimation: false
+      // opened: !+localStorage.getItem('sidebarStatus'),
+      opened: false,
+      withoutAnimation: false,
     },
-    device: 'desktop'
+    device: "desktop",
   },
   mutations: {
-    TOGGLE_SIDEBAR: state => {
+    TOGGLE_SIDEBAR: (state) => {
       if (state.sidebar.opened) {
-        localStorage.setItem('sidebarStatus', 1)
+        localStorage.setItem("sidebarStatus", 1);
       } else {
-        localStorage.setItem('sidebarStatus', 0)
+        localStorage.setItem("sidebarStatus", 0);
       }
-      state.sidebar.opened = !state.sidebar.opened
+      state.sidebar.opened = !state.sidebar.opened;
     },
     CLOSE_SIDEBAR: (state, withoutAnimation) => {
-      localStorage.setItem('sidebarStatus', 1)
-      state.sidebar.opened = false
-      state.sidebar.withoutAnimation = withoutAnimation
+      localStorage.setItem("sidebarStatus", 1);
+      state.sidebar.opened = false;
+      state.sidebar.withoutAnimation = withoutAnimation;
     },
     TOGGLE_DEVICE: (state, device) => {
-      state.device = device
-    }
+      state.device = device;
+    },
   },
   actions: {
     ToggleSideBar: ({ commit }) => {
-      commit('TOGGLE_SIDEBAR')
+      commit("TOGGLE_SIDEBAR");
     },
-    CloseSideBar ({ commit }, { withoutAnimation }) {
-      commit('CLOSE_SIDEBAR', withoutAnimation)
+    CloseSideBar({ commit }, { withoutAnimation }) {
+      commit("CLOSE_SIDEBAR", withoutAnimation);
     },
-    ToggleDevice ({ commit }, device) {
-      commit('TOGGLE_DEVICE', device)
-    }
-  }
-}
+    ToggleDevice({ commit }, device) {
+      commit("TOGGLE_DEVICE", device);
+    },
+  },
+};
 
-export default app
+export default app;
