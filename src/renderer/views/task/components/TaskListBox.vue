@@ -79,7 +79,15 @@ export default {
           this.missionArray.find((item) => {
             return item.missionName == task.taskName;
           }) || {};
-        if (mi.children && mi.children.length > 0 && !mi.children[0].status) {
+        if (mi.children && mi.children.length > 0) {
+          if (mi.children[0].status) {
+            if (
+              mi.children.length == 1 ||
+              (mi.children.length > 1 && mi.children[1].status)
+            ) {
+              return "#2bcd24"; //绿色
+            }
+          }
           const offDay = this.getDaysBetween(mi.children[0].date, new Date());
           if (offDay <= 1) {
             return "#ff4949"; //红色

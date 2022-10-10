@@ -137,34 +137,34 @@ export default {
       quickEntryArray: [
         {
           name: "归档目录",
-          iconPath: require("@/assets/entry_飞云.png"),
-          url: "web:https://www.baidu.com",
+          iconPath: require("@/assets/entry_归档.png"),
+          url: "app:" + DOC_DIR,
         },
         {
           name: "百度",
-          iconPath: require("@/assets/entry_飞云.png"),
-          url: "app:D:/VSCodePro/electron-vue-template/src/renderer/assets/user.png",
+          iconPath: require("@/assets/entry_百度.png"),
+          url: "web:https://www.baidu.com",
         },
         {
           name: "Fdev",
-          iconPath: require("@/assets/entry_飞云.png"),
-          url: "web:https://www.baidu.com",
+          iconPath: require("@/assets/entry_Fdev.png"),
+          url: "web:http://10.134.13.25:8080/fdev/#/",
         },
         {
           name: "飞云",
           iconPath: require("@/assets/entry_飞云.png"),
-          url: "web:https://www.baidu.com",
+          url: "web:http://fcloud.spdb.com",
         },
         {
           name: "IPMP",
-          iconPath: require("@/assets/entry_飞云.png"),
-          url: "web:https://www.baidu.com",
+          iconPath: require("@/assets/entry_IPMP.png"),
+          url: "web:http://ipmp.spdb.com",
         },
-        {
-          name: "添加",
-          iconPath: require("@/assets/entry_飞云.png"),
-          url: "add",
-        },
+        // {
+        //   name: "添加",
+        //   iconPath: require("@/assets/entry_飞云.png"),
+        //   url: "add",
+        // },
       ],
       noteArray: [],
     };
@@ -270,10 +270,6 @@ export default {
 
       // }
       this.$refs.addTodo.show(item);
-    },
-    deleteTodo(item) {
-      console.log(item);
-      // this.$store.commit("DELETE_MISSION", item);
     },
     addNote() {
       this.noteArray.push({ content: "" });

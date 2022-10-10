@@ -14,11 +14,8 @@
             <i class="el-icon-circle-plus-outline" @click="showDialog" />
           </div>
           <div v-if="refreshFlag" class="maxHeight">
-            <transition-group  name="todo-trans" tag="div">
-              <div
-                v-for="item of missionArray"
-                :key="item.missionName"
-              >
+            <transition-group name="todo-trans" tag="div">
+              <div v-for="item of missionArray" :key="item.missionName">
                 <PendingList style="width: 1000px" :todo="item" /></div
             ></transition-group>
           </div>
@@ -28,7 +25,7 @@
           <div class="titleCenter">
             <el-select
               v-model="queryInvestor"
-              style="width: 130px;padding-left: 10px;"
+              style="width: 130px; padding-left: 10px"
               placeholder="请选择"
             >
               <el-option
@@ -58,7 +55,11 @@
           </div>
         </el-tab-pane>
       </el-tabs>
-      <IncreaseDialog ref="increaseDialog" :activeFirstPage="activeFirstPage" @refresh="refresh"/>
+      <IncreaseDialog
+        ref="increaseDialog"
+        :activeFirstPage="activeFirstPage"
+        @refresh="refresh"
+      />
     </div>
   </div>
 </template>
@@ -77,9 +78,9 @@ export default {
     return {
       activeName: "first",
       searchInput: "",
-      queryInvestor: "", 
+      queryInvestor: "",
       investorList: [],
-      refreshFlag:true,
+      refreshFlag: true,
       tableData2: [
         {
           id: 1,
@@ -202,15 +203,25 @@ export default {
   computed: {
     ...mapGetters(["missionArray"]),
     activeFirstPage() {
-      return this.activeName == 'first';
-    }
+      return this.activeName == "first";
+    },
   },
-  created(){
+  created() {
     //todo 从数据库获取授予了权限的人名单 getGrantedList
     //入参 本人用户名,授予我权限的人名单 grantedList[granted:授予我权限人,permission:授予我权限(只读/新增)]
     this.investorList = [
-      {granted:'liyw11',permission:'只读',investorNo:'12066390',investorName:'李亚威'},
-      {granted:'wenty',permission:'新增',investorNo:'12066391',investorName:'文天阳'}
+      {
+        granted: "liyw11",
+        permission: "只读",
+        investorNo: "12066390",
+        investorName: "李亚威",
+      },
+      {
+        granted: "wenty",
+        permission: "新增",
+        investorNo: "12066391",
+        investorName: "文天阳",
+      },
     ];
     this.queryInvestor = this.investorList?.[0].investorNo;
   },
@@ -222,8 +233,8 @@ export default {
       this.refreshFlag = false;
       this.$nextTick(() => {
         this.refreshFlag = true;
-      },500);
-    }
+      }, 500);
+    },
   },
 };
 </script>

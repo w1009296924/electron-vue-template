@@ -40,7 +40,7 @@ export default {
         shell.openExternal(arg);
       } else if (type === "app") {
         shell.openPath(arg);
-        shell.openPath(path.join(arg, "/"));
+        // shell.openPath(path.join(arg, "/"));
       }
     },
   },

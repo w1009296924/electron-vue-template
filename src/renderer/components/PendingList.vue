@@ -180,12 +180,12 @@ export default {
       return (startDate - endDate) / (24 * 60 * 60 * 1000);
     },
     openMenu([e, item]) {
-      // console.log(e);
+      console.log(e);
       // console.log(item);
       document.getElementById("a").click();
       this.nowItem = item;
-      this.menuLeft = e.clientX;
-      this.menuTop = e.clientY;
+      this.menuLeft = e.layerX;
+      this.menuTop = e.layerY;
       this.todoMenuVisible = true;
       document.body.addEventListener("click", this.closeMenu);
     },
