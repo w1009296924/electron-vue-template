@@ -28,7 +28,7 @@
         "url": "http://127.0.0.1"
       }
     ],
-    "productName": "electron-vue-admin",
+    "productName": "Gow",
     "appId": "Gow",
     "directories": {
       "output": "build"

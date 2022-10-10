@@ -200,12 +200,16 @@ export default {
   methods: {
     test() {
       // getTaskTree();
-      let option = {
-        title: "test",
-        body: "body",
-        icon: "",
-        href: "",
-      };
+      // let option = {
+      //   title: "健康提醒",
+      //   body: "您已连续使用电脑45分钟了，要注意休息哦！",
+      //   icon: require("@/assets/snoretoast.png"),
+      //   href: "",
+      // };
+      // let noc = new window.Notification(option.title, option);
+      // // myNotification.DesktopMsg(option);
+      // // myNotification.createTipsWindow();
+      // // const notifier = require("node-notifier");
       const WindowsToaster = require("node-notifier").WindowsToaster;
 
       var notifier = new WindowsToaster({
@@ -213,10 +217,6 @@ export default {
         customPath: undefined, // Relative/Absolute path if you want to use your fork of SnoreToast.exe
       });
 
-      // let noc = new window.Notification(option.title, option);
-      // myNotification.DesktopMsg(option);
-      // myNotification.createTipsWindow();
-      // const notifier = require("node-notifier");
       notifier.notify(
         {
           title: "健康提醒",

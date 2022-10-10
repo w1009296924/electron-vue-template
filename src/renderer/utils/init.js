@@ -7,45 +7,88 @@ import store from "@/store";
 //登录成功后执行该函数
 export function initData() {
   console.log("init函数执行---");
-  // getTaskTree().then((res) => {});
-  console.log("getTaskTree end---");
-  new Promise((resolve, reject) => {
-    //创建归档目录
-    fileTool.createDir(DOC_DIR);
-    //创建配置文件夹
-    fileTool.createDir(CONFIG_DIR);
-    //创建用户配置文件夹
-    fileTool.createDir(`${CONFIG_DIR}\\${store.state.user.name}`);
-    //创建配置文件
-    fs.stat(
-      `${CONFIG_DIR}\\${store.state.user.name}\\settings.ini`,
-      (error) => {
-        if (error) {
-          fileTool.writeSettingFile(DEFAULT_VAL);
-        }
-      }
-    );
-    //创建非绑定任务的待办目录及文件
-    fileTool.createDir(DOC_DIR + "global");
-    fs.stat(`${DOC_DIR}global\\Todo.txt`, (error) => {
-      if (error) {
-        fs.writeFile(
-          `${DOC_DIR}global\\Todo.txt`,
-          JSON.stringify({ globalTodoList: [] }, null, 2),
-          function () {
-            resolve();
+  getTaskTree()
+    .then((res) => {
+      console.log("getTaskTree end---");
+      new Promise((resolve, reject) => {
+        //创建归档目录
+        fileTool.createDir(DOC_DIR);
+        //创建配置文件夹
+        fileTool.createDir(CONFIG_DIR);
+        //创建用户配置文件夹
+        fileTool.createDir(`${CONFIG_DIR}\\${store.state.user.name}`);
+        //创建配置文件
+        fs.stat(
+          `${CONFIG_DIR}\\${store.state.user.name}\\settings.ini`,
+          (error) => {
+            if (error) {
+              fileTool.writeSettingFile(DEFAULT_VAL);
+            }
           }
         );
-      } else {
-        resolve();
-      }
+        //创建非绑定任务的待办目录及文件
+        fileTool.createDir(DOC_DIR + "global");
+        fs.stat(`${DOC_DIR}global\\Todo.txt`, (error) => {
+          if (error) {
+            fs.writeFile(
+              `${DOC_DIR}global\\Todo.txt`,
+              JSON.stringify({ globalTodoList: [] }, null, 2),
+              function () {
+                resolve();
+              }
+            );
+          } else {
+            resolve();
+          }
+        });
+      }).then(() => {
+        initMission();
+        setTimeout(() => {
+          initNotice();
+        }, 5000);
+      });
+    })
+    .catch((e) => {
+      console.log("getTaskTree end---");
+      new Promise((resolve, reject) => {
+        //创建归档目录
+        fileTool.createDir(DOC_DIR);
+        //创建配置文件夹
+        fileTool.createDir(CONFIG_DIR);
+        //创建用户配置文件夹
+        fileTool.createDir(`${CONFIG_DIR}\\${store.state.user.name}`);
+        //创建配置文件
+        fs.stat(
+          `${CONFIG_DIR}\\${store.state.user.name}\\settings.ini`,
+          (error) => {
+            if (error) {
+              fileTool.writeSettingFile(DEFAULT_VAL);
+            }
+          }
+        );
+        //创建非绑定任务的待办目录及文件
+        fileTool.createDir(DOC_DIR + "global");
+        fs.stat(`${DOC_DIR}global\\Todo.txt`, (error) => {
+          if (error) {
+            fs.writeFile(
+              `${DOC_DIR}global\\Todo.txt`,
+              JSON.stringify({ globalTodoList: [] }, null, 2),
+              function () {
+                resolve();
+              }
+            );
+          } else {
+            resolve();
+          }
+        });
+      }).then(() => {
+        initMission();
+        setTimeout(() => {
+          initNotice();
+        }, 5000);
+      });
     });
-  }).then(() => {
-    initMission();
-    setTimeout(() => {
-      initNotice();
-    }, 5000);
-  });
+
   // getTaskTree().then((res) => { initMission(); });
 }
 
@@ -86,15 +129,25 @@ function initNotice() {
         )}时间`
       );
       setTimeout(() => {
-        nn.notify({
+        let option = {
           title: "待办提醒",
-          message: `距${notice.info}还剩${formatInterval(
+          body: `距${notice.info}还剩${formatInterval(
             new Date(),
             Date.parse(notice.realDate)
           )}时间`,
-          appID: " ",
-          // actions: ["OK"],
-        });
+          icon: "",
+          href: "",
+        };
+        let noc = new window.Notification(option.title, option);
+        // nn.notify({
+        //   title: "待办提醒",
+        //   message: `距${notice.info}还剩${formatInterval(
+        //     new Date(),
+        //     Date.parse(notice.realDate)
+        //   )}时间`,
+        //   appID: " ",
+        //   // actions: ["OK"],
+        // });
       }, timeout);
     }
   });
