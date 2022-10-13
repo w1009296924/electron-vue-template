@@ -102,10 +102,7 @@
         <div class="context-menu-item" @click="deleteTodo()">删除待办</div>
       </div></transition
     >
-    <IncreaseDialog
-      ref="addTodoList"
-      @freshFirstLine="freshFirstLine"
-    ></IncreaseDialog>
+    <IncreaseDialog ref="addTodoList" @aaa="freshFirstLine"></IncreaseDialog>
   </div>
 </template>
 

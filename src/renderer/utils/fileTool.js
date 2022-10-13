@@ -1,4 +1,4 @@
-import { CONFIG_DIR } from "@/utils/constans.js";
+import { CONFIG_DIR, DOC_DIR } from "@/utils/constans.js";
 import store from "@/store";
 const fs = require("fs");
 const pathT = require("path");
@@ -126,6 +126,54 @@ function createDir(directory) {
   } catch {
     fs.mkdirSync(directory);
   }
+}
+//更新global/Todo.txt
+export function globalTodoUpdate(updateObj) {
+  fs.readFile(DOC_DIR + "global\\Todo.txt", "utf-8", (err, data) => {
+    let globalTodo = JSON.parse(data);
+    let globalTodoIdx = globalTodo.globalTodoList.findIndex((item) => {
+      if (item.missionName == updateObj.missionName) {
+        return true;
+      }
+    });
+    globalTodo.globalTodoList[globalTodoIdx] = updateObj;
+    fs.writeFile(
+      DOC_DIR + "global\\Todo.txt",
+      JSON.stringify(globalTodo, null, 2),
+      function () {}
+    );
+  });
+}
+//删除global/Todo.txt待办
+export function globalTodoDelete(missionName) {
+  fs.readFile(DOC_DIR + "global\\Todo.txt", "utf-8", (err, data) => {
+    let globalTodo = JSON.parse(data);
+    let globalTodoIdx = globalTodo.globalTodoList.findIndex((item) => {
+      if (item.missionName == missionName) {
+        return true;
+      }
+    });
+    console.log(globalTodo);
+    console.log(globalTodoIdx);
+    globalTodo.globalTodoList.splice(globalTodoIdx, 1);
+    fs.writeFile(
+      DOC_DIR + "global\\Todo.txt",
+      JSON.stringify(globalTodo, null, 2),
+      function () {}
+    );
+  });
+}
+//新增global/Todo.txt待办
+export function globalTodoAdd(addObj) {
+  fs.readFile(DOC_DIR + "global\\Todo.txt", "utf-8", (err, data) => {
+    let globalTodo = JSON.parse(data);
+    globalTodo.globalTodoList.push(addObj);
+    fs.writeFile(
+      DOC_DIR + "global\\Todo.txt",
+      JSON.stringify(globalTodo, null, 2),
+      function () {}
+    );
+  });
 }
 export default {
   getAllfiles,
