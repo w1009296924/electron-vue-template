@@ -102,7 +102,10 @@
         <div class="context-menu-item" @click="deleteTodo()">删除待办</div>
       </div></transition
     >
-    <IncreaseDialog ref="addTodoList"></IncreaseDialog>
+    <IncreaseDialog
+      ref="addTodoList"
+      @freshFirstLine="freshFirstLine"
+    ></IncreaseDialog>
   </div>
 </template>
 
@@ -203,6 +206,7 @@ export default {
           this.nowItem.pendingType,
         ]);
       }
+      this.freshFirstLine();
     },
     editTodo() {
       this.$refs.addTodoList.showEdit(this.todo, this.nowItem.pendingType);

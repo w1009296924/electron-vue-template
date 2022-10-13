@@ -33,7 +33,7 @@ export const DEFAULT_VAL = {
     category: "",
     jobContent: "",
     autoCommit: false,
-    autoCommitTime: "",
+    autoCommitTime: "17:30",
   },
   tools: {
     healthRemindSwitch: true, //健康提醒开关

@@ -1,4 +1,5 @@
 const fs = require("fs");
+import ElementUI from "element-ui";
 import { DOC_DIR } from "@/utils/constans.js";
 const mission = {
   state: {
@@ -17,6 +18,16 @@ const mission = {
             return true;
           }
         });
+        if (missionIdx == -1) {
+          ElementUI.Message({
+            message:
+              "已删除的任务可以删除归档任务文件夹下的Todo.txt后重新生成待办",
+            type: "error",
+            offset: 250,
+            duration: 2500,
+          });
+          return;
+        }
         newArray[missionIdx].children.push(missionObj.children[0]);
         newArray[missionIdx].children = newArray[missionIdx].children.sort(
           (a, b) => {
@@ -169,9 +180,14 @@ const mission = {
       state.missionArray = state.missionArray.filter((item) => {
         return item != mission;
       });
+      mission.children = [];
+      fs.writeFile(
+        mission.todoDir,
+        JSON.stringify(mission, null, 2),
+        function () {}
+      );
     },
     DELETE_MISSIONCHILD(state, [mission, pendingType]) {
-      console.log(pendingType);
       let index = state.missionArray.findIndex((item) => {
         return item == mission;
       });
@@ -180,6 +196,11 @@ const mission = {
       ].children.filter((child) => {
         return child.pendingType != pendingType;
       });
+      fs.writeFile(
+        mission.todoDir,
+        JSON.stringify(state.missionArray[index], null, 2),
+        function () {}
+      );
       console.log(state.missionArray[index].children);
     },
   },

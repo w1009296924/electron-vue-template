@@ -13,6 +13,7 @@ export function initMission() {
       "utf-8"
     )
   );
+  let nowDateTime = new Date().getTime();
   //是否有授权列表
   // const hasGrant = settings.settings.grantList.length > 0;
   //需要更新id的待办列表
@@ -80,7 +81,19 @@ export function initMission() {
           getDemandPath(item) + "\\" + "Todo.txt",
           "utf-8",
           (err, data) => {
-            store.dispatch("addMissionData", [JSON.parse(data)]);
+            const pushObj = JSON.parse(data);
+            const length = pushObj.children.length;
+            const intervalDays =
+              (nowDateTime -
+                new Date(pushObj.children[length - 1].date).getTime()) /
+              (60000 * 24 * 60);
+            //删除后的数据以及全部完成三天后的数据不展示
+            if (
+              length > 0 &&
+              (!pushObj.status || (pushObj.status && intervalDays < 3))
+            ) {
+              store.dispatch("addMissionData", [JSON.parse(data)]);
+            }
           }
         );
       }
@@ -92,7 +105,13 @@ export function initMission() {
     if (globalTodoList.length > 0) {
       globalTodoList.forEach((data) => {
         //如果有授权列表且待办id为空,数据插入 需要更新id的待办列表
-        store.dispatch("addMissionData", [data]);
+        const intervalDays =
+          (nowDateTime - new Date(data.children[0].date).getTime()) /
+          (60000 * 24 * 60);
+        //已完成三天后的数据不展示
+        if (!data.status || (data.status && intervalDays < 3)) {
+          store.dispatch("addMissionData", [data]);
+        }
       });
     }
   });

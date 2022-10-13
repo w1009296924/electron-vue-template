@@ -244,6 +244,7 @@ export default {
         this.editMission,
         { children: [this.editMission.children[this.editIndex]] },
       ]);
+      this.$emit("freshFirstLine");
       this.dialogVisible = false;
     },
   },
