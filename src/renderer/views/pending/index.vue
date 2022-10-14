@@ -10,12 +10,13 @@
               prefix-icon="el-icon-search"
               class="searchInput"
               v-model="searchInput"
+              @change="search"
             />
             <i class="el-icon-circle-plus-outline" @click="showDialog" />
           </div>
           <div v-if="refreshFlag" class="maxHeight">
             <transition-group name="todo-trans" tag="div">
-              <div v-for="item of missionArray" :key="item.missionName">
+              <div v-for="item of missionList" :key="item.missionName">
                 <PendingList style="width: 1000px" :todo="item" /></div
             ></transition-group>
           </div>
@@ -81,6 +82,7 @@ export default {
       queryInvestor: "",
       investorList: [],
       refreshFlag: true,
+      missionList: [],
       tableData2: [
         {
           id: 1,
@@ -223,6 +225,7 @@ export default {
         investorName: "文天阳",
       },
     ];
+    this.missionList = this.missionArray;
     this.queryInvestor = this.investorList?.[0].investorNo;
   },
   methods: {
@@ -234,6 +237,18 @@ export default {
       this.$nextTick(() => {
         this.refreshFlag = true;
       }, 500);
+    },
+    search() {
+      this.missionList = [];
+      for (let i = 0; i < this.missionArray.length; i++) {
+        //匹配需求编号
+        if (this.missionArray[i].missionNo.match(this.searchInput)) {
+          this.missionList.push(this.missionArray[i]);
+          //匹配需求名称
+        } else if (this.missionArray[i].missionName.match(this.searchInput)) {
+          this.missionList.push(this.missionArray[i]);
+        }
+      }
     },
   },
 };

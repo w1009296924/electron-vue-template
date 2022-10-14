@@ -2,6 +2,7 @@ const fs = require("fs");
 import ElementUI from "element-ui";
 import { DOC_DIR } from "@/utils/constans.js";
 import {
+  missionTodoWrite,
   globalTodoUpdate,
   globalTodoAdd,
   globalTodoDelete,
@@ -15,6 +16,12 @@ const mission = {
       state.missionArray = [];
     },
     ADD_MISSIONDATA: (state, [missionObj, increaseFlag]) => {
+      //初始化直接插入
+      if (!increaseFlag) {
+        state.missionArray.push(missionObj);
+        return;
+      }
+      //新增待办
       let newArray;
       [...newArray] = state.missionArray;
       let missionIdx = newArray.findIndex((item) => {
@@ -42,25 +49,16 @@ const mission = {
             return new Date(Date.parse(a.date)) - new Date(Date.parse(b.date));
           }
         );
-        fs.writeFile(
-          newArray[missionIdx].todoDir,
-          JSON.stringify(newArray[missionIdx], null, 2),
-          function () {}
-        );
+        missionTodoWrite(newArray[missionIdx]);
       } else {
-        if (increaseFlag) {
-          //向global/Todo.txt添加新增待办
-          //判断是否有重名的全局待办,如果有则更新,没有则新增
-          if (missionIdx == -1) {
-            newArray.push(missionObj);
-            globalTodoAdd(missionObj);
-          } else {
-            newArray[missionIdx] = missionObj;
-            globalTodoUpdate(missionObj);
-          }
-        } else {
-          //初始化直接插入
+        //向global/Todo.txt添加新增待办
+        //判断是否有重名的全局待办,如果有则更新,没有则新增
+        if (missionIdx == -1) {
           newArray.push(missionObj);
+          globalTodoAdd(missionObj);
+        } else {
+          newArray[missionIdx] = missionObj;
+          globalTodoUpdate(missionObj);
         }
       }
       // console.log(newArray);
@@ -114,11 +112,7 @@ const mission = {
           if (newArray[index].isBindMission === false) {
             globalTodoUpdate(submitObj);
           } else {
-            fs.writeFile(
-              newArray[index].todoDir,
-              JSON.stringify(newArray[index], null, 2),
-              function () {}
-            );
+            missionTodoWrite(newArray[index]);
           }
           break;
         }
@@ -176,11 +170,7 @@ const mission = {
       if (mission.todoDir == DOC_DIR + "global\\Todo.txt") {
         globalTodoDelete(mission.missionName);
       } else {
-        fs.writeFile(
-          mission.todoDir,
-          JSON.stringify(mission, null, 2),
-          function () {}
-        );
+        missionTodoWrite(mission);
       }
     },
     DELETE_MISSIONCHILD(state, [mission, pendingType]) {
@@ -192,12 +182,7 @@ const mission = {
       ].children.filter((child) => {
         return child.pendingType != pendingType;
       });
-      fs.writeFile(
-        mission.todoDir,
-        JSON.stringify(state.missionArray[index], null, 2),
-        function () {}
-      );
-      console.log(state.missionArray[index].children);
+      missionTodoWrite(mission);
     },
   },
   actions: {

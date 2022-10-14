@@ -127,6 +127,14 @@ function createDir(directory) {
     fs.mkdirSync(directory);
   }
 }
+//写入任务下的Todo.txt
+export function missionTodoWrite(missionObj) {
+  fs.writeFile(
+    missionObj.todoDir,
+    JSON.stringify(missionObj, null, 2),
+    function () {}
+  );
+}
 //更新global/Todo.txt
 export function globalTodoUpdate(updateObj) {
   fs.readFile(DOC_DIR + "global\\Todo.txt", "utf-8", (err, data) => {
@@ -153,8 +161,6 @@ export function globalTodoDelete(missionName) {
         return true;
       }
     });
-    console.log(globalTodo);
-    console.log(globalTodoIdx);
     globalTodo.globalTodoList.splice(globalTodoIdx, 1);
     fs.writeFile(
       DOC_DIR + "global\\Todo.txt",
