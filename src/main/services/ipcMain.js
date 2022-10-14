@@ -1,9 +1,17 @@
-import { ipcMain, dialog, BrowserWindow,globalShortcut  } from "electron";
+import {
+  ipcMain,
+  dialog,
+  BrowserWindow,
+  globalShortcut,
+  screen,
+} from "electron";
 import Server from "../server/index";
 import { winURL } from "../config/StaticPath";
 import downloadFile from "./downloadFile";
 import Update from "./checkupdate";
 import { updater } from "./HotUpdater";
+import NoticeAni from "./noticeAnimate";
+import path from "path";
 
 export default {
   Mainfunc(IsUseSysTitle) {
@@ -23,9 +31,9 @@ export default {
         return { status: true };
       }
     });
-    ipcMain.handle("notice-close", (event, args) => {
-      BrowserWindow.fromWebContents(event.sender).close();
-    });
+    // ipcMain.handle("notice-close", (event, args) => {
+    //   BrowserWindow.fromWebContents(event.sender).close();
+    // });
     ipcMain.handle("window-close", (event, args) => {
       BrowserWindow.fromWebContents(event.sender)?.close();
     });
@@ -96,9 +104,9 @@ export default {
       }
     });
 
-    ipcMain.on("drag-start", (event, path, icon) => {
+    ipcMain.on("drag-start", (event, filePath, icon) => {
       event.sender.startDrag({
-        file: path, // string | string[]
+        file: filePath, // string | string[]
         icon: icon,
       });
       return true;
@@ -121,10 +129,11 @@ export default {
       } else {
         //获取主窗口ID
         let parentID = event.sender.id;
+        let rate = screen.getPrimaryDisplay().workAreaSize.width / 1920;
         //创建窗口
         childWin = new BrowserWindow({
-          width: arg?.width || 842,
-          height: arg?.height || 595,
+          width: parseInt((arg?.width || 842) * rate),
+          height: parseInt((arg?.height || 595) * rate),
           //width 和 height 将设置为 web 页面的尺寸(译注: 不包含边框), 这意味着窗口的实际尺寸将包括窗口边框的大小，稍微会大一点。
           useContentSize: true,
           //自动隐藏菜单栏，除非按了Alt键。
@@ -134,12 +143,18 @@ export default {
           //窗口的最小高度
           minWidth: arg?.minWidth || 842,
           show: arg?.show ?? false,
+          alwaysOnTop: arg?.alwaysOnTop ?? false,
+          skipTaskbar: arg?.skipTaskbar ?? false,
+          movable: arg.movable,
           //窗口透明度
           opacity: arg?.opacity || 1.0,
+          transparent: true,
+          // backgroundColor: "#00000000",
           //当前窗口的父窗口ID
           parent: parentID,
-          frame: IsUseSysTitle,
+          frame: arg?.frame === false ? false : IsUseSysTitle,
           webPreferences: {
+            zoomFactor: rate,
             nodeIntegration: true,
             webSecurity: false,
             //使用webview标签 必须开启
@@ -150,14 +165,36 @@ export default {
             scrollBounce: process.platform === "darwin",
             // 临时修复打开新窗口报错
             contextIsolation: false,
+            // preload: path.resolve("./src/main/services/preload.js"),
           },
         });
         childWin.loadURL(winURL + `#${arg.url}`);
+        // childWin.loadURL(`http://localhost:9080/static/notice.html`);
+        let sizeObj;
+        if (arg?.isNotice) {
+          sizeObj = screen.getPrimaryDisplay().workAreaSize;
+          const { width, height } = sizeObj;
+          const [cwidth, cheight] = childWin.getContentSize();
+          const left = parseInt(width - (cwidth || 0) - 5);
+          const top = parseInt(height);
+          childWin.setPosition(left, top);
+        }
+
         cidJson.id = childWin?.id;
         cidJson.url = arg.url;
         cidArray.push(cidJson);
         childWin.webContents.once("dom-ready", () => {
-          childWin.show();
+          if (arg?.isNotice) {
+            NoticeAni.show(
+              childWin,
+              parseInt((arg?.height || 595) * rate),
+              parseInt((arg?.width || 842) * rate),
+              sizeObj.height
+            );
+            // show(childWin);
+          } else {
+            childWin.show();
+          }
           childWin.webContents.send("send-data", arg.sendData);
           if (arg.IsPay) {
             // 检查支付时候自动关闭小窗口
