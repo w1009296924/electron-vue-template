@@ -46,17 +46,17 @@
 </template>
 
 <script>
-import { getIcon, getAllfiles } from '@/utils/fileTool.js';
-import { getTaskPath } from '@/utils/taskTool.js';
-import { ipcRenderer, shell } from 'electron';
-import { mapGetters } from 'vuex';
-const path = require('path');
+import { getIcon, getAllfiles } from "@/utils/fileTool.js";
+import { getTaskPath } from "@/utils/taskTool.js";
+import { ipcRenderer, shell } from "electron";
+import { mapGetters } from "vuex";
+const path = require("path");
 export default {
-  name: 'task-list-box',
+  name: "task-list-box",
   props: {
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     taskArray: {
       type: Array,
@@ -73,19 +73,19 @@ export default {
       menuLeft: 0,
       menuTop: 0,
       allowDrop: true,
-      taskPath: '',
+      taskPath: "",
     };
   },
   watch: {
     nowTask() {
-      console.log('task changed');
+      console.log("task changed");
       console.log(getTaskPath(this.nowTask));
       this.taskPath = getTaskPath(this.nowTask);
       this.update();
     },
   },
   computed: {
-    ...mapGetters(['nowTask']),
+    ...mapGetters(["nowTask"]),
   },
   mounted() {
     this.update();
@@ -104,12 +104,15 @@ export default {
       console.log(e);
       e.preventDefault();
       this.allowDrop = false;
+      // const { Tray } = require("@electron/remote");
+      // const icon = new Tray("src/renderer/assets/document.png");
       // 发送IPC
       await ipcRenderer.send(
-        'drag-start',
+        "drag-start",
         item.path,
         // e.target.firstChild.firstChild.currentSrc
-        'src/renderer/assets/document.png'
+        // JSON.stringify(icon)
+        "static/assets/document.png"
       );
     },
     handleDrop(e) {
@@ -124,7 +127,7 @@ export default {
       if (!files || files.length <= 0) {
         return;
       }
-      const fs = require('fs');
+      const fs = require("fs");
       let count = 0;
       Object.keys(files).forEach((key) => {
         fs.cp(
@@ -146,11 +149,11 @@ export default {
     clickFile(e, index, item) {
       console.log(e);
       if (e.detail == 1) {
-        console.log('单击');
+        console.log("单击");
         this.selectedIndex = index;
       } else if (e.detail == 2) {
-        console.log('双击');
-        shell.openPath(path.join(item.path, '/'));
+        console.log("双击");
+        shell.openPath(path.join(item.path, "/"));
       }
     },
     async update() {
@@ -159,7 +162,7 @@ export default {
       getAllfiles(this.taskPath, arr);
       console.log(arr);
       for (let i = 0; i < arr.length; i++) {
-        if (arr[i].type == 'dir') {
+        if (arr[i].type == "dir") {
           continue;
         }
         // console.log(item.path);
@@ -174,27 +177,27 @@ export default {
       this.menuLeft = e.layerX;
       this.menuTop = e.layerY;
       this.nowFile = item;
-      document.body.addEventListener('click', this.closeMenu);
+      document.body.addEventListener("click", this.closeMenu);
     },
     closeMenu() {
       this.menuVisible = false;
-      document.body.removeEventListener('click', this.closeMenu);
+      document.body.removeEventListener("click", this.closeMenu);
     },
     openFile(file = this.nowFile) {
-      shell.openPath(path.join(file.path, '/'));
+      shell.openPath(path.join(file.path, "/"));
     },
     copyFile(file = this.nowFile) {
-      const { clipboard } = require('electron');
-      const fs = require('fs');
+      const { clipboard } = require("electron");
+      const fs = require("fs");
       fs.readFile(file.path, (data) => {
-        clipboard.writeBuffer('text/plain', data);
+        clipboard.writeBuffer("text/plain", data);
       });
       // console.log(clipboard.availableFormats());
       // console.log(clipboard.read("text/plain"));
       // console.log(clipboard.read("text/html"));
     },
     deleteFile(file = this.nowFile) {
-      const fs = require('fs');
+      const fs = require("fs");
       fs.rm(file.path, { recursive: true }, () => {
         this.update();
       });

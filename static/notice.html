@@ -3,6 +3,8 @@
         <input type = "button" onclick = "btnRst_Click()" value = "重置" >
                         <script>
                             function btnRst_Click() {
+                                console.log(window)
+                                console.log(window.darkMode)
                                 const { ipcRenderer } = require('electron');
  				                ipcRenderer.send('notice-close')
                             }

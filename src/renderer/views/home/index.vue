@@ -115,6 +115,7 @@ import { mapGetters } from "vuex";
 import myNotification from "@/tools/myNotification";
 import { getTaskTree } from "@/utils/taskTool.js";
 import { DOC_DIR } from "@/utils/constans.js";
+import { ipcRenderer } from "electron";
 const fs = require("fs");
 BScroll.use(MouseWheel);
 export default {
@@ -210,31 +211,69 @@ export default {
       // // myNotification.DesktopMsg(option);
       // // myNotification.createTipsWindow();
       // // const notifier = require("node-notifier");
-      const WindowsToaster = require("node-notifier").WindowsToaster;
 
-      var notifier = new WindowsToaster({
-        withFallback: false, // Fallback to Growl or Balloons?
-        customPath: undefined, // Relative/Absolute path if you want to use your fork of SnoreToast.exe
-      });
+      // const WindowsToaster = require("node-notifier").WindowsToaster;
 
-      notifier.notify(
-        {
-          title: "健康提醒",
-          message: "您已连续使用电脑45分钟了，要注意休息哦！",
-          // actions: ["OK"],
+      // var notifier = new WindowsToaster({
+      //   withFallback: false, // Fallback to Growl or Balloons?
+      //   customPath: undefined, // Relative/Absolute path if you want to use your fork of SnoreToast.exe
+      // });
 
-          appID: " ",
-          // wait: true, // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
-        },
-        function (error, response, metadata) {
-          console.log(response, metadata);
-        }
-      );
-      // let data = {
-      //   url: "/notice",
-      //   resizable: false,
-      // };
-      // ipcRenderer.invoke("open-notice", data);
+      // notifier.notify(
+      //   {
+      //     title: "健康提醒",
+      //     message: "您已连续使用电脑45分钟了，要注意休息哦！",
+      //     // actions: ["OK"],
+
+      //     appID: " ",
+      //     // wait: true, // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
+      //   },
+      //   function (error, response, metadata) {
+      //     console.log(response, metadata);
+      //   }
+      // );
+
+      let data = {
+        url: "/notice",
+        resizable: false,
+        frame: false,
+        isNotice: true,
+        width: 380,
+        height: 200,
+        alwaysOnTop: true,
+        skipTaskbar: true,
+        movable: false,
+        // opacity: 1.0,
+      };
+      ipcRenderer.invoke("open-win", data);
+
+      // const { BrowserWindow, screen } = require("@electron/remote");
+      // const winURL =
+      //   process.env.NODE_ENV === "development"
+      //     ? `http://localhost:9080/`
+      //     : `file://${__dirname}/index.html`;
+      // const win = new BrowserWindow({
+      //   width: 800,
+      //   height: 600,
+      //   // frame: false, // 无边框
+      //   // transparent: true,
+      //   webPreferences: {
+      //     nodeIntegration: true,
+      //     webSecurity: false,
+      //     //使用webview标签 必须开启prelo
+      //     // webviewTag: false,
+      //     // 如果是开发模式可以使用devTools
+      //     // devTools: process.env.NODE_ENV === "development",
+      //     // 在macos中启用橡皮动画
+      //     scrollBounce: process.platform === "darwin",
+      //     // 临时修复打开新窗口报错
+      //     // contextIsolation: false,
+      //   },
+      // });
+      // // win.loadURL(winURL + `#${"/notice"}`);
+      // // win.loadURL(winURL + `${"notice"}`);
+      // win.loadURL(`http://localhost:9080/static/notice.html`);
+      // win.showInactive();
 
       // this.$store.dispatch("setMissionData", [
       //   this.missionArray[0],

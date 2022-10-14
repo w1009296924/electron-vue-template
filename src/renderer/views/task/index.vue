@@ -74,6 +74,7 @@
                 :disabled="item !== '任务名'"
               >
                 <div
+                  v-if="item != '工作量（人月）'"
                   class="task-info-item-value"
                   :class="[
                     item == '任务名' ? 'first' : '',
@@ -84,6 +85,16 @@
                   @mouseleave="leaveText"
                 >
                   {{ nowTask[key] }}
+                </div>
+                <div v-else class="input-box">
+                  <el-input
+                    v-model="nowTask.workload"
+                    maxlength="4"
+                    size="mini"
+                    placeholder="0"
+                    @input="editInput"
+                    @blur="checkInput"
+                  ></el-input>
                 </div>
               </el-tooltip>
 
@@ -187,6 +198,18 @@ export default {
         this.loading = false;
       }, 500);
     },
+    editInput(value) {
+      this.nowTask.workload =
+        ("" + value) // 第一步：转成字符串
+          .replace(/[^\d^\.]+/g, "") // 第二步：把不是数字，不是小数点的过滤掉
+          .replace(/^0+(\d)/, "$1") // 第三步：第一位0开头，0后面为数字，则过滤掉，取后面的数字
+          .replace(/^\./, "0.") // 第四步：如果输入的第一位为小数点，则替换成 0. 实现自动补全
+          .match(/^\d*(\.?\d{0,1})/g)[0] || ""; // 第五步：最终匹配得到结果 以数字开头，只有一个小数点，而且小数点后面只能有0到2位小数
+    },
+    checkInput() {
+      this.nowTask.workload = ("" + this.nowTask.workload) // 第一步：转成字符串
+        .replace(/\.$/g, ""); // 第二步：把最后一位是小数点去掉
+    },
   },
 };
 </script>
@@ -265,6 +288,13 @@ export default {
             }
             &.click {
               background-color: #b3d2f9 !important;
+            }
+          }
+          .input-box {
+            width: 50px;
+            ::v-deep.el-input__inner {
+              text-align: center;
+              padding: 0 10px;
             }
           }
         }
