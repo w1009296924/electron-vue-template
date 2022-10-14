@@ -83,6 +83,7 @@ export default {
       investorList: [],
       refreshFlag: true,
       missionList: [],
+      grantMissionList: [],
       tableData2: [
         {
           id: 1,
