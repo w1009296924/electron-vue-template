@@ -62,7 +62,11 @@ export function loadTaskFile() {
         const workload = JSON.parse(fs.readFileSync(fileDir, "utf-8")).workload;
         fs.writeFile(
           fileDir,
-          JSON.stringify({ ...task, workload: workload }, null, 2),
+          JSON.stringify(
+            { ...task, fileDir: fileDir, workload: workload },
+            null,
+            2
+          ),
           function () {}
         );
       }
