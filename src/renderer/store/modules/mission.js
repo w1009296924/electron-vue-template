@@ -2,7 +2,7 @@ const fs = require("fs");
 import ElementUI from "element-ui";
 import { DOC_DIR } from "@/utils/constans.js";
 import {
-  missionTodoWrite,
+  writeFileFromObjDir,
   globalTodoUpdate,
   globalTodoAdd,
   globalTodoDelete,
@@ -49,7 +49,7 @@ const mission = {
             return new Date(Date.parse(a.date)) - new Date(Date.parse(b.date));
           }
         );
-        missionTodoWrite(newArray[missionIdx]);
+        writeFileFromObjDir(newArray[missionIdx]);
       } else {
         //向global/Todo.txt添加新增待办
         //判断是否有重名的全局待办,如果有则更新,没有则新增
@@ -112,7 +112,7 @@ const mission = {
           if (newArray[index].isBindMission === false) {
             globalTodoUpdate(submitObj);
           } else {
-            missionTodoWrite(newArray[index]);
+            writeFileFromObjDir(newArray[index]);
           }
           break;
         }
@@ -167,10 +167,10 @@ const mission = {
       });
       mission.children = [];
       //文件中删除
-      if (mission.todoDir == DOC_DIR + "global\\Todo.txt") {
+      if (mission.fileDir == DOC_DIR + "global\\Todo.txt") {
         globalTodoDelete(mission.missionName);
       } else {
-        missionTodoWrite(mission);
+        writeFileFromObjDir(mission);
       }
     },
     DELETE_MISSIONCHILD(state, [mission, pendingType]) {
@@ -182,7 +182,7 @@ const mission = {
       ].children.filter((child) => {
         return child.pendingType != pendingType;
       });
-      missionTodoWrite(mission);
+      writeFileFromObjDir(mission);
     },
   },
   actions: {

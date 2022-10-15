@@ -206,7 +206,7 @@ export default {
           : {
               isBindMission: false,
               missionName: this.pengingSth,
-              todoDir: DOC_DIR + "global\\Todo.txt",
+              fileDir: DOC_DIR + "global\\Todo.txt",
               status: false,
               children: [
                 {

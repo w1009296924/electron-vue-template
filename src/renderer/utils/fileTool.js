@@ -127,11 +127,11 @@ function createDir(directory) {
     fs.mkdirSync(directory);
   }
 }
-//写入任务下的Todo.txt
-export function missionTodoWrite(missionObj) {
+//写入文件
+export function writeFileFromObjDir(fileObj) {
   fs.writeFile(
-    missionObj.todoDir,
-    JSON.stringify(missionObj, null, 2),
+    fileObj.fileDir,
+    JSON.stringify(fileObj, null, 2),
     function () {}
   );
 }
@@ -181,10 +181,24 @@ export function globalTodoAdd(addObj) {
     );
   });
 }
+//获取归档目录上级的年月目录
+function getDatePath(task) {
+  const strs = task.startTimeReal.split("/");
+  const time = strs[0] + "年" + strs[1] + "月";
+  return pathT.join(DOC_DIR, time);
+}
+//获取任务目录
+function getDemandPath(task) {
+  const strs = task.startTime.split("/");
+  const time = strs[0] + "年" + strs[1] + "月";
+  return pathT.join(DOC_DIR, time, task.taskName);
+}
 export default {
   getAllfiles,
   getIcon,
   readSettingFile,
   writeSettingFile,
   createDir,
+  getDatePath,
+  getDemandPath,
 };
