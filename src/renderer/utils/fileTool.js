@@ -193,61 +193,6 @@ function getDemandPath(task) {
   const time = strs[0] + "年" + strs[1] + "月";
   return pathT.join(DOC_DIR, time, task.taskName);
 }
-function fileDisplay(filePath, dateRange) {
-  let fileList = [];
-  //根据文件路径读取文件，返回文件列表
-  fs.readdir(filePath, function (err, files) {
-    if (err) {
-      console.warn(err);
-    } else {
-      //遍历读取到的文件列表
-      files.forEach(function (filename) {
-        //获取当前文件的绝对路径
-        var filedir = pathT.join(filePath, filename);
-        //根据文件路径获取文件信息，返回一个fs.Stats对象
-        fs.stat(filedir, function (eror, stats) {
-          if (eror) {
-            console.warn("获取文件stats失败");
-          } else {
-            var isFile = stats.isFile(); //是文件
-            var isDir = stats.isDirectory(); //是文件夹
-            if (isFile && filedir.match("mission.txt")) {
-              fs.readFile(filedir, "utf-8", (err, data) => {
-                const taskObj = JSON.parse(data);
-                if (taskObj.fireTimeRel) {
-                  if (this.isBetweenDate(taskObj.fireTimeRel, dateRange)) {
-                    fileList.push({
-                      date: taskObj.fireTimeRel,
-                      missionNo: taskObj.demandNo,
-                      missionName: taskObj.taskName,
-                      workLoad: taskObj.workload,
-                    });
-                  }
-                } else {
-                  if (this.isBetweenDate(taskObj.fireTime, dateRange)) {
-                    fileList.push({
-                      date: taskObj.fireTime,
-                      missionNo: taskObj.demandNo,
-                      missionName: taskObj.taskName,
-                      workLoad: taskObj.workload,
-                    });
-                  }
-                }
-              });
-            }
-            if (isDir) {
-              fileDisplay(filedir); //递归，如果是文件夹，就继续遍历该文件夹下面的文件
-            }
-          }
-        });
-      });
-    }
-  });
-}
-function isBetweenDate(date, dateRange) {
-  const dateObj = new Date(date);
-  return dateObj >= dateRange[0] && dateObj <= dateRange[1];
-}
 export default {
   getAllfiles,
   getIcon,
@@ -256,5 +201,4 @@ export default {
   createDir,
   getDatePath,
   getDemandPath,
-  fileDisplay,
 };

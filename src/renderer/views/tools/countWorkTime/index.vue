@@ -31,14 +31,22 @@
             <el-table-column prop="workLoad" label="工作量" width="120">
               <template slot-scope="scope">
                 <el-input
+                  v-if="scope.row.isOK"
                   ref="gain"
                   size="mini"
-                  v-if="scope.row.isOK"
-                  @keyup.native.enter="enterClick(scope)"
+                  @blur="editWorkLoadSave(scope.row, scope.$index)"
+                  @keyup.native.enter="
+                    editWorkLoadSave(scope.row, scope.$index)
+                  "
                   v-model="scope.row.workLoad"
                   style="width: 100%; hight: 100%"
                 />
-                <span size="mini" v-else>{{ scope.row.workLoad }}</span>
+                <span
+                  v-else
+                  size="mini"
+                  @click="editWorkLoad(scope.row, scope.$index)"
+                  >{{ scope.row.workLoad }}</span
+                >
               </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -53,41 +61,57 @@
               </template>
             </el-table-column>
           </el-table>
-          <div style="margin: 12px 0">以下为预计投产但无实际投产日期的需求</div>
-          <el-table :data="otherTableData" border style="width: 100%">
-            <el-table-column
-              fixed
-              prop="date"
-              label="预计投产日期"
-              width="200"
-            />
-            <el-table-column prop="missionNo" label="需求编号" width="300" />
-            <el-table-column prop="missionName" label="需求名称" width="450" />
-            <el-table-column prop="workLoad" label="工作量" width="120">
-              <template slot-scope="scope">
-                <el-input
-                  ref="gain"
-                  size="mini"
-                  v-if="scope.row.isOK"
-                  @keyup.native.enter="enterClick(scope)"
-                  v-model="scope.row.workLoad"
-                  style="width: 100%; hight: 100%"
-                />
-                <span size="mini" v-else>{{ scope.row.workLoad }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <!-- <el-button type="text" size="small" @click="handleClick(scope.row)">{{ scope.row.isOK?'确认':'修改' }}</el-button> -->
-                <el-button
-                  type="text"
-                  size="small"
-                  @click="addCount(scope.$index, otherTableData)"
-                  >加入统计</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table>
+          <div v-show="otherTableData.length > 0">
+            <div style="margin: 12px 0">
+              以下为预计投产但无实际投产日期的需求
+            </div>
+            <el-table :data="otherTableData" border style="width: 100%">
+              <el-table-column
+                fixed
+                prop="date"
+                label="预计投产日期"
+                width="200"
+              />
+              <el-table-column prop="missionNo" label="需求编号" width="300" />
+              <el-table-column
+                prop="missionName"
+                label="需求名称"
+                width="450"
+              />
+              <el-table-column prop="workLoad" label="工作量" width="120">
+                <template slot-scope="scope">
+                  <el-input
+                    v-if="scope.row.isOK"
+                    ref="gain"
+                    size="mini"
+                    @blur="editWorkLoadSave(scope.row, scope.$index)"
+                    @keyup.native.enter="
+                      editWorkLoadSave(scope.row, scope.$index)
+                    "
+                    v-model="scope.row.workLoad"
+                    style="width: 100%; hight: 100%"
+                  />
+                  <span
+                    v-else
+                    size="mini"
+                    @click="editWorkLoad(scope.row, scope.$index)"
+                    >{{ scope.row.workLoad }}</span
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <!-- <el-button type="text" size="small" @click="handleClick(scope.row)">{{ scope.row.isOK?'确认':'修改' }}</el-button> -->
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="addCount(scope.$index, otherTableData)"
+                    >加入统计</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
         </div>
       </div>
     </div>
@@ -171,6 +195,7 @@ export default {
       //如果fireTimeRel为空,但fireTime在范围内的,记入list2
       //读取全部目录
       this.tableData = [];
+      this.otherTableData = [];
       this.workLoads = 0;
       const dateDir = fs.readdirSync(DOC_DIR);
       dateDir.forEach((filename) => {
@@ -185,6 +210,7 @@ export default {
                 if (taskObj.fireTimeRel) {
                   if (this.isBetweenDate(taskObj.fireTimeRel, this.dateRange)) {
                     this.tableData.push({
+                      fileDir: taskObj.fileDir,
                       date: taskObj.fireTimeRel,
                       missionNo: taskObj.demandNo,
                       missionName: taskObj.taskName,
@@ -196,6 +222,7 @@ export default {
                 } else {
                   if (this.isBetweenDate(taskObj.fireTime, this.dateRange)) {
                     this.otherTableData.push({
+                      fileDir: taskObj.fileDir,
                       date: taskObj.fireTime,
                       missionNo: taskObj.demandNo,
                       missionName: taskObj.taskName,
@@ -247,6 +274,12 @@ export default {
       if (column.label === "工作量") {
         this.$set(row, "isOK", false);
       }
+    },
+    editWorkLoad(row, index) {
+      this.$set(row, "isOK", true);
+    },
+    editWorkLoadSave(row, index) {
+      this.$set(row, "isOK", false);
     },
     isBetweenDate(date, dateRange) {
       const dateObj = new Date(date);
