@@ -7,18 +7,18 @@
     >
       <div
         class="todo-date"
-        :class="{ 'small-date': firstDetail.date.length > 10 }"
+        :class="{ 'small-date': todo.children[0].date.length > 10 }"
       >
         <el-popover
-          v-if="firstDetail.remindSwitch"
+          v-if="todo.children[0].remindSwitch"
           placement="top-start"
           width="240"
           trigger="hover"
-          :content="`提醒时间:${firstDetail.remindTime}`"
+          :content="`提醒时间:${todo.children[0].remindTime}`"
         >
           <i slot="reference" class="el-icon-alarm-clock" />
         </el-popover>
-        {{ firstDetail.date.substr(5) }}
+        {{ todo.children[0].date.substr(5) }}
       </div>
       <div v-if="showTaskName" class="todo-name">
         <div class="arrow-box">
@@ -40,22 +40,22 @@
         </div>
       </div>
       <div
-        v-if="firstDetail.pendingType"
+        v-if="todo.children[0].pendingType"
         class="todo-type"
         @contextmenu.prevent.stop="
           openMenu([$event, clickFlag ? todo.children[0] : todo])
         "
       >
         <div class="ellipsis">
-          {{ firstDetail.pendingType }}
+          {{ todo.children[0].pendingType }}
         </div>
       </div>
       <div class="todo-check">
         <el-checkbox
           :disabled="!showCheck"
-          v-model="firstDetail.status"
+          v-model="todo.children[0].status"
           class="checkbox"
-          @change="changeChildren($event, 0)"
+          @change="changeChildren($event, todo.children[0])"
         />
       </div>
     </div>
@@ -87,7 +87,7 @@
             :disabled="!showCheck"
             v-model="item.status"
             class="checkbox"
-            @change="changeChildren($event, 0)"
+            @change="changeChildren($event, item)"
           />
         </div>
       </div>
@@ -102,12 +102,13 @@
         <div class="context-menu-item" @click="deleteTodo()">删除待办</div>
       </div></transition
     >
-    <IncreaseDialog ref="addTodoList" @aaa="freshFirstLine"></IncreaseDialog>
+    <IncreaseDialog ref="addTodoList"></IncreaseDialog>
   </div>
 </template>
 
 <script>
 import IncreaseDialog from "@/components/IncreaseDialog";
+import { mapGetters } from "vuex";
 export default {
   name: "PendingList",
   props: {
@@ -124,7 +125,6 @@ export default {
   data() {
     return {
       clickFlag: false,
-      firstDetail: {},
       today: new Date(),
       hasDone: false,
       menuLeft: 0,
@@ -134,43 +134,42 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["lastUpdateMission"]),
+    hasDoneC() {
+      return this.todo.children[0]?.status;
+    },
     //灰色+删除线-已完成 红色-过期  绿色-5天 蓝色-0~5天
     backgroudcolor() {
       return this.hasDone
         ? "gray"
-        : new Date(this.firstDetail.date) < this.today
+        : new Date(this.todo.children[0].date) < this.today
         ? "red"
-        : this.getDaysBetween(new Date(this.firstDetail.date), this.today) > 5
+        : this.getDaysBetween(
+            new Date(this.todo.children[0].date),
+            this.today
+          ) > 5
         ? "green"
         : "blue";
     },
   },
-  created() {
-    this.freshFirstLine();
+  watch: {
+    hasDoneC(val) {
+      console.log(val);
+      clearInterval(this.timer);
+      this.timer = setTimeout(() => {
+        this.clickFlag = this.todo.children[0]?.status;
+        this.hasDone = val;
+      }, 500);
+    },
   },
   methods: {
-    freshFirstLine() {
-      if (this.todo.children && this.todo.children.length > 0) {
-        this.firstDetail = this.todo.children[0];
-        this.hasDone = this.firstDetail.status;
-        if (this.hasDone) this.clickFlag = false; //全部事项完成收起
-      } else {
-        this.firstDetail = this.todo;
-        this.hasDone = this.firstDetail.status;
-        this.clickFlag = false;
-      }
-    },
     expandList() {
       this.clickFlag = !this.clickFlag;
     },
-    changeChildren(value, index) {
+    changeChildren(value, item) {
       console.log(value);
       setTimeout(() => {
-        this.$store.dispatch("setMissionData", [
-          this.parent || this.todo,
-          { children: [] },
-        ]);
-        this.freshFirstLine();
+        this.$store.dispatch("modifyPending", [item.id, item]);
         this.$emit("refresh");
       }, 500);
     },
@@ -196,14 +195,10 @@ export default {
     deleteTodo() {
       console.log(this.nowItem.pendingType);
       if (this.nowItem.children) {
-        this.$store.commit("DELETE_MISSION", this.todo);
+        this.$store.dispatch("deleteMission", this.todo.id);
       } else {
-        this.$store.commit("DELETE_MISSIONCHILD", [
-          this.todo,
-          this.nowItem.pendingType,
-        ]);
+        this.$store.dispatch("deletePending", [this.todo.id, this.nowItem.id]);
       }
-      this.freshFirstLine();
     },
     editTodo() {
       this.$refs.addTodoList.showEdit(this.todo, this.nowItem.pendingType);

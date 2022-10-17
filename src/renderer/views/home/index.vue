@@ -175,6 +175,7 @@ export default {
   },
   created() {
     console.log("created");
+    console.log(Math.random());
     this.initNote();
   },
   mounted() {
@@ -397,6 +398,7 @@ export default {
       } else {
         this.calendarMenuVisible = true;
       }
+      console.log(this.calendarMenuVisible);
       this.nowItem = item;
       document.body.addEventListener("click", this.closeMenu);
     },

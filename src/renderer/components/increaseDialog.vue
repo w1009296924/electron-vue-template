@@ -219,7 +219,7 @@ export default {
                 },
               ],
             };
-        this.$store.dispatch("addMissionData", [pushObj, true]);
+        this.$store.dispatch("addMission", pushObj);
         this.dialogVisible = false;
       }
     },
@@ -233,6 +233,10 @@ export default {
       } else {
         //全局待办修改待办名称
         this.editMission.missionName = this.pengingSth;
+        this.$store.dispatch("modifyMission", [
+          this.editMission.id,
+          { missionName: this.pengingSth },
+        ]);
       }
       this.editMission.children[this.editIndex].remindSwitch =
         this.remindSwitch;
@@ -240,9 +244,9 @@ export default {
         this.pendingTime,
         this.inputMin
       );
-      this.$store.dispatch("setMissionData", [
-        this.editMission,
-        { children: [this.editMission.children[this.editIndex]] },
+      this.$store.dispatch("modifyPending", [
+        this.editMission.children[this.editIndex].id,
+        this.editMission.children[this.editIndex],
       ]);
       this.$emit("freshFirstLine");
       this.dialogVisible = false;

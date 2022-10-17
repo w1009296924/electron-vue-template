@@ -70,28 +70,46 @@
         <div :style="{ top: positionTop + 'px' }" class="days">
           <div class="item" v-for="(item, index) in dates" :key="index">
             <div class="restDay" v-if="item.isRestDay">休</div>
-            <div
-              class="day"
-              @contextmenu.prevent="openMenu($event, item)"
-              @click="selectOne(item, $event)"
-              :class="{
-                choose: choose == `${item.year}-${item.month}-${item.date}`,
-                todayChoose: isTodayChoose(item.year, item.month, item.date),
-                nolm: !item.isCurM,
-                today: isToday(item.year, item.month, item.date),
-              }"
+            <el-popover
+              placement="right"
+              width="200"
+              trigger="hover"
+              :open-delay="300"
+              @show="getTodoOfDay(item)"
             >
+              <div>{{ item.month + "月" + item.date + "日 待办" }}</div>
+              <div v-for="(todo, index) in todoList" :key="index">
+                <div>{{ todo.parent.missionName }}</div>
+                <div>{{ todo.child.pendingType }}</div>
+                <el-checkbox
+                  v-model="todo.child.status"
+                  @change="changeTodoStatus($event, todo)"
+                ></el-checkbox>
+              </div>
               <div
-                class="markDay"
-                v-if="isMarkDay(item.year, item.month, item.date)"
-                :class="[
-                  choose == `${item.year}-${item.month}-${item.date}`
-                    ? 'markDayChoose'
-                    : 'markDayNoChoose',
-                ]"
-              ></div>
-              {{ Number(item.date) }}
-            </div>
+                class="day"
+                slot="reference"
+                @contextmenu.prevent="openMenu($event, item)"
+                @click="selectOne(item, $event)"
+                :class="{
+                  choose: choose == `${item.year}-${item.month}-${item.date}`,
+                  todayChoose: isTodayChoose(item.year, item.month, item.date),
+                  nolm: !item.isCurM,
+                  today: isToday(item.year, item.month, item.date),
+                }"
+              >
+                <div
+                  class="markDay"
+                  v-if="isMarkDay(item.year, item.month, item.date)"
+                  :class="[
+                    choose == `${item.year}-${item.month}-${item.date}`
+                      ? 'markDayChoose'
+                      : 'markDayNoChoose',
+                  ]"
+                ></div>
+                {{ Number(item.date) }}
+              </div>
+            </el-popover>
           </div>
         </div>
       </div>
@@ -114,6 +132,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "Calendar",
   props: {
@@ -171,6 +190,7 @@ export default {
       toLeft: false,
       leaveRight: false,
       toRight: false,
+      todoList: [],
     };
   },
   created() {
@@ -202,6 +222,15 @@ export default {
       this.$emit("changeDates", { dates: this.dates });
     },
   },
+  computed: {
+    ...mapGetters(["missionArray"]),
+    // 顶部星期栏
+    weekDay() {
+      return this.weektext
+        .slice(this.weekstart)
+        .concat(this.weektext.slice(0, this.weekstart));
+    },
+  },
   mounted() {
     if (this.selectDate) {
       this.choose = this.selectDate;
@@ -211,14 +240,6 @@ export default {
       this.choose = this.getToday().date;
     }
     this.toggle();
-  },
-  computed: {
-    // 顶部星期栏
-    weekDay() {
-      return this.weektext
-        .slice(this.weekstart)
-        .concat(this.weektext.slice(0, this.weekstart));
-    },
   },
   methods: {
     formatNum(num) {
@@ -465,6 +486,25 @@ export default {
       date.setHours(17, 30);
       this.$emit("openMenu", [e, date]);
     },
+    getTodoOfDay(dateItem) {
+      this.todoList = [];
+      this.missionArray.forEach((mission) => {
+        mission.children.forEach((child) => {
+          if (
+            child.date.substring(0, 10) ==
+            `${dateItem.year}-${dateItem.month}-${dateItem.date}`
+          ) {
+            this.todoList.push({ child: child, parent: mission });
+          }
+        });
+      });
+    },
+    changeTodoStatus(value, todo) {
+      console.log("changeTodoStatus");
+      console.log(value);
+      console.log(todo.child.id);
+      this.$store.dispatch("modifyPending", [todo.child.id, todo.child]);
+    },
   },
 };
 </script>
@@ -598,7 +638,7 @@ export default {
           pointer-events: none;
         }
         .restDay {
-          z-index: 1004;
+          z-index: 1;
           font-size: 12px;
           line-height: 12px;
           position: absolute;
@@ -666,7 +706,6 @@ export default {
     transition: all 0.2s ease-in-out;
   }
 }
-
 .to-top-ani {
   animation: to-top 0.4s ease forwards;
 }

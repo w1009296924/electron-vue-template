@@ -70,7 +70,7 @@ export function initMission() {
           }
         });
         //待办加入vuex
-        store.dispatch("addMissionData", [todoObj]);
+        store.dispatch("addMission", todoObj);
       } else {
         //任务待办加入vuex
         fs.readFile(
@@ -88,7 +88,7 @@ export function initMission() {
               length > 0 &&
               (!pushObj.status || (pushObj.status && intervalDays < 3))
             ) {
-              store.dispatch("addMissionData", [JSON.parse(data)]);
+              store.dispatch("addMission", JSON.parse(data));
             }
           }
         );
@@ -106,7 +106,7 @@ export function initMission() {
           (60000 * 24 * 60);
         //已完成三天后的数据不展示
         if (!data.status || (data.status && intervalDays < 3)) {
-          store.dispatch("addMissionData", [data]);
+          store.dispatch("addMission", data);
         }
       });
     }

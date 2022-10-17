@@ -12,6 +12,7 @@ const getters = {
   taskArray: (state) => state.task.taskArray,
   nowTask: (state) => state.task.nowTask,
   missionArray: (state) => state.mission.missionArray,
+  lastUpdateMission: (state) => state.mission.lastUpdateMission,
 };
 
 export default getters;
