@@ -22,6 +22,8 @@ const task = {
         fireTime: "2022/10/18",
         // fireTimeReal: "2022/10/18",
         workload: "0.4",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "develop",
@@ -43,6 +45,8 @@ const task = {
         fireTime: "2022/11/12",
         // fireTimeReal: "2022/10/18",
         workload: "0.1",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "develop",
@@ -64,6 +68,8 @@ const task = {
         fireTime: "2022/11/12",
         // fireTimeReal: "2022/10/18",
         workload: "0.1",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "develop",
@@ -85,6 +91,8 @@ const task = {
         fireTime: "2022/11/12",
         // fireTimeReal: "2022/10/18",
         workload: "0.1",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "sit",
@@ -106,6 +114,8 @@ const task = {
         fireTime: "2022/11/12",
         // fireTimeReal: "2022/10/18",
         workload: "0.2",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "sit",
@@ -127,6 +137,8 @@ const task = {
         fireTime: "2022/11/08",
         // fireTimeReal: "2022/10/18",
         workload: "0.1",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "sit",
@@ -148,6 +160,8 @@ const task = {
         fireTime: "2022/09/27",
         // fireTimeReal: "2022/10/18",
         workload: "0.5",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "uat",
@@ -169,6 +183,8 @@ const task = {
         fireTime: "2022/09/06",
         // fireTimeReal: "2022/10/18",
         workload: "1.2",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "uat",
@@ -190,6 +206,8 @@ const task = {
         fireTime: "2022/09/06",
         // fireTimeReal: "2022/10/18",
         workload: "0.3",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "rel",
@@ -211,6 +229,8 @@ const task = {
         fireTime: "2022/09/09",
         // fireTimeReal: "2022/10/18",
         workload: "0.1",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
       {
         state: "rel",
@@ -232,6 +252,8 @@ const task = {
         fireTime: "2022/09/13",
         // fireTimeReal: "2022/10/18",
         workload: "0.1",
+        fileDir:
+          "D:\\liyw11归档目录\\2022年09月\\UT-WLJR-2022-0912-还款交易等联机反欺诈系统需求（手机信用卡）\\mission.txt",
       },
     ],
   },

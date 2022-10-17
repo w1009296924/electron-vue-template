@@ -42,6 +42,17 @@ export function getTaskTree() {
         });
       })
       .catch((e) => {
+        store.getters.taskArray.forEach((task, index) => {
+          //判断有无该任务文件夹,没有则创建文件夹
+          fs.stat(fileTool.getDemandPath(task), (error) => {
+            if (error) {
+              //先生成年月的文件夹
+              fileTool.createDir(fileTool.getDatePath(task));
+              //再生成任务文件夹
+              fileTool.createDir(fileTool.getDemandPath(task));
+            }
+          });
+        });
         reject();
       });
   });

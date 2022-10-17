@@ -135,6 +135,12 @@ export function writeFileFromObjDir(fileObj) {
     function () {}
   );
 }
+//本地文件更新任务工作量
+export function setWorkLoad(fileDir, workload) {
+  let file = JSON.parse(fs.readFileSync(fileDir));
+  file.workload = workload;
+  fs.writeFile(fileDir, JSON.stringify(file, null, 2), function () {});
+}
 //更新global/Todo.txt
 export function globalTodoUpdate(updateObj) {
   fs.readFile(DOC_DIR + "global\\Todo.txt", "utf-8", (err, data) => {
@@ -201,4 +207,5 @@ export default {
   createDir,
   getDatePath,
   getDemandPath,
+  setWorkLoad,
 };

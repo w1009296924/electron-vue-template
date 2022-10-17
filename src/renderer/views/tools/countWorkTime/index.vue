@@ -31,27 +31,23 @@
             <el-table-column prop="workLoad" label="工作量" width="120">
               <template slot-scope="scope">
                 <el-input
-                  v-if="scope.row.isOK"
                   ref="gain"
                   size="mini"
                   @blur="editWorkLoadSave(scope.row, scope.$index)"
-                  @keyup.native.enter="
-                    editWorkLoadSave(scope.row, scope.$index)
-                  "
                   v-model="scope.row.workLoad"
                   style="width: 100%; hight: 100%"
                 />
-                <span
+                <!-- <span
+                  v-if="scope.row.isOK"
                   v-else
                   size="mini"
                   @click="editWorkLoad(scope.row, scope.$index)"
                   >{{ scope.row.workLoad }}</span
-                >
+                > -->
               </template>
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <!-- <el-button type="text" size="small" @click="handleClick(scope.row)">{{ scope.row.isOK?'确认':'修改' }}</el-button> -->
                 <el-button
                   type="text"
                   size="small"
@@ -81,27 +77,23 @@
               <el-table-column prop="workLoad" label="工作量" width="120">
                 <template slot-scope="scope">
                   <el-input
-                    v-if="scope.row.isOK"
                     ref="gain"
                     size="mini"
                     @blur="editWorkLoadSave(scope.row, scope.$index)"
-                    @keyup.native.enter="
-                      editWorkLoadSave(scope.row, scope.$index)
-                    "
                     v-model="scope.row.workLoad"
                     style="width: 100%; hight: 100%"
                   />
-                  <span
+                  <!-- <span
+                    v-if="scope.row.isOK"
                     v-else
                     size="mini"
                     @click="editWorkLoad(scope.row, scope.$index)"
                     >{{ scope.row.workLoad }}</span
-                  >
+                  > -->
                 </template>
               </el-table-column>
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <!-- <el-button type="text" size="small" @click="handleClick(scope.row)">{{ scope.row.isOK?'确认':'修改' }}</el-button> -->
                   <el-button
                     type="text"
                     size="small"
@@ -119,6 +111,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import fileTool from "@/utils/fileTool.js";
 import { DOC_DIR } from "@/utils/constans";
 import ToolTitle from "../components/toolTitle";
@@ -169,6 +162,9 @@ export default {
       otherTableData: [],
     };
   },
+  computed: {
+    ...mapGetters(["taskArray"]),
+  },
   mounted() {
     //从本地配置中读取上次选择的时间范围
     this.settings = fileTool.readSettingFile();
@@ -216,8 +212,8 @@ export default {
                       missionName: taskObj.taskName,
                       workLoad: taskObj.workload,
                     });
-                    this.workLoads += Number(taskObj.workload);
-                    console.log(this.workLoads);
+                    this.workLoads =
+                      (this.workLoads * 1000 + taskObj.workLoad * 1000) / 1000;
                   }
                 } else {
                   if (this.isBetweenDate(taskObj.fireTime, this.dateRange)) {
@@ -235,10 +231,6 @@ export default {
           });
         }
       });
-    },
-    handleClick(row) {
-      this.$set(row, "isOK", !row.isOK);
-      //TODO 修改数据
     },
     deleteRow(index, rows) {
       // this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
@@ -267,7 +259,8 @@ export default {
     },
     addCount(index, rows) {
       this.tableData.push(rows[index]);
-      this.workLoads += Number(rows[index].workLoad);
+      this.workLoads =
+        (this.workLoads * 1000 + rows[index].workLoad * 1000) / 1000;
       rows.splice(index, 1);
     },
     enterClick({ row, column }) {
@@ -279,7 +272,15 @@ export default {
       this.$set(row, "isOK", true);
     },
     editWorkLoadSave(row, index) {
+      //如果vuex里面有,更新vuex
+      let taskIdx = this.taskArray.findIndex((item) => {
+        if (item.taskName == row.missionName) {
+          return true;
+        }
+      });
+      if (taskIdx != -1) this.taskArray[taskIdx].workload = row.workLoad;
       this.$set(row, "isOK", false);
+      fileTool.setWorkLoad(row.fileDir, row.workLoad);
     },
     isBetweenDate(date, dateRange) {
       const dateObj = new Date(date);
