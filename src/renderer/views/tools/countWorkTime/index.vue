@@ -33,6 +33,7 @@
                 <el-input
                   ref="gain"
                   size="mini"
+                  @input="editInput($event, scope.row)"
                   @blur="editWorkLoadSave(scope.row, scope.$index)"
                   v-model="scope.row.workLoad"
                   style="width: 100%; hight: 100%"
@@ -79,6 +80,7 @@
                   <el-input
                     ref="gain"
                     size="mini"
+                    @input="editInput($event, scope.row)"
                     @blur="editWorkLoadSave(scope.row, scope.$index)"
                     v-model="scope.row.workLoad"
                     style="width: 100%; hight: 100%"
@@ -271,6 +273,14 @@ export default {
     editWorkLoad(row, index) {
       this.$set(row, "isOK", true);
     },
+    editInput(value, row) {
+      row.workLoad =
+        ("" + value) // 第一步：转成字符串
+          .replace(/[^\d^\.]+/g, "") // 第二步：把不是数字，不是小数点的过滤掉
+          .replace(/^0+(\d)/, "$1") // 第三步：第一位0开头，0后面为数字，则过滤掉，取后面的数字
+          .replace(/^\./, "0.") // 第四步：如果输入的第一位为小数点，则替换成 0. 实现自动补全
+          .match(/^\d*(\.?\d{0,1})/g)[0] || ""; // 第五步：最终匹配得到结果 以数字开头，只有一个小数点，而且小数点后面只能有0到2位小数
+    },
     editWorkLoadSave(row, index) {
       //如果vuex里面有,更新vuex
       let taskIdx = this.taskArray.findIndex((item) => {
@@ -278,6 +288,8 @@ export default {
           return true;
         }
       });
+      row.workLoad = ("" + row.workLoad) // 第一步：转成字符串
+        .replace(/\.$/g, ""); // 第二步：把最后一位是小数点去掉
       if (taskIdx != -1) this.taskArray[taskIdx].workload = row.workLoad;
       this.$set(row, "isOK", false);
       fileTool.setWorkLoad(row.fileDir, row.workLoad);
