@@ -1,9 +1,6 @@
-const fs = require("fs");
-import ElementUI from "element-ui";
 import { DOC_DIR } from "@/utils/constans.js";
 import {
   writeFileFromObjDir,
-  globalTodoUpdate,
   globalTodoAdd,
   globalTodoDelete,
 } from "@/utils/fileTool.js";
@@ -19,11 +16,6 @@ const mission = {
 
     //添加待办（整体维度）
     ADD_MISSION(state, missionObj) {
-      missionObj.id = missionObj.id || generateId();
-      for (let i = 0; i < missionObj.children?.length; i++) {
-        const child = missionObj.children[i];
-        child.id = child.id || generateId();
-      }
       state.missionArray.push(missionObj);
     },
 
@@ -108,26 +100,39 @@ const mission = {
     },
   },
   actions: {
-    addMission({ commit }, missionObj) {
+    addMission({ commit }, [missionObj, increaseFlag = false]) {
       commit("ADD_MISSION", missionObj);
+      //向global/Todo.txt添加新增待办
+      if (increaseFlag) globalTodoAdd(missionObj);
       commit("SORT_MISSION_ARRAY");
       commit("SET_UPDATED");
     },
     deleteMission({ commit }, missionId) {
+      let mission = getMissionById(missionId);
+      mission.children = [];
+      // 文件中删除;
+      if (mission.fileDir == DOC_DIR + "global\\Todo.txt") {
+        globalTodoDelete(mission.missionName);
+      } else {
+        writeFileFromObjDir(mission);
+      }
       commit("DELETE_MISSION", missionId);
       commit("SORT_MISSION_ARRAY");
       commit("SET_UPDATED");
     },
     addPending({ commit }, [missionId, pendingObj]) {
-      pendingObj.id = generateId();
       commit("ADD_PENDING", [missionId, pendingObj]);
       commit("SORT_MISSION_CHILDREN", missionId);
+      writeFileFromObjDir(getMissionById(missionId));
       commit("SORT_MISSION_ARRAY");
       commit("SET_UPDATED");
     },
     deletePending({ commit }, [missionId, pendingId]) {
       commit("DELETE_PENDING", [missionId, pendingId]);
       commit("SORT_MISSION_CHILDREN", missionId);
+      const mission = getMissionById(missionId);
+      console.log(mission);
+      writeFileFromObjDir(mission);
       commit("SORT_MISSION_ARRAY");
       commit("SET_UPDATED");
     },
@@ -147,7 +152,7 @@ const mission = {
       // console.log(mission);
       commit("SET_MISSIONDATA", [mission, change]);
       // if (change.status != null || change.children) {
-      commit("SORT_MISSIONCHILDREN", mission);
+      // commit("SORT_MISSIONCHILDREN", mission);
       commit("SORT_MISSIONARRAY");
       commit("SET_UPDATED");
       // }
@@ -164,9 +169,10 @@ const mission = {
   },
 };
 
-//生成13+16位ID
-function generateId() {
-  return `${new Date().getTime()}${("" + Math.random()).slice(2)}`;
+//获取id在mission中的值
+function getMissionById(missionId) {
+  return mission.state.missionArray.find((item) => {
+    return item.id == missionId;
+  });
 }
-
 export default mission;

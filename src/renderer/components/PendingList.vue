@@ -118,6 +118,7 @@ export default {
     },
     showCheck: { type: Boolean, default: true },
     showTaskName: { type: Boolean, default: true },
+    showRightClickMenu: { type: Boolean, default: true },
   },
   components: {
     IncreaseDialog,
@@ -185,7 +186,8 @@ export default {
       this.nowItem = item;
       this.menuLeft = e.layerX;
       this.menuTop = e.layerY;
-      this.todoMenuVisible = true;
+      //授权待办不展示右键菜单
+      if (this.showRightClickMenu) this.todoMenuVisible = true;
       document.body.addEventListener('click', this.closeMenu);
     },
     closeMenu() {

@@ -31,7 +31,7 @@ export function initMission() {
             rule.missionType == item.demandNo.substring(0, 4)
           ) {
             pendingChildren.push({
-              id: "",
+              id: generateId(),
               pendingType: rule.pendingName,
               date: getPendingDate(item, rule),
               status: false,
@@ -44,7 +44,7 @@ export function initMission() {
             rule.missionType == item.demandNo.substring(0, 4)
           ) {
             pendingChildren.push({
-              id: "",
+              id: generateId(),
               pendingType: rule.pendingName,
               date: getPendingDate(item, rule),
               status: false,
@@ -53,24 +53,27 @@ export function initMission() {
         });
         //生成本地待办文件
         let todoObj = {
+          id: generateId(),
           missionNo: item.demandNo,
           missionName: item.taskName,
           fileDir: fileTool.getDemandPath(item) + "\\" + "Todo.txt",
           status: false,
           children: pendingChildren,
         };
-        store.commit("SORT_MISSIONCHILDREN", todoObj);
-        fs.stat(fileTool.getDemandPath(item) + "\\" + "Todo.txt", (error) => {
-          if (error) {
-            fs.writeFile(
-              fileTool.getDemandPath(item) + "\\" + "Todo.txt",
-              JSON.stringify(todoObj, null, 2),
-              function () {}
-            );
+        todoObj.children = todoObj.children.sort((a, b) => {
+          if (a.status != b.status) {
+            return a.status ? 1 : -1;
           }
+          return new Date(a.date) - new Date(b.date);
         });
+        console.log(todoObj);
+        fs.writeFile(
+          fileTool.getDemandPath(item) + "\\" + "Todo.txt",
+          JSON.stringify(todoObj, null, 2),
+          function () {}
+        );
         //待办加入vuex
-        store.dispatch("addMission", todoObj);
+        store.dispatch("addMission", [todoObj]);
       } else {
         //任务待办加入vuex
         fs.readFile(
@@ -79,16 +82,15 @@ export function initMission() {
           (err, data) => {
             const pushObj = JSON.parse(data);
             const length = pushObj.children.length;
-            const intervalDays =
-              (nowDateTime -
-                new Date(pushObj.children[length - 1].date).getTime()) /
-              (60000 * 24 * 60);
-            //删除后的数据以及全部完成三天后的数据不展示
-            if (
-              length > 0 &&
-              (!pushObj.status || (pushObj.status && intervalDays < 3))
-            ) {
-              store.dispatch("addMission", JSON.parse(data));
+            if (length > 0) {
+              const intervalDays =
+                (nowDateTime -
+                  new Date(pushObj.children[length - 1].date).getTime()) /
+                (60000 * 24 * 60);
+              //删除后的数据以及全部完成三天后的数据不展示
+              if (!pushObj.status || (pushObj.status && intervalDays < 3)) {
+                store.dispatch("addMission", [JSON.parse(data)]);
+              }
             }
           }
         );
@@ -106,7 +108,7 @@ export function initMission() {
           (60000 * 24 * 60);
         //已完成三天后的数据不展示
         if (!data.status || (data.status && intervalDays < 3)) {
-          store.dispatch("addMission", data);
+          store.dispatch("addMission", [data]);
         }
       });
     }
@@ -125,4 +127,9 @@ function getPendingDate(task, rule) {
       ? task.uatTime
       : task.fireTime;
   return subTrackTime(time, rule.beforeDays * 60 * 24);
+}
+
+//生成13+16位ID
+function generateId() {
+  return `${new Date().getTime()}${("" + Math.random()).slice(2)}`;
 }

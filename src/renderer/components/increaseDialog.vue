@@ -117,21 +117,47 @@ export default {
           investorNo: "000000",
           investorName: "本人",
         },
-        {
-          granted: "wenty",
-          permission: "新增",
-          investorNo: "12066391",
-          investorName: "文天阳",
-        },
       ],
       remindSwitch: false,
       inputMin: 15,
     };
   },
   computed: {
-    ...mapGetters(["taskArray"]),
+    ...mapGetters(["taskArray", "missionArray"]),
+  },
+  created() {
+    this.init();
   },
   methods: {
+    async init() {
+      //从数据库获取授予了权限的人名单 queryGrantedUserList
+      // const queryInvestorList = await queryGrantedUserList(this.$store.state.user.userNo);
+      const queryInvestorList = [
+        {
+          granted: "liyw11",
+          permission: "只读",
+          investorNo: "12066390",
+          investorName: "李亚威",
+        },
+        {
+          granted: "wenty",
+          permission: "新增",
+          investorNo: "12066391",
+          investorName: "文天阳",
+        },
+        {
+          granted: "wenty",
+          permission: "新增",
+          investorNo: "12066392",
+          investorName: "王双",
+        },
+      ];
+      queryInvestorList.forEach((item) => {
+        if (item.permission == "新增") {
+          this.investorList.push(item);
+        }
+      });
+    },
     show(info = null) {
       this.editFlag = false;
       if (info) {
@@ -187,39 +213,64 @@ export default {
           duration: 1000,
         });
       } else {
-        let pushObj = this.selectMisson
-          ? {
-              isBindMission: true,
-              missionName: this.selectMisson,
-              status: false,
-              children: [
-                {
-                  id: "",
-                  pendingType: this.pengingSth,
-                  date: formatDateTime(this.pendingTime),
-                  status: false,
-                  remindSwitch: this.remindSwitch,
-                  remindTime: subTrackTime(this.pendingTime, this.inputMin),
-                },
-              ],
-            }
-          : {
-              isBindMission: false,
-              missionName: this.pengingSth,
-              fileDir: DOC_DIR + "global\\Todo.txt",
-              status: false,
-              children: [
-                {
-                  id: "",
-                  pendingType: "",
-                  date: formatDateTime(this.pendingTime),
-                  status: false,
-                  remindSwitch: this.remindSwitch,
-                  remindTime: subTrackTime(this.pendingTime, this.inputMin),
-                },
-              ],
-            };
-        this.$store.dispatch("addMission", pushObj);
+        let pushObj = {};
+        //绑定了任务,插入子待办
+        if (this.selectMisson) {
+          //找到任务对应的待办id
+          const mission = this.missionArray.find((element) => {
+            return element.missionName == this.selectMisson;
+          });
+          if (!mission) {
+            this.$message({
+              message:
+                "已删除的任务可以删除归档任务文件夹下的Todo.txt后重新生成待办",
+              type: "error",
+              offset: 250,
+              duration: 2500,
+            });
+            return;
+          }
+          pushObj = {
+            isBindMission: true,
+            missionName: this.selectMisson,
+            status: false,
+            children: [
+              {
+                id: this.generateId(),
+                pendingType: this.pengingSth,
+                date: formatDateTime(this.pendingTime),
+                status: false,
+                remindSwitch: this.remindSwitch,
+                remindTime: subTrackTime(this.pendingTime, this.inputMin),
+              },
+            ],
+          };
+          //本人新增待办修改vuex和本地文件
+          this.$store.dispatch("addPending", [mission.id, pushObj]);
+        } else {
+          //没绑定任务,插入Global.Txt
+          pushObj = {
+            id: this.generateId(),
+            isBindMission: false,
+            missionName: this.pengingSth,
+            fileDir: DOC_DIR + "global\\Todo.txt",
+            status: false,
+            children: [
+              {
+                id: this.generateId(),
+                pendingType: "",
+                date: formatDateTime(this.pendingTime),
+                status: false,
+                remindSwitch: this.remindSwitch,
+                remindTime: subTrackTime(this.pendingTime, this.inputMin),
+              },
+            ],
+          };
+          console.log(pushObj);
+          //本人新增待办修改vuex和本地文件
+          this.$store.dispatch("addMission", [pushObj, true]);
+        }
+        //TODO 发新增待办交易
         this.dialogVisible = false;
       }
     },
@@ -249,7 +300,12 @@ export default {
         this.editMission.children[this.editIndex],
       ]);
       this.$emit("freshFirstLine");
+      //TODO 判断是否需要发新增待办交易
       this.dialogVisible = false;
+    },
+    //生成13+16位ID
+    generateId() {
+      return `${new Date().getTime()}${("" + Math.random()).slice(2)}`;
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="pending-container">
-      <el-tabs v-model="activeName">
+      <el-tabs v-model="activeName" @tab-click="tabClick">
         <el-tab-pane name="first">
           <span slot="label" class="title">我的待办</span>
           <div class="titleCenter">
@@ -16,7 +16,7 @@
           </div>
           <div v-if="refreshFlag" class="maxHeight">
             <transition-group name="todo-trans" tag="div">
-              <div v-for="item of missionList" :key="item.missionName">
+              <div v-for="item of missionList" :key="item.id">
                 <PendingList style="width: 1000px" :todo="item" /></div
             ></transition-group>
           </div>
@@ -28,6 +28,7 @@
               v-model="queryInvestor"
               style="width: 130px; padding-left: 10px"
               placeholder="请选择"
+              @change="selectChange"
             >
               <el-option
                 v-for="item in investorList"
@@ -41,17 +42,18 @@
               prefix-icon="el-icon-search"
               class="searchInput"
               v-model="searchInput"
+              @change="searchGranted"
             />
             <i class="el-icon-circle-plus-outline" @click="showDialog" />
           </div>
           <div v-if="refreshFlag" class="maxHeight">
             <PendingList
-              v-for="(item, key) of tableData2"
+              v-for="(item, key) of showGrantMissionList"
               style="width: 1000px"
               :key="key"
               :showCheck="false"
+              :showRightClickMenu="false"
               :todo="item"
-              @refresh="refresh"
             />
           </div>
         </el-tab-pane>
@@ -83,7 +85,8 @@ export default {
       investorList: [],
       refreshFlag: true,
       missionList: [],
-      grantMissionList: [],
+      allGrantMissionList: [],
+      showGrantMissionList: [],
       tableData2: [
         {
           id: 1,
@@ -201,6 +204,42 @@ export default {
           ],
         },
       ],
+      tableData3: [
+        {
+          id: 1,
+          missionNo: "UT-WLJR-2022-0575",
+          missionName:
+            "UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits",
+          status: false,
+          children: [
+            {
+              pendingType: "提交内测",
+              date: "2016-05-05",
+              status: false,
+            },
+            {
+              pendingType: "上传资料",
+              date: "2016-05-06",
+              status: false,
+            },
+            {
+              pendingType: "提交业测",
+              date: "2016-05-07",
+              status: false,
+            },
+            {
+              pendingType: "rel代码审核",
+              date: "2016-05-07",
+              status: false,
+            },
+            {
+              pendingType: "投产",
+              date: "2016-05-10",
+              status: false,
+            },
+          ],
+        },
+      ],
     };
   },
   computed: {
@@ -209,29 +248,59 @@ export default {
       return this.activeName == "first";
     },
   },
+  watch: {
+    missionArray: {
+      handler() {
+        this.missionList = this.missionArray;
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   created() {
-    //todo 从数据库获取授予了权限的人名单 getGrantedList
-    //入参 本人用户名,授予我权限的人名单 grantedList[granted:授予我权限人,permission:授予我权限(只读/新增)]
-    this.investorList = [
-      {
-        granted: "liyw11",
-        permission: "只读",
-        investorNo: "12066390",
-        investorName: "李亚威",
-      },
-      {
-        granted: "wenty",
-        permission: "新增",
-        investorNo: "12066391",
-        investorName: "文天阳",
-      },
-    ];
     this.missionList = this.missionArray;
-    this.queryInvestor = this.investorList?.[0].investorNo;
+    this.init();
   },
   methods: {
+    async init() {
+      //从数据库获取授予了权限的人名单 queryGrantedUserList
+      // this.investorList = await queryGrantedUserList(this.$store.state.user.userNo);
+      this.investorList = [
+        {
+          granted: "liyw11",
+          permission: "只读",
+          investorNo: "12066390",
+          investorName: "李亚威",
+        },
+        {
+          granted: "wenty",
+          permission: "新增",
+          investorNo: "12066391",
+          investorName: "文天阳",
+        },
+      ];
+      this.queryInvestor = this.investorList?.[0]?.investorNo;
+    },
     showDialog() {
       this.$refs.increaseDialog.show();
+    },
+    tabClick(tab) {
+      if (tab.index == 1) {
+        this.getGrantedPending(this.queryInvestor);
+      } else {
+        this.search();
+      }
+    },
+    selectChange() {
+      this.getGrantedPending(this.queryInvestor);
+    },
+    //查询他人待办
+    async getGrantedPending(queryNo) {
+      // this.allGrantMissionList = await getGrantedPending(queryNo);
+      //测试用
+      this.allGrantMissionList =
+        this.queryInvestor == "12066391" ? this.tableData2 : this.tableData3;
+      this.searchGranted();
     },
     refresh() {
       this.refreshFlag = false;
@@ -248,6 +317,20 @@ export default {
           //匹配需求名称
         } else if (this.missionArray[i].missionName.match(this.searchInput)) {
           this.missionList.push(this.missionArray[i]);
+        }
+      }
+    },
+    searchGranted() {
+      this.showGrantMissionList = [];
+      for (let i = 0; i < this.allGrantMissionList.length; i++) {
+        //匹配需求编号
+        if (this.allGrantMissionList[i].missionNo.match(this.searchInput)) {
+          this.showGrantMissionList.push(this.allGrantMissionList[i]);
+          //匹配需求名称
+        } else if (
+          this.allGrantMissionList[i].missionName.match(this.searchInput)
+        ) {
+          this.showGrantMissionList.push(this.allGrantMissionList[i]);
         }
       }
     },

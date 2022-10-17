@@ -11,7 +11,7 @@
           ></el-button>
         </template>
         <transition-group class="mission-box" name="todo-trans" tag="div">
-          <div v-for="item of missionArray" :key="item.missionName">
+          <div v-for="item of missionArray" :key="item.id">
             <PendingList :todo="item" /></div
         ></transition-group>
         <!-- {{ noteArray }}
