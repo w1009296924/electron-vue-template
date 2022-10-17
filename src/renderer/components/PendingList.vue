@@ -7,18 +7,18 @@
     >
       <div
         class="todo-date"
-        :class="{ 'small-date': todo.children[0].date.length > 10 }"
+        :class="{ 'small-date': firstLine.date.length > 10 }"
       >
         <el-popover
-          v-if="todo.children[0].remindSwitch"
+          v-if="firstLine.remindSwitch"
           placement="top-start"
           width="240"
           trigger="hover"
-          :content="`提醒时间:${todo.children[0].remindTime}`"
+          :content="`提醒时间:${firstLine.remindTime}`"
         >
           <i slot="reference" class="el-icon-alarm-clock" />
         </el-popover>
-        {{ todo.children[0].date.substr(5) }}
+        {{ firstLine.date.substr(5) }}
       </div>
       <div v-if="showTaskName" class="todo-name">
         <div class="arrow-box">
@@ -40,22 +40,22 @@
         </div>
       </div>
       <div
-        v-if="todo.children[0].pendingType"
+        v-if="firstLine.pendingType"
         class="todo-type"
         @contextmenu.prevent.stop="
-          openMenu([$event, clickFlag ? todo.children[0] : todo])
+          openMenu([$event, clickFlag ? firstLine : todo])
         "
       >
         <div class="ellipsis">
-          {{ todo.children[0].pendingType }}
+          {{ firstLine.pendingType }}
         </div>
       </div>
       <div class="todo-check">
         <el-checkbox
           :disabled="!showCheck"
-          v-model="todo.children[0].status"
+          v-model="firstLine.status"
           class="checkbox"
-          @change="changeChildren($event, todo.children[0])"
+          @change="changeChildren($event, firstLine)"
         />
       </div>
     </div>
@@ -107,10 +107,10 @@
 </template>
 
 <script>
-import IncreaseDialog from "@/components/IncreaseDialog";
-import { mapGetters } from "vuex";
+import IncreaseDialog from '@/components/IncreaseDialog';
+import { mapGetters } from 'vuex';
 export default {
-  name: "PendingList",
+  name: 'PendingList',
   props: {
     todo: { type: Object },
     parent: {
@@ -134,22 +134,22 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["lastUpdateMission"]),
+    ...mapGetters(['lastUpdateMission']),
     hasDoneC() {
-      return this.todo.children[0]?.status;
+      return this.firstLine.status;
+    },
+    firstLine() {
+      return this.parent ? this.todo : this.todo.children[0];
     },
     //灰色+删除线-已完成 红色-过期  绿色-5天 蓝色-0~5天
     backgroudcolor() {
       return this.hasDone
-        ? "gray"
-        : new Date(this.todo.children[0].date) < this.today
-        ? "red"
-        : this.getDaysBetween(
-            new Date(this.todo.children[0].date),
-            this.today
-          ) > 5
-        ? "green"
-        : "blue";
+        ? 'gray'
+        : new Date(this.firstLine.date) < this.today
+        ? 'red'
+        : this.getDaysBetween(new Date(this.firstLine.date), this.today) > 5
+        ? 'green'
+        : 'blue';
     },
   },
   watch: {
@@ -157,7 +157,7 @@ export default {
       console.log(val);
       clearInterval(this.timer);
       this.timer = setTimeout(() => {
-        this.clickFlag = this.todo.children[0]?.status;
+        this.clickFlag = this.firstLine?.status;
         this.hasDone = val;
       }, 500);
     },
@@ -169,8 +169,8 @@ export default {
     changeChildren(value, item) {
       console.log(value);
       setTimeout(() => {
-        this.$store.dispatch("modifyPending", [item.id, item]);
-        this.$emit("refresh");
+        this.$store.dispatch('modifyPending', [item.id, item]);
+        this.$emit('refresh');
       }, 500);
     },
     getDaysBetween(date1, date2) {
@@ -180,28 +180,34 @@ export default {
     },
     openMenu([e, item]) {
       console.log(e);
-      // console.log(item);
-      document.getElementById("a").click();
+      console.log(item);
+      document.getElementById('a').click();
       this.nowItem = item;
       this.menuLeft = e.layerX;
       this.menuTop = e.layerY;
       this.todoMenuVisible = true;
-      document.body.addEventListener("click", this.closeMenu);
+      document.body.addEventListener('click', this.closeMenu);
     },
     closeMenu() {
       this.todoMenuVisible = false;
-      document.body.removeEventListener("click", this.closeMenu);
+      document.body.removeEventListener('click', this.closeMenu);
     },
     deleteTodo() {
       console.log(this.nowItem.pendingType);
       if (this.nowItem.children) {
-        this.$store.dispatch("deleteMission", this.todo.id);
+        this.$store.dispatch('deleteMission', this.todo.id);
       } else {
-        this.$store.dispatch("deletePending", [this.todo.id, this.nowItem.id]);
+        this.$store.dispatch('deletePending', [
+          (this.parent || this.todo).id,
+          this.nowItem.id,
+        ]);
       }
     },
     editTodo() {
-      this.$refs.addTodoList.showEdit(this.todo, this.nowItem.pendingType);
+      this.$refs.addTodoList.showEdit(
+        this.parent || this.todo,
+        this.nowItem.pendingType
+      );
     },
   },
 };
@@ -282,6 +288,9 @@ export default {
     .todo-type {
       width: 135px;
       border-right: 1px solid #f3f9ff;
+      .ellipsis {
+        width: 115px;
+      }
     }
     .todo-check {
       justify-content: center;
