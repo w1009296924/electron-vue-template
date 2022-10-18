@@ -49,6 +49,7 @@ function getAllfiles0(path, arr, deep = true) {
       item == "abbrev" ||
       item == "node_modules" ||
       item == "Todo.txt" ||
+      item == "mission.txt" ||
       item == "study"
     ) {
       return;
@@ -89,7 +90,8 @@ export function getAllfiles(path, arr) {
     if (
       item == "$RECYCLE.BIN" ||
       item == "System Volume Information" ||
-      item == "Todo.txt"
+      item == "Todo.txt" ||
+      item == "mission.txt"
     ) {
       return;
     }
@@ -106,16 +108,16 @@ export function getAllfiles(path, arr) {
     }
   });
 }
-function readSettingFile() {
+export function readSettingFile(name = "settings.ini") {
   const data = fs.readFileSync(
-    `${CONFIG_DIR}\\${store.state.user.name}\\settings.ini`,
+    `${CONFIG_DIR}\\${store.state.user.name}\\${name}`,
     "utf-8"
   );
   return JSON.parse(data);
 }
-function writeSettingFile(settingObj) {
+export function writeSettingFile(settingObj, name = "settings.ini") {
   fs.writeFileSync(
-    `${CONFIG_DIR}\\${store.state.user.name}\\settings.ini`,
+    `${CONFIG_DIR}\\${store.state.user.name}\\${name}`,
     JSON.stringify(settingObj, null, 2)
   );
 }

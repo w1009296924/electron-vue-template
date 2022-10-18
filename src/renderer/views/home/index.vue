@@ -9,6 +9,12 @@
             @click="() => addTodo()"
             size="mini"
           ></el-button>
+          <el-button
+            class="plus-btn"
+            icon="el-icon-files"
+            @click="() => showTodoWin()"
+            size="mini"
+          ></el-button>
         </template>
         <transition-group class="mission-box" name="todo-trans" tag="div">
           <div v-for="item of missionArray" :key="item.id">
@@ -21,6 +27,14 @@
         </div> -->
       </HomeCard>
       <HomeCard width="544" height="430" title="工时日历">
+        <template v-slot:header>
+          <el-button
+            class="plus-btn"
+            icon="el-icon-files"
+            @click="() => showCalendarWin()"
+            size="mini"
+          ></el-button>
+        </template>
         <div class="calendar-box">
           <Calendar @openMenu="openMenu" />
         </div>
@@ -58,19 +72,21 @@
         </template>
         <draggable
           v-model="quickEntryArray"
+          class="entry-box"
           delay="50"
           animation="300"
           filter=".forbid"
           ghostClass="ghost"
           :move="onMove"
+          @end="saveEntry()"
         >
           <transition-group class="quick-entrys">
             <qucik-entry
               v-for="element in quickEntryArray"
               :key="element.name"
-              :name="element.name"
-              :iconPath="element.iconPath"
-              :url="element.url"
+              :entry="element"
+              @editEntry="editEntry(element)"
+              @deleteEntry="deleteEntry(element)"
               :class="{ forbid: element.name == '添加' }"
             />
           </transition-group>
@@ -99,11 +115,16 @@
       </div></transition
     >
     <IncreaseDialog ref="addTodo"></IncreaseDialog>
+    <AddEntryDialog
+      ref="addEntry"
+      :entryArray="quickEntryArray"
+    ></AddEntryDialog>
   </div>
 </template>
 <script>
 import HomeCard from "./components/HomeCard";
 import QucikEntry from "./components/QuickEntry";
+import AddEntryDialog from "./components/AddEntryDialog";
 import Calendar from "./components/Calendar";
 import Note from "./components/Note";
 import PendingList from "@/components/PendingList";
@@ -114,6 +135,7 @@ import MouseWheel from "@better-scroll/mouse-wheel";
 import { mapGetters } from "vuex";
 import myNotification from "@/tools/myNotification";
 import { getTaskTree } from "@/utils/taskTool.js";
+import { writeSettingFile, readSettingFile } from "@/utils/fileTool.js";
 import { DOC_DIR } from "@/utils/constans.js";
 import { ipcRenderer } from "electron";
 const fs = require("fs");
@@ -125,6 +147,7 @@ export default {
     Calendar,
     Note,
     PendingList,
+    AddEntryDialog,
     IncreaseDialog,
     draggable,
   },
@@ -177,6 +200,7 @@ export default {
     console.log("created");
     console.log(Math.random());
     this.initNote();
+    this.initEntry();
   },
   mounted() {
     this.$nextTick(() => {
@@ -234,19 +258,21 @@ export default {
       //   }
       // );
 
-      let data = {
-        url: "/notice",
-        resizable: false,
-        frame: false,
-        isNotice: true,
-        width: 380,
-        height: 200,
-        alwaysOnTop: true,
-        skipTaskbar: true,
-        movable: false,
-        // opacity: 1.0,
-      };
-      ipcRenderer.invoke("open-win", data);
+      this.$refs.addEntry.show();
+
+      // let data = {
+      //   url: "/notice",
+      //   resizable: false,
+      //   frame: false,
+      //   isNotice: true,
+      //   width: 380,
+      //   height: 200,
+      //   alwaysOnTop: true,
+      //   skipTaskbar: true,
+      //   movable: false,
+      //   // opacity: 1.0,
+      // };
+      // ipcRenderer.invoke("open-win", data);
 
       // const { BrowserWindow, screen } = require("@electron/remote");
       // const winURL =
@@ -388,6 +414,48 @@ export default {
         () => {}
       );
     },
+    initEntry() {
+      this.quickEntryArray =
+        readSettingFile("quickEntry.ini").quickEntryArray ||
+        this.quickEntryArray;
+    },
+    saveEntry() {
+      writeSettingFile(
+        { quickEntryArray: this.quickEntryArray },
+        "quickEntry.ini"
+      );
+    },
+    editEntry(entry) {
+      this.$refs.addEntry.show(entry);
+    },
+    deleteEntry(entry) {
+      this.quickEntryArray = this.quickEntryArray.filter((item) => {
+        return item != entry;
+      });
+      this.saveEntry();
+    },
+    showTodoWin() {
+      // let data = {
+      //   url: "/notice",
+      //   resizable: false,
+      //   frame: false,
+      //   isNotice: true,
+      //   width: 380,
+      //   height: 200,
+      //   alwaysOnTop: true,
+      //   skipTaskbar: true,
+      //   movable: false,
+      //   // opacity: 1.0,
+      // };
+      const arg = {
+        url: "/todoWin",
+        // frame: false,
+        width: 380,
+        height: 400,
+        movable: true,
+      };
+      ipcRenderer.invoke("open-todo-win", arg);
+    },
     openMenu([e, item]) {
       console.log(e);
       console.log(item);
@@ -450,14 +518,19 @@ export default {
     gap: 10px;
   }
 }
-.quick-entrys {
-  display: flex;
-  flex-wrap: wrap;
-  row-gap: 48px;
-  column-gap: 84px;
-  padding: 47px 56px;
-  .ghost {
-    opacity: 0;
+.entry-box {
+  height: calc(100% - 76px);
+  overflow-y: overlay;
+  margin-top: 10px;
+  .quick-entrys {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 48px;
+    column-gap: 29px;
+    padding: 20px 56px;
+    .ghost {
+      opacity: 0;
+    }
   }
 }
 

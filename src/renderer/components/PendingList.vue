@@ -34,9 +34,17 @@
           </div>
         </div>
         <div class="text-box">
-          <div :class="[clickFlag ? '' : 'ellipsis']">
-            {{ todo.missionName }}
-          </div>
+          <el-tooltip
+            effect="light"
+            :content="todo.missionName"
+            placement="right"
+            :open-delay="500"
+            :enterable="true"
+          >
+            <div :class="[clickFlag ? '' : 'ellipsis']">
+              {{ todo.missionName }}
+            </div>
+          </el-tooltip>
         </div>
       </div>
       <div

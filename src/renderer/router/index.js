@@ -38,6 +38,11 @@ export const constantRouterMap = [
     hidden: true,
   },
   {
+    path: "/todoWin",
+    component: () => import("@/views/todoWin"),
+    hidden: true,
+  },
+  {
     path: "*",
     component: () => import("@/views/404"),
     hidden: true,

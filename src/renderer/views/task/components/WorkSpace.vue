@@ -112,7 +112,7 @@ export default {
         item.path,
         // e.target.firstChild.firstChild.currentSrc
         // JSON.stringify(icon)
-        "static/assets/document.png"
+        "assets/document.png"
       );
     },
     handleDrop(e) {
