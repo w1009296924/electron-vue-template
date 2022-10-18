@@ -154,17 +154,17 @@ export default {
     },
   },
   watch: {
-    hasDoneC: {
-      handler(val) {
-        console.log(val);
-        clearInterval(this.timer);
-        this.timer = setTimeout(() => {
-          this.clickFlag = this.firstLine?.status;
-          this.hasDone = val;
-        }, 500);
-      },
-      immediate: true,
+    hasDoneC(val) {
+      console.log(val);
+      clearInterval(this.timer);
+      this.timer = setTimeout(() => {
+        this.clickFlag = !this.firstLine?.status && this.clickFlag;
+        this.hasDone = val;
+      }, 500);
     },
+  },
+  created() {
+    this.hasDone = this.hasDoneC;
   },
   methods: {
     expandList() {
@@ -173,7 +173,11 @@ export default {
     changeChildren(value, item) {
       console.log(value);
       setTimeout(() => {
-        this.$store.dispatch("modifyPending", [item.id, item, this.todo.id]);
+        this.$store.dispatch("modifyPending", [
+          item.id,
+          item,
+          (this.parent || this.todo).id,
+        ]);
         this.$emit("refresh");
       }, 500);
     },
