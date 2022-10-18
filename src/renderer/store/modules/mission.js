@@ -17,6 +17,11 @@ const mission = {
 
     //添加待办（整体维度）
     ADD_MISSION(state, missionObj) {
+      missionObj.id = missionObj.id || generateId();
+      for (let i = 0; i < missionObj.children?.length; i++) {
+        const child = missionObj.children[i];
+        child.id = child.id || generateId();
+      }
       state.missionArray.push(missionObj);
     },
 
@@ -122,6 +127,7 @@ const mission = {
       commit("SET_UPDATED");
     },
     addPending({ commit }, [missionId, pendingObj]) {
+      pendingObj.id = pendingObj.id || generateId();
       commit("ADD_PENDING", [missionId, pendingObj]);
       commit("SORT_MISSION_CHILDREN", missionId);
       writeFileFromObjDir(getMissionById(missionId));
@@ -182,5 +188,10 @@ function getMissionById(missionId) {
   return mission.state.missionArray.find((item) => {
     return item.id == missionId;
   });
+}
+
+//生成13+16位ID
+function generateId() {
+  return `${new Date().getTime()}${("" + Math.random()).slice(2)}`;
 }
 export default mission;

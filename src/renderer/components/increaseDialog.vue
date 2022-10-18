@@ -231,22 +231,16 @@ export default {
             return;
           }
           pushObj = {
-            isBindMission: true,
-            missionName: this.selectMisson,
+            id: this.generateId(),
+            pendingType: this.pengingSth,
+            date: formatDateTime(this.pendingTime),
             status: false,
-            children: [
-              {
-                id: this.generateId(),
-                pendingType: this.pengingSth,
-                date: formatDateTime(this.pendingTime),
-                status: false,
-                remindSwitch: this.remindSwitch,
-                remindTime: subTrackTime(this.pendingTime, this.inputMin),
-              },
-            ],
+            remindSwitch: this.remindSwitch,
+            remindTime: subTrackTime(this.pendingTime, this.inputMin),
           };
           //本人新增待办修改vuex和本地文件
           this.$store.dispatch("addPending", [mission.id, pushObj]);
+          // addPending()
         } else {
           //没绑定任务,插入Global.Txt
           pushObj = {
@@ -266,7 +260,6 @@ export default {
               },
             ],
           };
-          console.log(pushObj);
           //本人新增待办修改vuex和本地文件
           this.$store.dispatch("addMission", [pushObj, true]);
         }
@@ -301,7 +294,7 @@ export default {
         this.editMission.id,
       ]);
       this.$emit("freshFirstLine");
-      //TODO 判断是否需要发新增待办交易
+      //TODO 判断是否需要发修改待办交易
       this.dialogVisible = false;
     },
     //生成13+16位ID

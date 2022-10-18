@@ -85,13 +85,6 @@
                     v-model="scope.row.workLoad"
                     style="width: 100%; hight: 100%"
                   />
-                  <!-- <span
-                    v-if="scope.row.isOK"
-                    v-else
-                    size="mini"
-                    @click="editWorkLoad(scope.row, scope.$index)"
-                    >{{ scope.row.workLoad }}</span
-                  > -->
                 </template>
               </el-table-column>
               <el-table-column label="操作">
@@ -176,7 +169,6 @@ export default {
     this.workLoads = "";
   },
   methods: {
-    //todo 查询统计数据
     async query() {
       if (!this.dateRange) {
         this.$message({
@@ -189,8 +181,8 @@ export default {
       //将时间范围记录本地
       this.settings.tools.dateRange = this.dateRange;
       fileTool.writeSettingFile(this.settings);
-      //遍历本地文件,如果fireTimeRel在选择范围内的,记入list1
-      //如果fireTimeRel为空,但fireTime在范围内的,记入list2
+      //遍历本地文件,如果fireTimeRel在选择范围内的,记入tableData
+      //如果fireTimeRel为空,但fireTime在范围内的,记入otherTableData
       //读取全部目录
       this.tableData = [];
       this.otherTableData = [];
