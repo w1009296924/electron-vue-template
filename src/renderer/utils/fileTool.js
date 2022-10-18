@@ -146,7 +146,7 @@ export function globalTodoUpdate(updateObj) {
   fs.readFile(DOC_DIR + "global\\Todo.txt", "utf-8", (err, data) => {
     let globalTodo = JSON.parse(data);
     let globalTodoIdx = globalTodo.globalTodoList.findIndex((item) => {
-      if (item.missionName == updateObj.missionName) {
+      if (item.id == updateObj.id) {
         return true;
       }
     });
@@ -159,11 +159,11 @@ export function globalTodoUpdate(updateObj) {
   });
 }
 //删除global/Todo.txt待办
-export function globalTodoDelete(missionName) {
+export function globalTodoDelete(missionId) {
   fs.readFile(DOC_DIR + "global\\Todo.txt", "utf-8", (err, data) => {
     let globalTodo = JSON.parse(data);
     let globalTodoIdx = globalTodo.globalTodoList.findIndex((item) => {
-      if (item.missionName == missionName) {
+      if (item.id == missionId) {
         return true;
       }
     });

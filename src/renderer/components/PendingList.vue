@@ -107,10 +107,10 @@
 </template>
 
 <script>
-import IncreaseDialog from '@/components/IncreaseDialog';
-import { mapGetters } from 'vuex';
+import IncreaseDialog from "@/components/IncreaseDialog";
+import { mapGetters } from "vuex";
 export default {
-  name: 'PendingList',
+  name: "PendingList",
   props: {
     todo: { type: Object },
     parent: {
@@ -135,7 +135,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['lastUpdateMission']),
+    ...mapGetters(["lastUpdateMission"]),
     hasDoneC() {
       return this.firstLine.status;
     },
@@ -145,22 +145,25 @@ export default {
     //灰色+删除线-已完成 红色-过期  绿色-5天 蓝色-0~5天
     backgroudcolor() {
       return this.hasDone
-        ? 'gray'
+        ? "gray"
         : new Date(this.firstLine.date) < this.today
-        ? 'red'
+        ? "red"
         : this.getDaysBetween(new Date(this.firstLine.date), this.today) > 5
-        ? 'green'
-        : 'blue';
+        ? "green"
+        : "blue";
     },
   },
   watch: {
-    hasDoneC(val) {
-      console.log(val);
-      clearInterval(this.timer);
-      this.timer = setTimeout(() => {
-        this.clickFlag = this.firstLine?.status;
-        this.hasDone = val;
-      }, 500);
+    hasDoneC: {
+      handler(val) {
+        console.log(val);
+        clearInterval(this.timer);
+        this.timer = setTimeout(() => {
+          this.clickFlag = this.firstLine?.status;
+          this.hasDone = val;
+        }, 500);
+      },
+      immediate: true,
     },
   },
   methods: {
@@ -170,8 +173,8 @@ export default {
     changeChildren(value, item) {
       console.log(value);
       setTimeout(() => {
-        this.$store.dispatch('modifyPending', [item.id, item]);
-        this.$emit('refresh');
+        this.$store.dispatch("modifyPending", [item.id, item, this.todo.id]);
+        this.$emit("refresh");
       }, 500);
     },
     getDaysBetween(date1, date2) {
@@ -182,24 +185,24 @@ export default {
     openMenu([e, item]) {
       console.log(e);
       console.log(item);
-      document.getElementById('a').click();
+      document.getElementById("a").click();
       this.nowItem = item;
       this.menuLeft = e.layerX;
       this.menuTop = e.layerY;
       //授权待办不展示右键菜单
       if (this.showRightClickMenu) this.todoMenuVisible = true;
-      document.body.addEventListener('click', this.closeMenu);
+      document.body.addEventListener("click", this.closeMenu);
     },
     closeMenu() {
       this.todoMenuVisible = false;
-      document.body.removeEventListener('click', this.closeMenu);
+      document.body.removeEventListener("click", this.closeMenu);
     },
     deleteTodo() {
       console.log(this.nowItem.pendingType);
       if (this.nowItem.children) {
-        this.$store.dispatch('deleteMission', this.todo.id);
+        this.$store.dispatch("deleteMission", this.todo.id);
       } else {
-        this.$store.dispatch('deletePending', [
+        this.$store.dispatch("deletePending", [
           (this.parent || this.todo).id,
           this.nowItem.id,
         ]);

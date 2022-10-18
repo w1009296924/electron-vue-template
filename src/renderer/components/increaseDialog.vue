@@ -298,6 +298,7 @@ export default {
       this.$store.dispatch("modifyPending", [
         this.editMission.children[this.editIndex].id,
         this.editMission.children[this.editIndex],
+        this.editMission.id,
       ]);
       this.$emit("freshFirstLine");
       //TODO 判断是否需要发新增待办交易

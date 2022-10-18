@@ -3,6 +3,7 @@ import {
   writeFileFromObjDir,
   globalTodoAdd,
   globalTodoDelete,
+  globalTodoUpdate,
 } from "@/utils/fileTool.js";
 const mission = {
   state: {
@@ -61,7 +62,7 @@ const mission = {
         const mission = state.missionArray[i];
         for (let j = 0; j < mission.children?.length; j++) {
           if (mission.children[j].id == pendingId) {
-            mission[j] = pendingObj;
+            mission.children[j] = pendingObj;
             this.commit("SORT_MISSION_CHILDREN", mission.id);
             return;
           }
@@ -112,7 +113,7 @@ const mission = {
       mission.children = [];
       // 文件中删除;
       if (mission.fileDir == DOC_DIR + "global\\Todo.txt") {
-        globalTodoDelete(mission.missionName);
+        globalTodoDelete(missionId);
       } else {
         writeFileFromObjDir(mission);
       }
@@ -131,18 +132,25 @@ const mission = {
       commit("DELETE_PENDING", [missionId, pendingId]);
       commit("SORT_MISSION_CHILDREN", missionId);
       const mission = getMissionById(missionId);
-      console.log(mission);
       writeFileFromObjDir(mission);
       commit("SORT_MISSION_ARRAY");
       commit("SET_UPDATED");
     },
     modifyMission({ commit }, [missionId, changeObj]) {
       commit("MODIFY_MISSION", [missionId, changeObj]);
+      const mission = getMissionById(missionId);
+      globalTodoUpdate(mission);
       commit("SORT_MISSION_ARRAY");
       commit("SET_UPDATED");
     },
-    modifyPending({ commit }, [pendingId, pendingObj]) {
+    modifyPending({ commit }, [pendingId, pendingObj, missionId]) {
       commit("MODIFY_PENDING", [pendingId, pendingObj]); //已在该方法中对children进行排序
+      const mission = getMissionById(missionId);
+      if (mission.isBindMission === false) {
+        globalTodoUpdate(mission);
+      } else {
+        writeFileFromObjDir(mission);
+      }
       commit("SORT_MISSION_ARRAY");
       commit("SET_UPDATED");
     },

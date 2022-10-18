@@ -503,7 +503,11 @@ export default {
       console.log("changeTodoStatus");
       console.log(value);
       console.log(todo.child.id);
-      this.$store.dispatch("modifyPending", [todo.child.id, todo.child]);
+      this.$store.dispatch("modifyPending", [
+        todo.child.id,
+        todo.child,
+        todo.id,
+      ]);
     },
   },
 };

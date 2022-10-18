@@ -243,17 +243,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["missionArray"]),
+    ...mapGetters(["missionArray", "lastUpdateMission"]),
     activeFirstPage() {
       return this.activeName == "first";
     },
   },
   watch: {
-    missionArray: {
+    lastUpdateMission: {
       handler() {
         this.missionList = this.missionArray;
       },
-      deep: true,
       immediate: true,
     },
   },
