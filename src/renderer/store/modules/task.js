@@ -269,6 +269,12 @@ const task = {
       // state.taskArray = newArray;
       state.nowTask = nowTask;
     },
+    SET_WORKLOAD: (state, [taskObj, workload]) => {
+      let task = state.taskArray.find((element) => {
+        return element.taskName == taskObj.taskName;
+      });
+      task.workload = workload;
+    },
   },
   actions: {
     SelectTask({ commit }, data) {

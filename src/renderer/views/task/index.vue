@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { setWorkLoad } from "@/utils/fileTool.js";
+import { setWorkload } from "@/utils/fileTool.js";
 import TaskListBox from "./components/TaskListBox";
 import WorkSpace from "./components/WorkSpace";
 import TodoSpace from "./components/TodoSpace";
@@ -210,7 +210,7 @@ export default {
     checkInput() {
       this.nowTask.workload = ("" + this.nowTask.workload) // 第一步：转成字符串
         .replace(/\.$/g, ""); // 第二步：把最后一位是小数点去掉
-      setWorkLoad(this.nowTask.fileDir, this.nowTask.workload);
+      setWorkload(this.nowTask.fileDir, this.nowTask.workload);
     },
   },
 };

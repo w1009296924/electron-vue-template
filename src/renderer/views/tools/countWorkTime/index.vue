@@ -19,28 +19,28 @@
       </div>
       <div class="maxHeight">
         <div class="showMessage">
-          <div>工作量: {{ workLoads }}</div>
+          <div>工作量: {{ workloads }}</div>
           <div class="missionList">投产需求:</div>
           <el-table :data="tableData" border style="width: 100%">
             <el-table-column fixed prop="date" label="投产日期" width="200" />
             <el-table-column prop="missionNo" label="需求编号" width="300" />
             <el-table-column prop="missionName" label="需求名称" width="450" />
-            <el-table-column prop="workLoad" label="工作量" width="120">
+            <el-table-column prop="workload" label="工作量" width="120">
               <template slot-scope="scope">
                 <el-input
                   ref="gain"
                   size="mini"
                   @input="editInput($event, scope.row)"
-                  @blur="editWorkLoadSave(scope.row, scope.$index)"
-                  v-model="scope.row.workLoad"
+                  @blur="editWorkloadSave(scope.row, scope.$index)"
+                  v-model="scope.row.workload"
                   style="width: 100%; hight: 100%"
                 />
                 <!-- <span
                   v-if="scope.row.isOK"
                   v-else
                   size="mini"
-                  @click="editWorkLoad(scope.row, scope.$index)"
-                  >{{ scope.row.workLoad }}</span
+                  @click="editWorkload(scope.row, scope.$index)"
+                  >{{ scope.row.workload }}</span
                 > -->
               </template>
             </el-table-column>
@@ -66,26 +66,32 @@
                 label="预计投产日期"
                 width="200"
               />
-              <el-table-column prop="missionNo" label="需求编号" width="300" />
+              <el-table-column prop="missionNo" label="需求编号" width="280" />
               <el-table-column
                 prop="missionName"
                 label="需求名称"
                 width="450"
               />
-              <el-table-column prop="workLoad" label="工作量" width="120">
+              <el-table-column prop="workload" label="工作量" width="120">
                 <template slot-scope="scope">
                   <el-input
                     ref="gain"
                     size="mini"
                     @input="editInput($event, scope.row)"
-                    @blur="editWorkLoadSave(scope.row, scope.$index)"
-                    v-model="scope.row.workLoad"
+                    @blur="editWorkloadSave(scope.row, scope.$index)"
+                    v-model="scope.row.workload"
                     style="width: 100%; hight: 100%"
                   />
                 </template>
               </el-table-column>
               <el-table-column label="操作">
                 <template slot-scope="scope">
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="showTimeDialog(scope.$index, otherTableData)"
+                    >已投产</el-button
+                  >
                   <el-button
                     type="text"
                     size="small"
@@ -99,12 +105,38 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      title="已投产"
+      :modal="false"
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      width="60%"
+    >
+      <div class="dialogContent">
+        预计投产日期:{{ String(selectMission.date).replaceAll("/", "-") }}
+        <div style="display: inline-block; margin-left: 40px">
+          实际投产日期:<el-date-picker
+            v-model="fireDate"
+            type="date"
+            align="center"
+            placeholder="选择日期"
+            style="margin-left: 16px"
+          >
+          </el-date-picker>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="isFired">保 存</el-button>
+      </span></el-dialog
+    >
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import fileTool from "@/utils/fileTool.js";
+import { formatDateTime } from "@/utils/validate.js";
 import { DOC_DIR } from "@/utils/constans";
 import ToolTitle from "../components/toolTitle";
 const fs = require("fs");
@@ -149,9 +181,13 @@ export default {
       },
       dateRange: "", //时间选择范围
       settings: {},
-      workLoads: "", //统计的工作量
+      workloads: "", //统计的工作量
       tableData: [],
       otherTableData: [],
+      dialogVisible: false,
+      selectMission: {},
+      selectIndex: 0,
+      fireDate: "",
     };
   },
   computed: {
@@ -163,7 +199,7 @@ export default {
     this.dateRange = this.settings.tools.dateRange
       ? this.settings.tools.dateRange
       : [new Date(), new Date()];
-    this.workLoads = "";
+    this.workloads = "";
   },
   methods: {
     async query() {
@@ -178,12 +214,12 @@ export default {
       //将时间范围记录本地
       this.settings.tools.dateRange = this.dateRange;
       fileTool.writeSettingFile(this.settings);
-      //遍历本地文件,如果fireTimeRel在选择范围内的,记入tableData
-      //如果fireTimeRel为空,但fireTime在范围内的,记入otherTableData
+      //遍历本地文件,如果fireTimeReal在选择范围内的,记入tableData
+      //如果fireTimeReal为空,但fireTime在范围内的,记入otherTableData
       //读取全部目录
       this.tableData = [];
       this.otherTableData = [];
-      this.workLoads = 0;
+      this.workloads = 0;
       const dateDir = fs.readdirSync(DOC_DIR);
       dateDir.forEach((filename) => {
         if (filename != "global") {
@@ -194,17 +230,19 @@ export default {
               "utf-8",
               (err, data) => {
                 const taskObj = JSON.parse(data);
-                if (taskObj.fireTimeRel) {
-                  if (this.isBetweenDate(taskObj.fireTimeRel, this.dateRange)) {
+                if (taskObj.fireTimeReal) {
+                  if (
+                    this.isBetweenDate(taskObj.fireTimeReal, this.dateRange)
+                  ) {
                     this.tableData.push({
                       fileDir: taskObj.fileDir,
-                      date: taskObj.fireTimeRel,
+                      date: taskObj.fireTimeReal,
                       missionNo: taskObj.demandNo,
                       missionName: taskObj.taskName,
-                      workLoad: taskObj.workload,
+                      workload: taskObj.workload,
                     });
-                    this.workLoads =
-                      (this.workLoads * 1000 + taskObj.workLoad * 1000) / 1000;
+                    this.workloads =
+                      (this.workloads * 1000 + taskObj.workload * 1000) / 1000;
                   }
                 } else {
                   if (this.isBetweenDate(taskObj.fireTime, this.dateRange)) {
@@ -213,12 +251,18 @@ export default {
                       date: taskObj.fireTime,
                       missionNo: taskObj.demandNo,
                       missionName: taskObj.taskName,
-                      workLoad: taskObj.workload,
+                      workload: taskObj.workload,
                     });
                   }
                 }
               }
             );
+          });
+          this.tableData = this.tableData.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date);
+          });
+          this.otherTableData = this.otherTableData.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date);
           });
         }
       });
@@ -244,14 +288,31 @@ export default {
       //     offset: 280,
       //   });
       // });
-      this.workLoads =
-        (this.workLoads * 1000 - rows[index].workLoad * 1000) / 1000;
+      this.workloads =
+        (this.workloads * 1000 - rows[index].workload * 1000) / 1000;
       rows.splice(index, 1);
+    },
+    showTimeDialog(index, rows) {
+      this.fireDate = "";
+      this.selectIndex = index;
+      this.selectMission = rows[index];
+      this.dialogVisible = true;
+    },
+    isFired() {
+      fileTool.setfireTimeReal(
+        this.selectMission,
+        formatDateTime(this.fireDate).replaceAll("-", "/")
+      );
+      this.otherTableData[this.selectIndex].date = formatDateTime(
+        this.fireDate
+      );
+      this.addCount(this.selectIndex, this.otherTableData);
+      this.dialogVisible = false;
     },
     addCount(index, rows) {
       this.tableData.push(rows[index]);
-      this.workLoads =
-        (this.workLoads * 1000 + rows[index].workLoad * 1000) / 1000;
+      this.workloads =
+        (this.workloads * 1000 + rows[index].workload * 1000) / 1000;
       rows.splice(index, 1);
     },
     enterClick({ row, column }) {
@@ -259,29 +320,29 @@ export default {
         this.$set(row, "isOK", false);
       }
     },
-    editWorkLoad(row, index) {
+    editWorkload(row, index) {
       this.$set(row, "isOK", true);
     },
     editInput(value, row) {
-      row.workLoad =
+      row.workload =
         ("" + value) // 第一步：转成字符串
           .replace(/[^\d^\.]+/g, "") // 第二步：把不是数字，不是小数点的过滤掉
           .replace(/^0+(\d)/, "$1") // 第三步：第一位0开头，0后面为数字，则过滤掉，取后面的数字
           .replace(/^\./, "0.") // 第四步：如果输入的第一位为小数点，则替换成 0. 实现自动补全
           .match(/^\d*(\.?\d{0,1})/g)[0] || ""; // 第五步：最终匹配得到结果 以数字开头，只有一个小数点，而且小数点后面只能有0到2位小数
     },
-    editWorkLoadSave(row, index) {
+    editWorkloadSave(row, index) {
       //如果vuex里面有,更新vuex
       let taskIdx = this.taskArray.findIndex((item) => {
         if (item.taskName == row.missionName) {
           return true;
         }
       });
-      row.workLoad = ("" + row.workLoad) // 第一步：转成字符串
+      row.workload = ("" + row.workload) // 第一步：转成字符串
         .replace(/\.$/g, ""); // 第二步：把最后一位是小数点去掉
-      if (taskIdx != -1) this.taskArray[taskIdx].workload = row.workLoad;
+      if (taskIdx != -1) this.taskArray[taskIdx].workload = row.workload;
       this.$set(row, "isOK", false);
-      fileTool.setWorkLoad(row.fileDir, row.workLoad);
+      fileTool.setWorkload(row.fileDir, row.workload);
     },
     isBetweenDate(date, dateRange) {
       const dateObj = new Date(date);

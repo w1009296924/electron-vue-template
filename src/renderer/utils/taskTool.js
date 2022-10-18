@@ -69,12 +69,20 @@ export function loadTaskFile() {
           function () {}
         );
       } else {
-        //更新任务信息,保留工作量
-        const workload = JSON.parse(fs.readFileSync(fileDir, "utf-8")).workload;
+        //更新任务信息,保留工作量和投产日期
+        const readTask = JSON.parse(fs.readFileSync(fileDir, "utf-8"));
+        const workload = readTask.workload;
+        const fireTimeReal = readTask.fireTimeReal;
+        store.commit("SET_WORKLOAD", [task, workload]);
         fs.writeFile(
           fileDir,
           JSON.stringify(
-            { ...task, fileDir: fileDir, workload: workload },
+            {
+              ...task,
+              fireTimeReal: fireTimeReal,
+              fileDir: fileDir,
+              workload: workload,
+            },
             null,
             2
           ),
