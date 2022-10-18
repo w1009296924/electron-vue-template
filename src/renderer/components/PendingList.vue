@@ -211,6 +211,7 @@ export default {
           this.nowItem.id,
         ]);
       }
+      //TODO 判断是否需要发删除待办交易
     },
     editTodo() {
       this.$refs.addTodoList.showEdit(
