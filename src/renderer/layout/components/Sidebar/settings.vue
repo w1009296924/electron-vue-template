@@ -31,6 +31,28 @@
           directory=""
         />
       </div>
+      <div class="line" style="margin-bottom: 20px">
+        待办提醒：
+        <div class="subText">
+          每天自动提醒待办事项
+          <el-switch
+            v-model="remindDaysSwitch"
+            style="margin: 0 76px 0 12px"
+          />提醒时间
+          <el-time-select
+            v-model="remindDaysTime"
+            align="center"
+            style="width: 120px; margin-left: 8px"
+            :picker-options="{
+              start: '08:30',
+              step: '00:15',
+              end: '21:30',
+            }"
+            placeholder="选择时间"
+          >
+          </el-time-select>
+        </div>
+      </div>
       <div>
         <div class="line" style="margin-bottom: 20px">自定义待办规则：</div>
         <el-table
@@ -114,12 +136,7 @@
           border
           style="width: 421px; margin-left: 88px"
         >
-          <el-table-column
-            fixed
-            prop="grant"
-            label="授权对象"
-            width="150"
-          >
+          <el-table-column fixed prop="grant" label="授权对象" width="150">
             <template slot-scope="scope">
               <el-input
                 size="mini"
@@ -173,27 +190,34 @@
           >新增</el-button
         >
       </div>
-      <div class="line" style="margin-bottom: 20px">
-        待办提醒：
-        <div class="subText">
-          每天自动提醒待办事项
-          <el-switch
-            v-model="remindDaysSwitch"
-            style="margin: 0 76px 0 12px"
-          />提醒时间
-          <el-time-select
-            v-model="remindDaysTime"
-            align="center"
-            style="width: 120px; margin-left: 8px"
-            :picker-options="{
-              start: '08:30',
-              step: '00:15',
-              end: '21:30',
-            }"
-            placeholder="选择时间"
-          >
-          </el-time-select>
-        </div>
+      <div v-if="grantedList.length > 0">
+        <div class="line" style="margin-bottom: 20px">我的授权列表:</div>
+        <el-table
+          :data="grantedList"
+          border
+          style="width: 421px; margin-left: 88px"
+        >
+          <el-table-column fixed prop="grant" label="授权对象" width="210">
+            <template slot-scope="scope">
+              <span size="mini">{{ scope.row.investorName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="permission" label="获得权限" width="210">
+            <template slot-scope="scope">
+              <span size="mini">{{ scope.row.permission }}</span>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button
+                type="text"
+                size="small"
+                @click.native.prevent="grantedDeleteRow(scope.$index)"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column> -->
+        </el-table>
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -212,17 +236,17 @@ export default {
   data() {
     return {
       settings: {},
-      doc_dir:'',
+      doc_dir: "",
       dialogVisible: false,
-      fileDirectory: '',
+      fileDirectory: "",
       grantList: [],
       permission: "readonly",
       permissionList: [
         {
-          value: "只读"
+          value: "只读",
         },
         {
-          value: "新增"
+          value: "新增",
         },
       ],
       remindDaysSwitch: true,
@@ -248,25 +272,26 @@ export default {
         {
           pendingName: "提交代码审核",
           rule: "提交内测前3天",
-          compareTo:'提交内测',
-          beforeDays:3,
-          missionType:'全部'
+          compareTo: "提交内测",
+          beforeDays: 3,
+          missionType: "全部",
         },
         {
           pendingName: "上传说明书、需规",
           rule: "提交内测前0天",
-          compareTo:'提交内测',
-          beforeDays:0,
-          missionType:'全部'
+          compareTo: "提交内测",
+          beforeDays: 0,
+          missionType: "全部",
         },
       ],
+      grantedList: [],
     };
   },
   created() {
     this.init();
   },
   methods: {
-    init() {
+    async init() {
       const data = fileTool.readSettingFile();
       this.settings = data;
       this.doc_dir = data.settings.fileDirectory;
@@ -275,6 +300,28 @@ export default {
         (this.grantList = data.settings.grantList),
         (this.remindDaysSwitch = data.settings.remindDaysSwitch),
         (this.remindDaysTime = data.settings.remindDaysTime);
+      //从数据库获取授予了权限的人名单 queryGrantedUserList
+      // this.grantedList = await queryGrantedUserList(this.$store.state.user.userNo);
+      this.grantedList = [
+        {
+          granted: "liyw11",
+          permission: "只读",
+          investorNo: "12066390",
+          investorName: "李亚威",
+        },
+        {
+          granted: "wenty",
+          permission: "新增",
+          investorNo: "12066391",
+          investorName: "文天阳",
+        },
+        {
+          granted: "wenty",
+          permission: "新增",
+          investorNo: "12066392",
+          investorName: "王双",
+        },
+      ];
     },
     show() {
       this.dialogVisible = true;
@@ -299,8 +346,8 @@ export default {
         remindDaysSwitch: this.remindDaysSwitch,
         remindDaysTime: this.remindDaysTime,
       };
-      fileTool.writeSettingFile(this.settings);//本地保存配置文件
-      if(this.doc_dir!=this.fileDirectory) {
+      fileTool.writeSettingFile(this.settings); //本地保存配置文件
+      if (this.doc_dir != this.fileDirectory) {
         initData();
         location.reload();
       }
@@ -361,7 +408,8 @@ export default {
           return;
         } else {
           this.ruleList[index].compareTo = this.status;
-          this.ruleList[index].beforeDays = (this.isBefore?-1 : 1) * this.days;
+          this.ruleList[index].beforeDays =
+            (this.isBefore ? -1 : 1) * this.days;
           this.ruleList[index].rule = `${this.status}${
             this.isBefore ? "前" : "后"
           }${this.days}天`;
@@ -372,15 +420,17 @@ export default {
       }
     },
     increaseGrantList() {
-      if (this.grantList.length>0 &&
-          this.grantList[this.grantList.length - 1].isOK) {
+      if (
+        this.grantList.length > 0 &&
+        this.grantList[this.grantList.length - 1].isOK
+      ) {
         this.$message({
           message: "请先输入授权对象",
           type: "warning",
           offset: 280,
         });
       } else {
-        this.grantList.push({permission:'只读'});
+        this.grantList.push({ permission: "只读" });
         this.$set(this.grantList[this.grantList.length - 1], "isOK", true);
       }
     },

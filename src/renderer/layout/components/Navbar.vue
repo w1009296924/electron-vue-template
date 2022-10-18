@@ -114,6 +114,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .sys-btn {
+  cursor: pointer;
   -webkit-app-region: no-drag; //设置按钮不可拖拽
   margin-right: 4px;
   height: 36px;

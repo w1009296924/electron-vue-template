@@ -1,10 +1,7 @@
 <template>
   <div class="app-container">
     <div class="tools-container">
-      <ToolTitle
-        toolName="工作量统计"
-        toolNotice="本数据参考自研发单元数据，可按实际情况进行修改。"
-      />
+      <ToolTitle toolName="工作量统计" />
       <div class="set-timeRage">
         时间范围
         <el-date-picker
