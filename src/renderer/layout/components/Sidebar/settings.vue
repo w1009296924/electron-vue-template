@@ -197,9 +197,9 @@
           border
           style="width: 421px; margin-left: 88px"
         >
-          <el-table-column fixed prop="grant" label="授权对象" width="210">
+          <el-table-column fixed prop="investorNo" label="授权对象" width="210">
             <template slot-scope="scope">
-              <span size="mini">{{ scope.row.investorName }}</span>
+              <span size="mini">{{ scope.row.investorNo }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="permission" label="获得权限" width="210">
@@ -231,6 +231,7 @@
 import { ipcRenderer } from "electron";
 import fileTool from "@/utils/fileTool.js";
 import { initData } from "@/utils/init.js";
+import { modifyGrantUserList } from "@/utils/nativeRequest.js";
 export default {
   name: "Settings",
   data() {
@@ -240,6 +241,7 @@ export default {
       dialogVisible: false,
       fileDirectory: "",
       grantList: [],
+      isChange: false,
       permission: "readonly",
       permissionList: [
         {
@@ -291,42 +293,24 @@ export default {
     this.init();
   },
   methods: {
-    async init() {
+    init() {
       const data = fileTool.readSettingFile();
       this.settings = data;
       this.doc_dir = data.settings.fileDirectory;
-      (this.fileDirectory = data.settings.fileDirectory),
-        (this.ruleList = data.settings.ruleList),
-        (this.grantList = data.settings.grantList),
-        (this.remindDaysSwitch = data.settings.remindDaysSwitch),
-        (this.remindDaysTime = data.settings.remindDaysTime);
-      //从数据库获取授予了权限的人名单 queryGrantedUserList
-      // this.grantedList = await queryGrantedUserList(this.$store.state.user.userNo);
-      this.grantedList = [
-        {
-          granted: "liyw11",
-          permission: "只读",
-          investorNo: "12066390",
-          investorName: "李亚威",
-        },
-        {
-          granted: "wenty",
-          permission: "新增",
-          investorNo: "12066391",
-          investorName: "文天阳",
-        },
-        {
-          granted: "wenty",
-          permission: "新增",
-          investorNo: "12066392",
-          investorName: "王双",
-        },
-      ];
+      this.fileDirectory = data.settings.fileDirectory;
+      this.ruleList = data.settings.ruleList;
+      this.remindDaysSwitch = data.settings.remindDaysSwitch;
+      this.remindDaysTime = data.settings.remindDaysTime;
+      this.grantList = this.$store.getters.grantList;
+      // this.grantList = data.settings.grantList;
+      this.grantedList = this.$store.getters.grantedList;
     },
     show() {
+      this.isChange = false;
       this.dialogVisible = true;
     },
     hide() {
+      this.isChange = false;
       this.dialogVisible = false;
     },
     saveSettings() {
@@ -351,9 +335,11 @@ export default {
         initData();
         location.reload();
       }
-      //todo 授权列表grantList 存入数据库中
-      //入参 本人用户名 this.$store.state.user.name,授予权限人列表grantList[grant:授予对象,permission:授予权限(只读/新增)]
-      //编号 12066390 姓名 李亚威
+      //如果有变更则将授权列表grantList 存入数据库中
+      if (this.isChange && this.grantList.length > 0) {
+        modifyGrantUserList(this.$store.state.user.name, this.grantList);
+        initData();
+      }
     },
     fileChange(e) {
       try {
@@ -420,6 +406,7 @@ export default {
       }
     },
     increaseGrantList() {
+      this.isChange = true;
       if (
         this.grantList.length > 0 &&
         this.grantList[this.grantList.length - 1].isOK
@@ -435,9 +422,11 @@ export default {
       }
     },
     grantDeleteRow(index) {
+      this.isChange = true;
       this.grantList.splice(index, 1);
     },
     grantEditclick(row, index) {
+      this.isChange = true;
       if (row.isOK) {
         if (!this.grantList[index].grant) {
           this.$message({

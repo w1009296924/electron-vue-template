@@ -268,26 +268,6 @@ export default {
       });
     },
     deleteRow(index, rows) {
-      // this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'warning'
-      // }).then(() => {
-      //   rows.splice(index, 1);
-      //   rows[index].isDelete = true;
-      //   //todo 删除数据
-      //   this.$message({
-      //     type: 'success',
-      //     message: '删除成功!',
-      //     offset: 280,
-      //   });
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '已取消删除',
-      //     offset: 280,
-      //   });
-      // });
       this.workloads =
         (this.workloads * 1000 - rows[index].workload * 1000) / 1000;
       rows.splice(index, 1);

@@ -74,7 +74,9 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="editFlag ? editPending() : addPending()"
+      <el-button
+        type="primary"
+        @click="editFlag ? edit_Pending() : add_Pending()"
         >确 定</el-button
       >
     </span>
@@ -83,6 +85,12 @@
 
 <script>
 import { formatDateTime, subTrackTime } from "@/utils/validate.js";
+import {
+  addPending,
+  addMission,
+  modifyMission,
+  modifyPendingInfo,
+} from "@/utils/nativeRequest.js";
 import { mapGetters } from "vuex";
 import { DOC_DIR } from "@/utils/constans.js";
 export default {
@@ -110,14 +118,8 @@ export default {
       pendingTime: "",
       pengingSth: "",
       selectMisson: "",
-      investor: "000000", //新增key
-      investorList: [
-        {
-          permission: "新增",
-          investorNo: "000000",
-          investorName: "本人",
-        },
-      ],
+      investor: "", //新增key
+      investorList: [],
       remindSwitch: false,
       inputMin: 15,
     };
@@ -130,29 +132,13 @@ export default {
   },
   methods: {
     async init() {
-      //从数据库获取授予了权限的人名单 queryGrantedUserList
-      // const queryInvestorList = await queryGrantedUserList(this.$store.state.user.userNo);
-      const queryInvestorList = [
-        {
-          granted: "liyw11",
-          permission: "只读",
-          investorNo: "12066390",
-          investorName: "李亚威",
-        },
-        {
-          granted: "wenty",
-          permission: "新增",
-          investorNo: "12066391",
-          investorName: "文天阳",
-        },
-        {
-          granted: "wenty",
-          permission: "新增",
-          investorNo: "12066392",
-          investorName: "王双",
-        },
-      ];
-      queryInvestorList.forEach((item) => {
+      this.investor = this.$store.state.user.name;
+      this.investorList.push({
+        permission: "新增",
+        investorNo: this.$store.state.user.name,
+        investorName: "本人",
+      });
+      this.$store.getters.grantedList.forEach((item) => {
         if (item.permission == "新增") {
           this.investorList.push(item);
         }
@@ -185,8 +171,7 @@ export default {
       this.pengingSth = mission.missionNo
         ? mission.children[this.editIndex].pendingType
         : mission.missionName;
-      (this.selectMisson = mission.missionNo ? mission.missionName : ""),
-        (this.investor = "000000");
+      this.selectMisson = mission.missionNo ? mission.missionName : "";
       this.remindSwitch = Boolean(
         mission.children[this.editIndex].remindSwitch
       );
@@ -197,7 +182,7 @@ export default {
         : 15;
       this.dialogVisible = true;
     },
-    addPending() {
+    add_Pending() {
       if (!this.pendingTime) {
         this.$message({
           message: "请选择待办时间",
@@ -240,7 +225,11 @@ export default {
           };
           //本人新增待办修改vuex和本地文件
           this.$store.dispatch("addPending", [mission.id, pushObj]);
-          // addPending()
+          //新增子待办数据
+          if (this.$store.state.grant.haveGrant) {
+            console.log("上传服务端addPending");
+            addPending(this.investor, mission.id, pushObj);
+          }
         } else {
           //没绑定任务,插入Global.Txt
           pushObj = {
@@ -262,12 +251,16 @@ export default {
           };
           //本人新增待办修改vuex和本地文件
           this.$store.dispatch("addMission", [pushObj, true]);
+          //新增待办数据上传服务端,新增全局待办事项
+          if (this.$store.state.grant.haveGrant) {
+            console.log("上传服务端addMission --增加全局待办");
+            addMission(this.investor, pushObj);
+          }
         }
-        //TODO 发新增待办交易
         this.dialogVisible = false;
       }
     },
-    editPending() {
+    edit_Pending() {
       this.editMission.children[this.editIndex].date = formatDateTime(
         this.pendingTime
       );
@@ -293,8 +286,20 @@ export default {
         this.editMission.children[this.editIndex],
         this.editMission.id,
       ]);
+      // modifyPendingInfo 修改待办信息  modifyMission 修改任务-全局待办
+      if (this.$store.state.grant.haveGrant) {
+        console.log(
+          "上传服务端 修改待办信息",
+          this.editMission.missionNo ? "modifyPendingInfo" : "modifyMission"
+        );
+        this.editMission.missionNo
+          ? modifyPendingInfo(
+              this.editMission.children[this.editIndex].id,
+              this.editMission.children[this.editIndex]
+            )
+          : modifyMission(this.editMission.id, this.editMission);
+      }
       this.$emit("freshFirstLine");
-      //TODO 判断是否需要发修改待办交易
       this.dialogVisible = false;
     },
     //生成13+16位ID

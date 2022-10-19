@@ -116,6 +116,11 @@
 
 <script>
 import IncreaseDialog from "@/components/IncreaseDialog";
+import {
+  modifyPendingStatus,
+  deleteMission,
+  deletePending,
+} from "@/utils/nativeRequest.js";
 import { mapGetters } from "vuex";
 export default {
   name: "PendingList",
@@ -186,6 +191,15 @@ export default {
           item,
           (this.parent || this.todo).id,
         ]);
+        //modifyPendingStatus 修改待办状态
+        if (this.$store.state.grant.haveGrant) {
+          console.log("上传服务端modifyPendingStatus");
+          modifyPendingStatus(
+            item.id,
+            (this.parent || this.todo).status,
+            item.status
+          );
+        }
         this.$emit("refresh");
       }, 500);
     },
@@ -213,13 +227,22 @@ export default {
       console.log(this.nowItem.pendingType);
       if (this.nowItem.children) {
         this.$store.dispatch("deleteMission", this.todo.id);
+        //deleteMission 删除任务
+        if (this.$store.state.grant.haveGrant) {
+          console.log("上传服务端deleteMission");
+          deleteMission(this.todo.id);
+        }
       } else {
         this.$store.dispatch("deletePending", [
           (this.parent || this.todo).id,
           this.nowItem.id,
         ]);
       }
-      //TODO 判断是否需要发删除待办交易
+      //deletePending 删除待办
+      if (this.$store.state.grant.haveGrant) {
+        console.log("上传服务端deletePending");
+        deletePending(this.nowItem.id);
+      }
     },
     editTodo() {
       this.$refs.addTodoList.showEdit(

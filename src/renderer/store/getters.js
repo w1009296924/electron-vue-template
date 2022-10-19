@@ -12,6 +12,8 @@ const getters = {
   taskArray: (state) => state.task.taskArray,
   nowTask: (state) => state.task.nowTask,
   missionArray: (state) => state.mission.missionArray,
+  grantList: (state) => state.grant.grantList,
+  grantedList: (state) => state.grant.grantedList,
   lastUpdateMission: (state) => state.mission.lastUpdateMission,
 };
 

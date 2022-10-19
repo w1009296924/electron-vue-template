@@ -1,5 +1,6 @@
 import { initMission } from "@/utils/missionTool.js";
 import { getTaskTree, loadTaskFile } from "@/utils/taskTool.js";
+import { getGrantUserList, getGrantedUserList } from "@/utils/grantTool.js";
 import fs from "fs";
 import { CONFIG_DIR, DOC_DIR, DEFAULT_VAL } from "@/utils/constans.js";
 import fileTool from "@/utils/fileTool.js";
@@ -43,7 +44,10 @@ export function initData() {
         });
       }).then(() => {
         loadTaskFile();
-        initMission();
+        getGrantUserList().then((res) => {
+          initMission();
+        });
+        getGrantedUserList();
         setTimeout(() => {
           initNotice();
         }, 5000);
@@ -84,7 +88,10 @@ export function initData() {
         });
       }).then(() => {
         loadTaskFile();
-        initMission();
+        getGrantUserList().then((res) => {
+          initMission();
+        });
+        getGrantedUserList();
         setTimeout(() => {
           initNotice();
         }, 5000);

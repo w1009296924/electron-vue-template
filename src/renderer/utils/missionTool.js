@@ -1,5 +1,6 @@
 import { DOC_DIR, CONFIG_DIR, BASE_PENDINGRULE } from "./constans";
 import { subTrackTime } from "@/utils/validate.js";
+import { addMission } from "@/utils/nativeRequest.js";
 import fileTool from "@/utils/fileTool.js";
 import fs from "fs";
 import store from "@/store";
@@ -66,7 +67,6 @@ export function initMission() {
           }
           return new Date(a.date) - new Date(b.date);
         });
-        console.log(todoObj);
         fs.writeFile(
           fileTool.getDemandPath(item) + "\\" + "Todo.txt",
           JSON.stringify(todoObj, null, 2),
@@ -113,8 +113,11 @@ export function initMission() {
       });
     }
   });
-  //根据设置的授权列表和待办事项id判断是否上传数据库
-  // if()
+  //待办数据上传服务端,每次启动上传当前的待办事项
+  if (store.state.grant.haveGrant) {
+    console.log("上传服务端addMission");
+    addMission(store.state.user.name, store.getters.missionArray);
+  }
 }
 
 function getPendingDate(task, rule) {

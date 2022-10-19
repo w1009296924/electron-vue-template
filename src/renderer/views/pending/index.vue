@@ -71,6 +71,7 @@
 import PendingList from "@/components/PendingList";
 import IncreaseDialog from "@/components/IncreaseDialog";
 import { mapGetters } from "vuex";
+import { getGrantedPending } from "@/utils/nativeRequest.js";
 export default {
   name: "tools",
   components: {
@@ -262,22 +263,7 @@ export default {
   },
   methods: {
     async init() {
-      //从数据库获取授予了权限的人名单 queryGrantedUserList
-      // this.investorList = await queryGrantedUserList(this.$store.state.user.userNo);
-      this.investorList = [
-        {
-          granted: "liyw11",
-          permission: "只读",
-          investorNo: "12066390",
-          investorName: "李亚威",
-        },
-        {
-          granted: "wenty",
-          permission: "新增",
-          investorNo: "12066391",
-          investorName: "文天阳",
-        },
-      ];
+      this.investorList = this.$store.getters.grantedList;
       this.queryInvestor = this.investorList?.[0]?.investorNo;
     },
     showDialog() {
@@ -294,11 +280,12 @@ export default {
       this.getGrantedPending(this.queryInvestor);
     },
     //查询他人待办
-    async getGrantedPending(queryNo) {
-      // this.allGrantMissionList = await getGrantedPending(queryNo);
+    getGrantedPending(queryNo) {
+      //TODO
+      // this.allGrantMissionList = getGrantedPending(queryNo);
       //测试用
       this.allGrantMissionList =
-        this.queryInvestor == "12066391" ? this.tableData2 : this.tableData3;
+        this.queryInvestor == "wenty" ? this.tableData2 : this.tableData3;
       this.searchGranted();
     },
     refresh() {
@@ -311,7 +298,10 @@ export default {
       this.missionList = [];
       for (let i = 0; i < this.missionArray.length; i++) {
         //匹配需求编号
-        if (this.missionArray[i].missionNo.match(this.searchInput)) {
+        if (
+          this.missionArray[i].missionNo &&
+          this.missionArray[i].missionNo.match(this.searchInput)
+        ) {
           this.missionList.push(this.missionArray[i]);
           //匹配需求名称
         } else if (this.missionArray[i].missionName.match(this.searchInput)) {
