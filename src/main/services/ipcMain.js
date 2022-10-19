@@ -288,6 +288,13 @@ export default {
         });
         childWin.loadURL(winURL + `#${arg.url}`);
         // childWin.loadURL(`http://localhost:9080/static/notice.html`);
+
+        ipcMain.on("update-mission-main", (event2, missionArray) => {
+          childWin.webContents.send("update-mission", missionArray);
+        });
+        ipcMain.on("update-mission-child", (event3, missionArray) => {
+          event.sender.send("update-mission", missionArray);
+        });
         let sizeObj;
         if (arg?.isNotice) {
           sizeObj = screen.getPrimaryDisplay().workAreaSize;

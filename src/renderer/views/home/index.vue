@@ -222,6 +222,10 @@ export default {
         );
       });
     }, 1000);
+    ipcRenderer.on("update-mission", (event, arg) => {
+      console.log("sssaas");
+      this.$store.dispatch("updateMission", arg);
+    });
   },
   methods: {
     test() {

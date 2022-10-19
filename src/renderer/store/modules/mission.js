@@ -15,6 +15,10 @@ const mission = {
       state.lastUpdateMission = new Date();
     },
 
+    UPDATE_MISSION(state, missionArray) {
+      state.missionArray = missionArray;
+    },
+
     //添加待办（整体维度）
     ADD_MISSION(state, missionObj) {
       missionObj.id = missionObj.id || generateId();
@@ -106,6 +110,15 @@ const mission = {
     },
   },
   actions: {
+    updateMission({ commit }, missionArray) {
+      commit("UPDATE_MISSION", missionArray);
+      for (let index = 0; index < missionArray.length; index++) {
+        const element = missionArray[index];
+        commit("SORT_MISSION_CHILDREN", element.id);
+      }
+      commit("SORT_MISSION_ARRAY");
+      commit("SET_UPDATED");
+    },
     addMission({ commit }, [missionObj, increaseFlag = false]) {
       commit("ADD_MISSION", missionObj);
       //向global/Todo.txt添加新增待办
