@@ -453,10 +453,12 @@ export default {
       // };
       const arg = {
         url: "/todoWin",
-        // frame: false,
+        frame: false,
         width: 380,
         height: 400,
+        resizable: false,
         movable: true,
+        alwaysOnTop: true,
       };
       ipcRenderer.invoke("open-todo-win", arg);
     },

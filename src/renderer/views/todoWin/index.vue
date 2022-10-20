@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="main-box" @mouseenter="enter" @mouseleave="leave">
+    <div class="header"></div>
     <button @click="clicsss">ss</button>
     <transition-group class="mission-box" name="todo-trans" tag="div">
       <div v-for="item of missionArray" :key="item.id">
@@ -28,6 +29,10 @@ export default {
     ipcRenderer.on("update-mission", (event, arg) => {
       this.missionArray = arg;
     });
+    ipcRenderer.on("moved", (event, arg) => {
+      console.log("moved");
+      console.log(arg);
+    });
   },
   methods: {
     change() {
@@ -39,11 +44,28 @@ export default {
       // console.log(type);
       ipcRenderer.send("update-mission-child", this.missionArray);
     },
+    enter() {
+      console.log("enter");
+      ipcRenderer.send("mouse-enter-win");
+    },
+    leave() {
+      console.log("leave");
+      ipcRenderer.send("mouse-leave-win");
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.main-box {
+  width: 100vw;
+  height: 100vh;
+  background: red;
+  .header {
+    -webkit-app-region: drag;
+    height: 10px;
+  }
+}
 .mission-box {
   padding: 0 14px 2px 14px;
   margin-top: 10px;

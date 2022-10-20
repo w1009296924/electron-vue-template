@@ -62,6 +62,7 @@ import { format } from "date-fns";
 import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
+import { initData } from "@/utils/init.js";
 export default {
   components: {
     Breadcrumb,
@@ -72,6 +73,9 @@ export default {
     userImage: require("@/assets/user.png"),
     isMac: process.platform === "darwin",
   }),
+  created() {
+    initData();
+  },
   mounted() {
     this.set_time();
     this.timer = setInterval(() => {

@@ -1,7 +1,6 @@
 import router from "./router";
 import store from "./store";
 import Performance from "@/tools/performance";
-import { initData } from "@/utils/init.js";
 
 var end = null;
 const whiteList = ["/login"]; // 不重定向白名单
@@ -21,7 +20,6 @@ router.beforeEach(async (to, from, next) => {
           const { roles } = await store.dispatch("GetUserInfo");
           const accessRoutes = await store.dispatch("GenerateRoutes", roles);
           router.addRoutes(accessRoutes);
-          initData();
           next({ ...to, replace: true });
         } catch (error) {
           await store.dispatch("LogOut");

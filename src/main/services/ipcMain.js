@@ -243,7 +243,8 @@ export default {
         //获取当前窗口
         let currentWindow = BrowserWindow.fromId(data[0].id);
         //聚焦窗口
-        currentWindow.focus();
+        // currentWindow.focus();
+        currentWindow.close();
       } else {
         //获取主窗口ID
         let parentID = event.sender.id;
@@ -287,6 +288,38 @@ export default {
           },
         });
         childWin.loadURL(winURL + `#${arg.url}`);
+        let hideDirection = "";
+        let shown = true;
+        let sliding = false;
+        childWin.on("move", (e) => {
+          sliding = true;
+        });
+        childWin.on("moved", (e) => {
+          const bound = childWin.getBounds();
+          bound.left = bound.x;
+          bound.top = bound.y;
+          bound.right = bound.x + bound.width;
+          bound.bottom = bound.y + bound.height;
+          if (bound.left < 5) {
+            hideDirection = "left";
+            childWin.webContents.send("moved", "left");
+          } else if (bound.top < 5) {
+            hideDirection = "top";
+            childWin.webContents.send("moved", "top");
+          } else if (
+            bound.right >
+            screen.getPrimaryDisplay().bounds.width - 5
+          ) {
+            hideDirection = "right";
+            childWin.webContents.send("moved", "right");
+          } else {
+            hideDirection = "";
+            childWin.webContents.send("moved", "none");
+          }
+          sliding = false;
+          // childWin.webContents.send("moved", childWin.getBounds()); //childWin.getBounds()
+        });
+
         // childWin.loadURL(`http://localhost:9080/static/notice.html`);
 
         ipcMain.on("update-mission-main", (event2, missionArray) => {
@@ -294,6 +327,40 @@ export default {
         });
         ipcMain.on("update-mission-child", (event3, missionArray) => {
           event.sender.send("update-mission", missionArray);
+        });
+        ipcMain.on("mouse-enter-win", (e) => {
+          childWin.webContents.send("moved", "hideDirection");
+          if (!sliding && !shown && hideDirection) {
+            childWin.webContents.send("moved", hideDirection);
+            sliding = true;
+            NoticeAni.slide(
+              childWin,
+              screen.getPrimaryDisplay().bounds.width,
+              hideDirection,
+              true,
+              () => {
+                sliding = false;
+                shown = true;
+              }
+            );
+          }
+        });
+        ipcMain.on("mouse-leave-win", (e) => {
+          if (!sliding && shown && hideDirection) {
+            childWin.webContents.send("moved", hideDirection);
+            sliding = true;
+            NoticeAni.slide(
+              childWin,
+              screen.getPrimaryDisplay().bounds.width,
+              hideDirection,
+              false,
+              () => {
+                sliding = false;
+                shown = false;
+              }
+            );
+          }
+          // childWin.webContents.send("moved", hideDirection);
         });
         let sizeObj;
         if (arg?.isNotice) {
@@ -336,6 +403,10 @@ export default {
         });
         childWin.on("closed", () => {
           childWin = null;
+          ipcMain.removeAllListeners("update-mission-main");
+          ipcMain.removeAllListeners("update-mission-child");
+          ipcMain.removeAllListeners("mouse-enter-win");
+          ipcMain.removeAllListeners("mouse-leave-win");
           let index = cidArray.indexOf(cidJson);
           if (index > -1) {
             cidArray.splice(index, 1);
