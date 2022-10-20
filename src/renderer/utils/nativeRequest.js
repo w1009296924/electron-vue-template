@@ -153,10 +153,10 @@ export function queryGrantedUserList(name) {
   });
 }
 
-export function getGrantedPending(name) {
+export function getMissionByName(name) {
   return instance({
     data: {
-      Trans: "GET_GRANTED_PENDING",
+      Trans: "GET_MISSION_BYNAME",
       name: name,
     },
   });

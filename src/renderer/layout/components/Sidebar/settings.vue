@@ -197,9 +197,9 @@
           border
           style="width: 421px; margin-left: 88px"
         >
-          <el-table-column fixed prop="investorNo" label="授权对象" width="210">
+          <el-table-column fixed prop="name" label="授权对象" width="210">
             <template slot-scope="scope">
-              <span size="mini">{{ scope.row.investorNo }}</span>
+              <span size="mini">{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="permission" label="获得权限" width="210">
@@ -229,6 +229,7 @@
 
 <script>
 import { ipcRenderer } from "electron";
+import { mapGetters } from "vuex";
 import fileTool from "@/utils/fileTool.js";
 import { initData } from "@/utils/init.js";
 import { modifyGrantUserList } from "@/utils/nativeRequest.js";
@@ -240,7 +241,6 @@ export default {
       doc_dir: "",
       dialogVisible: false,
       fileDirectory: "",
-      grantList: [],
       isChange: false,
       permission: "readonly",
       permissionList: [
@@ -286,11 +286,13 @@ export default {
           missionType: "全部",
         },
       ],
-      grantedList: [],
     };
   },
   created() {
     this.init();
+  },
+  computed: {
+    ...mapGetters(["grantList", "grantedList"]),
   },
   methods: {
     init() {
@@ -301,9 +303,7 @@ export default {
       this.ruleList = data.settings.ruleList;
       this.remindDaysSwitch = data.settings.remindDaysSwitch;
       this.remindDaysTime = data.settings.remindDaysTime;
-      this.grantList = this.$store.getters.grantList;
       // this.grantList = data.settings.grantList;
-      this.grantedList = this.$store.getters.grantedList;
     },
     show() {
       this.isChange = false;

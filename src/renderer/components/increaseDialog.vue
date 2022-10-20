@@ -50,9 +50,9 @@
         >
           <el-option
             v-for="item in investorList"
-            :key="item.investorNo"
-            :label="item.investorName"
-            :value="item.investorNo"
+            :key="item.name"
+            :label="item.label"
+            :value="item.name"
           ></el-option>
         </el-select>
       </div>
@@ -102,9 +102,9 @@ export default {
     activeFirstPage: {
       handler: function () {
         this.investor = this.activeFirstPage
-          ? this.investorList[0].investorNo
+          ? this.investorList[0].name
           : this.investorList.length > 1
-          ? this.investorList[1].investorNo
+          ? this.investorList[1].name
           : "";
       },
     },
@@ -125,24 +125,44 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["taskArray", "missionArray"]),
+    ...mapGetters(["taskArray", "missionArray", "grantedList"]),
   },
   created() {
     this.init();
   },
+  watch: {
+    grantedList: {
+      handler() {
+        this.investorList = [
+          {
+            permission: "新增",
+            name: this.$store.state.user.name,
+            label: "本人",
+          },
+        ];
+        this.grantedList.forEach((item) => {
+          if (item.permission == "新增") {
+            this.investorList.push({
+              permission: item.permission,
+              name: item.name,
+              label: item.name,
+            });
+          }
+        });
+      },
+      immediate: true,
+    },
+  },
   methods: {
-    async init() {
+    init() {
       this.investor = this.$store.state.user.name;
-      this.investorList.push({
-        permission: "新增",
-        investorNo: this.$store.state.user.name,
-        investorName: "本人",
-      });
-      this.$store.getters.grantedList.forEach((item) => {
-        if (item.permission == "新增") {
-          this.investorList.push(item);
-        }
-      });
+      this.investorList = [
+        {
+          permission: "新增",
+          name: this.$store.state.user.name,
+          label: "本人",
+        },
+      ];
     },
     show(info = null) {
       this.editFlag = false;

@@ -15,10 +15,6 @@ export function initMission() {
     )
   );
   let nowDateTime = new Date().getTime();
-  //是否有授权列表
-  // const hasGrant = settings.settings.grantList.length > 0;
-  //需要更新id的待办列表
-  // let updateIdList = [];
   //生成任务文件夹 加载进vuex
   store.getters.taskArray.forEach((item, index) => {
     //判断有无该任务文件夹,没有则创建文件夹,有则读取todo文件加入vuex
@@ -102,7 +98,6 @@ export function initMission() {
     const globalTodoList = JSON.parse(globalTodo).globalTodoList;
     if (globalTodoList.length > 0) {
       globalTodoList.forEach((data) => {
-        //如果有授权列表且待办id为空,数据插入 需要更新id的待办列表
         const intervalDays =
           (nowDateTime - new Date(data.children[0].date).getTime()) /
           (60000 * 24 * 60);

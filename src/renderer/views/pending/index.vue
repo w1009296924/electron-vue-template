@@ -26,15 +26,14 @@
           <div class="titleCenter">
             <el-select
               v-model="queryInvestor"
-              style="width: 130px; padding-left: 10px"
+              style="width: 140px; padding-left: 10px"
               placeholder="请选择"
               @change="selectChange"
             >
               <el-option
-                v-for="item in investorList"
-                :key="item.investorNo"
-                :label="item.investorName"
-                :value="item.investorNo"
+                v-for="item in grantedList"
+                :key="item.name"
+                :value="item.name"
               ></el-option>
             </el-select>
             <el-input
@@ -71,7 +70,7 @@
 import PendingList from "@/components/PendingList";
 import IncreaseDialog from "@/components/IncreaseDialog";
 import { mapGetters } from "vuex";
-import { getGrantedPending } from "@/utils/nativeRequest.js";
+import { getMissionByName } from "@/utils/nativeRequest.js";
 export default {
   name: "tools",
   components: {
@@ -83,7 +82,6 @@ export default {
       activeName: "first",
       searchInput: "",
       queryInvestor: "",
-      investorList: [],
       refreshFlag: true,
       missionList: [],
       allGrantMissionList: [],
@@ -244,7 +242,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["missionArray", "lastUpdateMission"]),
+    ...mapGetters(["missionArray", "lastUpdateMission", "grantedList"]),
     activeFirstPage() {
       return this.activeName == "first";
     },
@@ -262,30 +260,33 @@ export default {
     this.init();
   },
   methods: {
-    async init() {
-      this.investorList = this.$store.getters.grantedList;
-      this.queryInvestor = this.investorList?.[0]?.investorNo;
+    init() {
+      this.queryInvestor = this.grantedList?.[0]?.name;
     },
     showDialog() {
       this.$refs.increaseDialog.show();
     },
     tabClick(tab) {
       if (tab.index == 1) {
-        this.getGrantedPending(this.queryInvestor);
+        this.getMissionByName(this.queryInvestor);
       } else {
         this.search();
       }
     },
     selectChange() {
-      this.getGrantedPending(this.queryInvestor);
+      this.getMissionByName(this.queryInvestor);
     },
     //查询他人待办
-    getGrantedPending(queryNo) {
+    getMissionByName(queryNo) {
       //TODO
-      // this.allGrantMissionList = getGrantedPending(queryNo);
+      // const response = getMissionByName(queryNo);
+      // this.allGrantMissionList = JSON.parse(
+      //   JSON.stringify(response).replace(/detailId/g, "id")
+      // );
       //测试用
       this.allGrantMissionList =
         this.queryInvestor == "wenty" ? this.tableData2 : this.tableData3;
+
       this.searchGranted();
     },
     refresh() {

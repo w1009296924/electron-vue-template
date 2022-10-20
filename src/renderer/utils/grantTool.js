@@ -9,7 +9,9 @@ export function getGrantUserList() {
   return new Promise((resolve) => {
     queryGrantUserList(store.state.user.name)
       .then((res) => {
-        grantList = res;
+        grantList = JSON.parse(
+          JSON.stringify(res).replace(/grantName/g, "grant")
+        );
         if (grantList.length > 0) {
           store.commit("SET_GRANTLIST", grantList);
           store.commit("SET_HAVEGRANT", true);
@@ -20,12 +22,10 @@ export function getGrantUserList() {
         // grantList = [
         //   {
         //     permission: "只读",
-        //     isOK: false,
         //     grant: "wenty",
         //   },
         //   {
         //     permission: "只读",
-        //     isOK: false,
         //     grant: "wangs2",
         //   },
         // ];
@@ -54,18 +54,15 @@ export function getGrantedUserList() {
         grantedList = [
           {
             permission: "只读",
-            investorNo: "liyw11",
-            investorName: "李亚威",
+            name: "liyw11",
           },
           {
             permission: "新增",
-            investorNo: "wenty",
-            investorName: "文天阳",
+            name: "wenty",
           },
           {
             permission: "新增",
-            investorNo: "wangs64",
-            investorName: "王双",
+            name: "wangs64",
           },
         ];
         if (grantedList.length > 0) {
