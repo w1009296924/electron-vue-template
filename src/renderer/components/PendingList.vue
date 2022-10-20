@@ -7,7 +7,7 @@
     >
       <div
         class="todo-date"
-        :class="{ 'small-date': firstLine.date.length > 10 }"
+        :class="{ 'small-date': formatDateTime(firstLine.date).length > 10 }"
       >
         <el-popover
           v-if="firstLine.remindSwitch"
@@ -18,7 +18,7 @@
         >
           <i slot="reference" class="el-icon-alarm-clock" />
         </el-popover>
-        {{ firstLine.date.substr(5) }}
+        {{ formatDateTime(firstLine.date).substr(5) }}
       </div>
       <div v-if="showTaskName" class="todo-name">
         <div class="arrow-box">
@@ -74,7 +74,10 @@
         v-if="index != 0"
         class="todo-main-line"
       >
-        <div class="todo-date" :class="{ 'small-date': item.date.length > 10 }">
+        <div
+          class="todo-date"
+          :class="{ 'small-date': formatDateTime(item.date).length > 10 }"
+        >
           <el-popover
             v-if="item.remindSwitch"
             placement="top-start"
@@ -84,7 +87,7 @@
           >
             <i slot="reference" class="el-icon-alarm-clock" />
           </el-popover>
-          {{ item.date.substr(5) }}
+          {{ formatDateTime(item.date).substr(5) }}
         </div>
         <div class="todo-name"></div>
         <div class="todo-type" @contextmenu.prevent="openMenu([$event, item])">
@@ -121,6 +124,7 @@ import {
   deleteMission,
   deletePending,
 } from "@/utils/nativeRequest.js";
+import { formatDateTime } from "@/utils/validate.js";
 import { mapGetters } from "vuex";
 export default {
   name: "PendingList",
@@ -180,6 +184,7 @@ export default {
     this.hasDone = this.hasDoneC;
   },
   methods: {
+    formatDateTime,
     expandList() {
       this.clickFlag = !this.clickFlag;
     },

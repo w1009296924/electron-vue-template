@@ -60,6 +60,26 @@ export const formatDateTime = (date) => {
   }
   return timeStr;
 };
+/* 时间格式化 保留00:00:00存入数据库 */
+export const formatDateTime2 = (date) => {
+  var date = new Date(date);
+  var timeStr = date.getFullYear() + "-";
+  if (date.getMonth() < 9) {
+    //月份从0开始的
+    timeStr += "0";
+  }
+  timeStr += date.getMonth() + 1 + "-";
+  timeStr += date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+  timeStr += " ";
+  timeStr += date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+  timeStr += ":";
+  timeStr +=
+    date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+  timeStr += ":";
+  timeStr +=
+    date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+  return timeStr;
+};
 /* 计算提前x分钟后的时间*/
 export const subTrackTime = (date, min) => {
   var dateTimeStamp = new Date(date).getTime() - min * 60 * 1000;

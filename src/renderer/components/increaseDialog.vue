@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { formatDateTime, subTrackTime } from "@/utils/validate.js";
+import { formatDateTime2, subTrackTime } from "@/utils/validate.js";
 import {
   addPending,
   addMission,
@@ -238,7 +238,7 @@ export default {
           pushObj = {
             id: this.generateId(),
             pendingType: this.pengingSth,
-            date: formatDateTime(this.pendingTime),
+            date: formatDateTime2(this.pendingTime),
             status: false,
             remindSwitch: this.remindSwitch,
             remindTime: subTrackTime(this.pendingTime, this.inputMin),
@@ -262,7 +262,7 @@ export default {
               {
                 id: this.generateId(),
                 pendingType: "",
-                date: formatDateTime(this.pendingTime),
+                date: formatDateTime2(this.pendingTime),
                 status: false,
                 remindSwitch: this.remindSwitch,
                 remindTime: subTrackTime(this.pendingTime, this.inputMin),
@@ -281,7 +281,7 @@ export default {
       }
     },
     edit_Pending() {
-      this.editMission.children[this.editIndex].date = formatDateTime(
+      this.editMission.children[this.editIndex].date = formatDateTime2(
         this.pendingTime
       );
       if (this.editMission.missionNo) {

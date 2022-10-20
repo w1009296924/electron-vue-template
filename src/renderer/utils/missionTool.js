@@ -30,7 +30,7 @@ export function initMission() {
             pendingChildren.push({
               id: generateId(),
               pendingType: rule.pendingName,
-              date: getPendingDate(item, rule),
+              date: getPendingDate(item, rule) + " 00:00:00",
               status: false,
             });
           }
@@ -43,7 +43,7 @@ export function initMission() {
             pendingChildren.push({
               id: generateId(),
               pendingType: rule.pendingName,
-              date: getPendingDate(item, rule),
+              date: getPendingDate(item, rule) + " 00:00:00",
               status: false,
             });
           }

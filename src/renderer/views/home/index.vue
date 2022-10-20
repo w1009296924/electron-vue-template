@@ -262,21 +262,21 @@ export default {
       //   }
       // );
 
-      this.$refs.addEntry.show();
+      // this.$refs.addEntry.show();
 
-      // let data = {
-      //   url: "/notice",
-      //   resizable: false,
-      //   frame: false,
-      //   isNotice: true,
-      //   width: 380,
-      //   height: 200,
-      //   alwaysOnTop: true,
-      //   skipTaskbar: true,
-      //   movable: false,
-      //   // opacity: 1.0,
-      // };
-      // ipcRenderer.invoke("open-win", data);
+      let data = {
+        url: "/notice",
+        resizable: false,
+        frame: false,
+        isNotice: true,
+        width: 400,
+        height: 200,
+        alwaysOnTop: true,
+        skipTaskbar: true,
+        movable: false,
+        // opacity: 1.0,
+      };
+      ipcRenderer.invoke("open-win", data);
 
       // const { BrowserWindow, screen } = require("@electron/remote");
       // const winURL =
