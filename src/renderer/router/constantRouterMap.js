@@ -1,4 +1,4 @@
-import Layout from '@/layout'
+import Layout from "@/layout";
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
 * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -25,100 +25,112 @@ import Layout from '@/layout'
  **/
 export default [
   {
-    path: '/home',
+    path: "/home",
     component: Layout,
-    meta: { title: '首页', icon: 'home' },
+    meta: { title: "首页", icon: "home" },
     children: [
       {
-        path: 'index',
-        name: 'Home',
-        component: () => import('@/views/home/index'),
-        meta: { title: '首页', icon: 'home' }
-      }
-    ]
+        path: "index",
+        name: "Home",
+        component: () => import("@/views/home/index"),
+        meta: { title: "首页", icon: "home" },
+      },
+    ],
   },
   {
-    path: '/task',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: '任务',
-        component: () => import('@/views/task/index'),
-        meta: { title: '任务', icon: 'task' }
-      }
-    ]
-  },
-  {
-    path: '/pending',
+    path: "/task",
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: '权限',
-        component: () => import('@/views/pending/index'),
-        meta: { title: '待办', icon: 'todo' }
-      }
-    ]
+        path: "index",
+        name: "任务",
+        component: () => import("@/views/task/index"),
+        meta: { title: "任务", icon: "task" },
+      },
+    ],
   },
   {
-    path: '/hour',
+    path: "/pending",
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: '权限',
-        component: () => import('@/views/hour/index'),
-        meta: { title: '工时', icon: 'hour' }
-      }
-    ]
+        path: "index",
+        name: "权限",
+        component: () => import("@/views/pending/index"),
+        meta: { title: "待办", icon: "todo" },
+      },
+    ],
   },
   {
-    path: '/tools',
+    path: "/hour",
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'tools',
-        component: () => import('@/views/tools/index'),
-        meta: { title: '工具箱', icon: 'tool' }
-      }
-    ]
+        path: "index",
+        name: "权限",
+        component: () => import("@/views/hour/index"),
+        meta: { title: "工时", icon: "hour" },
+      },
+    ],
   },
   {
-    path: '/tools/healthRemind',
+    path: "/tools",
+    component: Layout,
+    children: [
+      {
+        path: "index",
+        name: "tools",
+        component: () => import("@/views/tools/index"),
+        meta: { title: "工具箱", icon: "tool" },
+      },
+    ],
+  },
+  {
+    path: "/tools/healthRemind",
     hidden: true,
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'healthRemind',
-        component: () => import('@/views/tools/healthRemind/index')
-      }
-    ]
+        path: "index",
+        name: "healthRemind",
+        component: () => import("@/views/tools/healthRemind/index"),
+      },
+    ],
   },
   {
-    path: '/tools/copyImg',
+    path: "/tools/copyImg",
     hidden: true,
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'copyImg',
-        component: () => import('@/views/tools/copyImg/index')
-      }
-    ]
+        path: "index",
+        name: "copyImg",
+        component: () => import("@/views/tools/copyImg/index"),
+      },
+    ],
   },
   {
-    path: '/tools/countWorkTime',
+    path: "/tools/countWorkTime",
     hidden: true,
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'countWorkTime',
-        component: () => import('@/views/tools/countWorkTime/index')
-      }
-    ]
+        path: "index",
+        name: "countWorkTime",
+        component: () => import("@/views/tools/countWorkTime/index"),
+      },
+    ],
   },
-]
+  {
+    path: "/tools/textExtraction",
+    hidden: true,
+    component: Layout,
+    children: [
+      {
+        path: "index",
+        name: "textExtraction",
+        component: () => import("@/views/tools/textExtraction/index"),
+      },
+    ],
+  },
+];
