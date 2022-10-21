@@ -96,27 +96,27 @@ export default {
           children: [
             {
               pendingType: "提交内测",
-              date: "2016-05-05",
+              date: "2016-05-05 00:00:00",
               status: false,
             },
             {
               pendingType: "上传资料",
-              date: "2016-05-06",
+              date: "2016-05-06 00:00:00",
               status: false,
             },
             {
               pendingType: "提交业测",
-              date: "2016-05-07",
+              date: "2016-05-07 00:00:00",
               status: false,
             },
             {
               pendingType: "rel代码审核",
-              date: "2016-05-07",
+              date: "2016-05-07 00:00:00",
               status: false,
             },
             {
               pendingType: "投产",
-              date: "2016-05-10",
+              date: "2016-05-10 00:00:00",
               status: false,
             },
           ],
@@ -130,27 +130,27 @@ export default {
           children: [
             {
               pendingType: "提交内测",
-              date: "2016-05-05",
+              date: "2016-05-05 00:00:00",
               status: false,
             },
             {
               pendingType: "上传资料",
-              date: "2016-05-06",
+              date: "2016-05-06 00:00:00",
               status: false,
             },
             {
               pendingType: "提交业测",
-              date: "2016-05-07",
+              date: "2016-05-07 00:00:00",
               status: false,
             },
             {
               pendingType: "rel代码审核",
-              date: "2016-05-07",
+              date: "2016-05-07 00:00:00",
               status: false,
             },
             {
               pendingType: "投产",
-              date: "2016-05-10",
+              date: "2016-05-10 00:00:00",
               status: false,
             },
           ],
@@ -164,27 +164,27 @@ export default {
           children: [
             {
               pendingType: "提交内测",
-              date: "2022-09-14",
+              date: "2022-09-14 00:00:00",
               status: false,
             },
             {
               pendingType: "上传资料",
-              date: "2022-09-14",
+              date: "2022-09-14 00:00:00",
               status: false,
             },
             {
               pendingType: "提交业测",
-              date: "2022-09-14",
+              date: "2022-09-14 00:00:00",
               status: false,
             },
             {
               pendingType: "rel代码审核",
-              date: "2022-09-14",
+              date: "2022-09-14 00:00:00",
               status: false,
             },
             {
               pendingType: "投产",
-              date: "2022-09-14",
+              date: "2022-09-14 00:00:00",
               status: false,
             },
           ],
@@ -213,27 +213,27 @@ export default {
           children: [
             {
               pendingType: "提交内测",
-              date: "2016-05-05",
+              date: "2016-05-05  00:00:00",
               status: false,
             },
             {
               pendingType: "上传资料",
-              date: "2016-05-06",
+              date: "2016-05-06  00:00:00",
               status: false,
             },
             {
               pendingType: "提交业测",
-              date: "2016-05-07",
+              date: "2016-05-07  00:00:00",
               status: false,
             },
             {
               pendingType: "rel代码审核",
-              date: "2016-05-07",
+              date: "2016-05-07  00:00:00",
               status: false,
             },
             {
               pendingType: "投产",
-              date: "2016-05-10",
+              date: "2016-05-10  00:00:00",
               status: false,
             },
           ],
