@@ -190,7 +190,7 @@ export default {
           if (arg?.isNotice) {
             NoticeAni.show(
               childWin,
-              parseInt((arg?.height || 595) * rate),
+              parseInt((arg?.height || 595) * rate) + 35,
               parseInt((arg?.width || 842) * rate),
               sizeObj.height
             );

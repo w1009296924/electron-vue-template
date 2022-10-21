@@ -21,13 +21,17 @@
         </div>
       </div>
       <div v-else class="summary">
-        今日共完成待办{{ todayList.length }}条
-        <div v-if="todayList.length > 0" style="display: inline-block">
-          ,具体如下:
+        <div class="summaryTitle">
+          今日共完成待办{{ todayList.length }}条
+          <div v-if="todayList.length > 0" style="display: inline-block">
+            ,具体如下:
+          </div>
         </div>
         <div v-for="(item, index) of todayList" :key="index">{{ item }}</div>
         <div v-if="tomorrowList.length > 0" style="margin-top: 16px">
-          明日有{{ tomorrowList.length }}条待办待完成
+          <div class="summaryTitle">
+            明日有{{ tomorrowList.length }}条待办待完成
+          </div>
           <div v-for="(item, index) of tomorrowList" :key="index">
             {{ item.date }}&nbsp;&nbsp;&nbsp;&nbsp;{{ item.mission }}
           </div>
@@ -45,7 +49,7 @@ export default {
   props: ["noticeType1", "pendingRemind1", "todayList1", "tomorrowList1"],
   data() {
     return {
-      noticeType: 1,
+      noticeType: 3,
       pendingRemind: {
         missionId: "aaaa",
         pendingObj: {},
@@ -134,8 +138,10 @@ export default {
 .notice {
   background: url("~@/assets/notice-back.png") no-repeat;
   background-size: 100%;
-  padding: 11px 0 0 8px;
-  min-height: 200px;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-size: 100% 100%;
   font-size: 20px;
   color: #ffffff;
   text-align: justify;
@@ -146,6 +152,7 @@ export default {
     justify-content: space-between;
     font-family: PingFangSC-Medium;
     font-weight: bold;
+    margin: 11px 0 0 8px;
     padding: 0 16px 3px 20px;
     width: 100%;
     height: 40px;
@@ -162,12 +169,12 @@ export default {
       padding-left: 4px;
       border-radius: 2px;
     }
-    .center {
-      text-align: center;
-    }
+  }
+  .center {
+    text-align: center;
   }
   .content {
-    margin: 30px 24px 0;
+    margin: 30px 24px 0 24px;
     font-family: PingFangSC-Regular;
     font-weight: 400;
   }
@@ -180,7 +187,7 @@ export default {
       align-items: center;
       justify-content: center;
       .button {
-        margin: 10px 20px 20px 20px;
+        margin: 20px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -197,6 +204,7 @@ export default {
     }
   }
   .summary {
+    margin-top: -30px;
     font-family: PingFangSC-Regular;
     font-size: 16px;
     overflow-y: scroll;
@@ -205,6 +213,11 @@ export default {
     text-align: left;
     line-height: 24px;
     font-weight: 400;
+  }
+  .summaryTitle {
+    display: inline-block;
+    font-size: 20px;
+    line-height: 32px;
   }
 }
 </style>
