@@ -208,7 +208,7 @@ export default {
     font-family: PingFangSC-Regular;
     font-size: 16px;
     overflow-y: scroll;
-    height: 160px;
+    height: 190px;
     color: #ffffff;
     text-align: left;
     line-height: 24px;
