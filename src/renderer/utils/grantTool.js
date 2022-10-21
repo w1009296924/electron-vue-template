@@ -7,6 +7,7 @@ import store from "@/store";
 export function getGrantUserList() {
   let grantList = [];
   return new Promise((resolve) => {
+    console.log("getGrantUserList");
     queryGrantUserList(store.state.user.name)
       .then((res) => {
         grantList = JSON.parse(
@@ -16,6 +17,7 @@ export function getGrantUserList() {
           store.commit("SET_GRANTLIST", grantList);
           store.commit("SET_HAVEGRANT", true);
         }
+        console.log("--交易查询grantList", grantList);
         resolve();
       })
       .catch(() => {
@@ -41,6 +43,7 @@ export function getGrantUserList() {
 //获取授权我的用户列表
 export function getGrantedUserList() {
   let grantedList = [];
+  console.log("getGrantedUserList");
   return new Promise((resolve) => {
     queryGrantedUserList(store.state.user.name)
       .then((res) => {
@@ -48,6 +51,7 @@ export function getGrantedUserList() {
         if (grantedList.length > 0) {
           store.commit("SET_GRANTEDLIST", grantedList);
         }
+        console.log("--交易查询grantedList", grantedList);
         resolve();
       })
       .catch(() => {

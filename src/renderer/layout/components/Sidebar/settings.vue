@@ -136,16 +136,16 @@
           border
           style="width: 421px; margin-left: 88px"
         >
-          <el-table-column fixed prop="grantName" label="授权对象" width="150">
+          <el-table-column fixed prop="grant" label="授权对象" width="150">
             <template slot-scope="scope">
               <el-input
                 size="mini"
                 placeholder="请输入邮箱前缀"
                 v-if="scope.row.isOK"
-                v-model="scope.row.grantName"
+                v-model="scope.row.grant"
                 style="width: 100%; height: 100%"
               ></el-input>
-              <span size="mini" v-else>{{ scope.row.grantName }}</span>
+              <span size="mini" v-else>{{ scope.row.grant }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="permission" label="授予权限" width="150">
@@ -428,7 +428,7 @@ export default {
     grantEditclick(row, index) {
       this.isChange = true;
       if (row.isOK) {
-        if (!this.grantList[index].grantName) {
+        if (!this.grantList[index].grant) {
           this.$message({
             message: "请先输入授权对象",
             type: "warning",
