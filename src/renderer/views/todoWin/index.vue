@@ -1,6 +1,7 @@
 <template>
   <div class="main-box" @mouseenter="enter" @mouseleave="leave">
-    <div class="header"></div>
+    <div class="header" @mousedown="moveWin"></div>
+    <div class="content-box"></div>
     <button @click="clicsss">ss</button>
     <transition-group class="mission-box" name="todo-trans" tag="div">
       <div v-for="item of missionArray" :key="item.id">
@@ -11,8 +12,8 @@
 </template>
 
 <script>
-import PendingList from "./components/PendingList";
-const ipcRenderer = require("electron").ipcRenderer;
+import PendingList from './components/PendingList';
+const ipcRenderer = require('electron').ipcRenderer;
 export default {
   components: {
     PendingList,
@@ -20,37 +21,65 @@ export default {
   data() {
     return {
       missionArray: [],
+      isKeyDown: false,
+      dinatesX: 0,
+      dinatesY: 0,
     };
   },
   mounted() {
     this.missionArray = this.$store.getters.missionArray;
-    console.log("this.missionArray");
+    console.log('this.missionArray');
     console.log(this.missionArray);
-    ipcRenderer.on("update-mission", (event, arg) => {
+    ipcRenderer.on('update-mission', (event, arg) => {
       this.missionArray = arg;
     });
-    ipcRenderer.on("moved", (event, arg) => {
-      console.log("moved");
+    ipcRenderer.on('moved', (event, arg) => {
+      console.log('moved');
       console.log(arg);
     });
   },
   methods: {
     change() {
-      console.log("changde");
-      ipcRenderer.send("update-mission-child", this.missionArray);
+      console.log('changde');
+      ipcRenderer.send('update-mission-child', this.missionArray);
     },
     clicsss() {
       console.log(this.missionArray);
       // console.log(type);
-      ipcRenderer.send("update-mission-child", this.missionArray);
+      ipcRenderer.send('update-mission-child', this.missionArray);
     },
     enter() {
-      console.log("enter");
-      ipcRenderer.send("mouse-enter-win");
+      // console.log('enter');
+      ipcRenderer.send('mouse-enter-win');
     },
     leave() {
-      console.log("leave");
-      ipcRenderer.send("mouse-leave-win");
+      // console.log('leave');
+      ipcRenderer.send('mouse-leave-win');
+    },
+    moveWin(e) {
+      this.isKeyDown = true;
+      this.dinatesX = Math.floor(e.x * window.devicePixelRatio);
+      this.dinatesY = Math.floor(e.y * window.devicePixelRatio);
+
+      document.addEventListener('mousemove', this.mousemoveHandler);
+      document.addEventListener('mouseup', this.mouseupHandler);
+    },
+    mousemoveHandler(ev) {
+      if (this.isKeyDown) {
+        const x = ev.screenX - this.dinatesX;
+        const y = ev.screenY - this.dinatesY;
+        //给主进程传入坐标
+        ipcRenderer.send('todo-win-move', {
+          appX: x,
+          appY: y,
+        });
+      }
+    },
+    mouseupHandler(ev) {
+      this.isKeyDown = false;
+      ipcRenderer.send('todo-win-moved');
+      document.removeEventListener('mousemove', this.mousemoveHandler);
+      document.removeEventListener('mouseup', this.mouseupHandler);
     },
   },
 };
@@ -61,9 +90,16 @@ export default {
   width: 100vw;
   height: 100vh;
   background: red;
+  overflow-y: hidden;
+  // -webkit-app-region: drag;
+  z-index: 2;
   .header {
-    -webkit-app-region: drag;
-    height: 10px;
+    z-index: 1;
+    height: 16px;
+  }
+  .content-box {
+    height: 200px;
+    // -webkit-app-region: no-drag;
   }
 }
 .mission-box {
