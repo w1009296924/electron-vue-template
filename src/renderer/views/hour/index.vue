@@ -29,8 +29,8 @@
                 :value="item.implUnitNo"
               >
                 <span class="left">{{ item.implContent }}</span>
-                <span style="float: right">{{
-                  getLeftHour(item.implUnitNo)
+                <span style="float: right" v-if="item.workload">{{
+                  item.workload
                 }}</span>
               </el-option>
             </el-select>
@@ -287,7 +287,6 @@ export default {
     this.login();
   },
   mounted() {
-    this.page(this.date);
     this.init();
   },
   methods: {
@@ -302,7 +301,18 @@ export default {
       this.jobContent = this.settings.hour.jobContent;
       this.autoCommit = this.settings.hour.autoCommit;
       this.autoCommitTime = this.settings.hour.autoCommitTime;
-      this.checkSmarkChoose();
+      setTimeout(() => {
+        this.page(new Date());
+        //更新工作量
+        this.ipmp_tasks.forEach((item) => {
+          setTimeout(() => {
+            Object.assign(item, {
+              workload: this.getLeftHour(item.implUnitNo),
+            });
+          }, 100);
+        });
+        this.checkSmarkChoose();
+      }, 500);
     },
     changeUnit() {
       this.workload = this.getLeftHour(this.unit);
