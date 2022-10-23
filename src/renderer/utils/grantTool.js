@@ -10,7 +10,7 @@ export function getGrantUserList() {
     console.log("getGrantUserList");
     queryGrantUserList(store.state.user.name)
       .then((res) => {
-        grantList = res;
+        grantList = res.data;
         if (grantList.length > 0) {
           store.commit("SET_GRANTLIST", grantList);
           store.commit("SET_HAVEGRANT", true);
@@ -19,16 +19,6 @@ export function getGrantUserList() {
         resolve();
       })
       .catch(() => {
-        // grantList = [
-        //   {
-        //     permission: "只读",
-        //     grant: "wenty",
-        //   },
-        //   {
-        //     permission: "只读",
-        //     grant: "wangs2",
-        //   },
-        // ];
         if (grantList.length > 0) {
           store.commit("SET_GRANTLIST", grantList);
           store.commit("SET_HAVEGRANT", true);
@@ -47,7 +37,7 @@ export function getGrantedUserList() {
       store.state.user.name ? store.state.user.name : "liyw11"
     )
       .then((res) => {
-        grantedList = res;
+        grantedList = res.data;
         if (grantedList.length > 0) {
           store.commit("SET_GRANTEDLIST", grantedList);
         }
@@ -55,20 +45,6 @@ export function getGrantedUserList() {
         resolve();
       })
       .catch(() => {
-        grantedList = [
-          {
-            permission: "只读",
-            name: "liyw11",
-          },
-          {
-            permission: "新增",
-            name: "wenty",
-          },
-          {
-            permission: "新增",
-            name: "wangs64",
-          },
-        ];
         if (grantedList.length > 0) {
           store.commit("SET_GRANTEDLIST", grantedList);
         }

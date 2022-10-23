@@ -72,19 +72,30 @@
             <div class="restDay" v-if="item.isRestDay">休</div>
             <el-popover
               placement="right"
-              width="200"
+              :width="todoList.length > 0 ? '400' : '100'"
               trigger="hover"
               :open-delay="300"
               @show="getTodoOfDay(item)"
             >
               <div>{{ item.month + "月" + item.date + "日 待办" }}</div>
-              <div v-for="(todo, index) in todoList" :key="index">
-                <div>{{ todo.parent.missionName }}</div>
-                <div>{{ todo.child.pendingType }}</div>
+              <div
+                v-for="(todo, index) in todoList"
+                :key="index"
+                class="showPop"
+              >
                 <el-checkbox
                   v-model="todo.child.status"
+                  style="margin-right: 8px"
                   @change="changeTodoStatus($event, todo)"
                 ></el-checkbox>
+                <div>
+                  <div>{{ todo.parent.missionName }}</div>
+                  <div
+                    style="font-size: 16px; font-weight: bold; margin-top: 4px"
+                  >
+                    {{ todo.child.pendingType }}
+                  </div>
+                </div>
               </div>
               <div
                 class="day"
@@ -677,7 +688,10 @@ export default {
 .point {
   cursor: pointer;
 }
-
+.showPop {
+  display: flex;
+  margin: 16px 0;
+}
 .month-list {
   position: absolute;
   width: 100%;
