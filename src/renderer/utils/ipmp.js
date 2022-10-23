@@ -144,3 +144,36 @@ export function rejectHour(params) {
     request.end();
   });
 }
+
+export function leftHour(params) {
+  return new Promise((resolve, reject) => {
+    let time = '' + new Date().getTime();
+    let res = '';
+    params = JSON.stringify(params);
+    const request = net.request({
+      ...defaultRequest,
+      path:
+        '/ipmp/api/biz/demand/implunit/comm/v1/getBaseImpltUnitList?t=' + time,
+      headers: {
+        // 这里要将content-type改成这种提交form表单时使用的格式
+        'Content-Type': 'application/json',
+        Sign: md5(`${params + time + 'F7x_' + time.substr(-4)}`),
+      },
+    });
+    request.on('response', (response) => {
+      // str += `STATUS: ${response.statusCode}\n`;
+      // str += `HEADERS: ${JSON.stringify(response.headers)}\n`;
+      response.on('end', () => {
+        resolve(res);
+      });
+      response.on('error', (chunk) => {
+        reject(chunk);
+      });
+      response.on('data', (chunk) => {
+        res += chunk;
+      });
+    });
+    request.write(params);
+    request.end();
+  });
+}

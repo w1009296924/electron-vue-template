@@ -16,6 +16,8 @@
         <button @click="page">page</button>
         <button @click="add">add</button>
         <button @click="reject">reject</button>
+        <button @click="getLeftHour">getLeftHour</button>
+        <button @click="evaluate">evaluate</button>
         <!-- 项目工时 -->
         <div v-if="hourType == '1'">
           <div class="flexCenter" style="margin-bottom: 20px">
@@ -182,7 +184,7 @@
           :class="[canCommit ? 'commit' : 'rollback']"
           @click="commitOrBack"
         >
-          {{ canCommit ? "填报工时" : "回退工时" }}
+          {{ canCommit ? '填报工时' : '回退工时' }}
         </div>
         <div class="abutton refill" @click="refill">补填工时</div>
       </div>
@@ -191,125 +193,138 @@
       {{ info }}
       info2:
       {{ info2 }}
+      ipmp_tasks:
+      {{ ipmp_tasks }}
+      fillInfo
+      {{ fillInfo }}
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import fileTool from "@/utils/fileTool.js";
-import { dateFormat } from "@/utils/utils.js";
-import { loginIPMP, getIPMPPage, fillHour, rejectHour } from "@/utils/ipmp.js";
+import { mapGetters } from 'vuex';
+import fileTool from '@/utils/fileTool.js';
+import { dateFormat } from '@/utils/utils.js';
+import {
+  loginIPMP,
+  getIPMPPage,
+  fillHour,
+  rejectHour,
+  leftHour,
+} from '@/utils/ipmp.js';
 export default {
-  name: "hour",
+  name: 'hour',
   data() {
     return {
-      info: "",
-      info2: "",
+      info: '',
+      info2: '',
+      fillInfo: '',
       settings: {},
-      hourType: "1",
+      hourType: '1',
       unitList: [
         {
           value:
-            "实施单元213-123UNKJ-2022-1234-代金券哦我我打算的弄啊-啊实打实是哒是法规处是给的原始股大Vu是去外地是武器二不请我大所大所大所奥术大师大所多撒大声地",
-          label: "103",
+            '实施单元213-123UNKJ-2022-1234-代金券哦我我打算的弄啊-啊实打实是哒是法规处是给的原始股大Vu是去外地是武器二不请我大所大所大所奥术大师大所多撒大声地',
+          label: '103',
         },
         {
           value:
-            "实施单元213-123UNKJ-2022-12334-代金券哦我我打算的弄啊-啊实打实撒大声地",
-          label: "1.03",
+            '实施单元213-123UNKJ-2022-12334-代金券哦我我打算的弄啊-啊实打实撒大声地',
+          label: '1.03',
         },
         {
           value:
-            "实施单元213-123UNKJ-2022-1214-代金券哦我我打算的弄啊-啊实打实撒大声地",
-          label: "10.3",
+            '实施单元213-123UNKJ-2022-1214-代金券哦我我打算的弄啊-啊实打实撒大声地',
+          label: '10.3',
         },
         {
           value:
-            "实施单元213-123UNKJ-2022-1224-代金券哦我我打算的弄啊-啊实打实撒大声地",
-          label: "5.03",
+            '实施单元213-123UNKJ-2022-1224-代金券哦我我打算的弄啊-啊实打实撒大声地',
+          label: '5.03',
         },
         {
           value:
-            "实施单元213-123UNKJ-2022-12378-代金券哦我我打算的弄啊-啊实打实撒大声地",
-          label: "2.03",
+            '实施单元213-123UNKJ-2022-12378-代金券哦我我打算的弄啊-啊实打实撒大声地',
+          label: '2.03',
         },
         {
           value:
-            "实施单元213-123UNKJ-2022-1284-代金券哦我我打算的弄啊-啊实打实撒大声地",
-          label: "0.03",
+            '实施单元213-123UNKJ-2022-1284-代金券哦我我打算的弄啊-啊实打实撒大声地',
+          label: '0.03',
         },
       ],
-      unit: "",
+      unit: '',
       rotate: false,
       date: new Date(),
       inputHour: 8,
       smartChooses: [
         {
-          label: "是",
+          label: '是',
           value: true,
         },
         {
-          label: "否",
+          label: '否',
           value: false,
         },
       ],
       smartChoose: false,
-      type: "",
+      type: '',
       typeList: [
         {
-          label: "综合事务",
-          value: "1",
+          label: '综合事务',
+          value: '1',
         },
         {
-          label: "成长提升",
-          value: "2",
+          label: '成长提升',
+          value: '2',
         },
         {
-          label: "项目服务",
-          value: "3",
+          label: '项目服务',
+          value: '3',
         },
         {
-          label: "专项任务",
-          value: "4",
+          label: '专项任务',
+          value: '4',
         },
         {
-          label: "预研工作",
-          value: "5",
+          label: '预研工作',
+          value: '5',
         },
       ],
-      category: "",
+      category: '',
       categoryList: [
         {
-          label: "管理保障",
-          value: "1",
+          label: '管理保障',
+          value: '1',
         },
         {
-          label: "运维保障",
-          value: "2",
+          label: '运维保障',
+          value: '2',
         },
         {
-          label: "研发支撑",
-          value: "3",
+          label: '研发支撑',
+          value: '3',
         },
         {
-          label: "自我提升",
-          value: "4",
+          label: '自我提升',
+          value: '4',
         },
       ],
-      jobContent: "",
+      jobContent: '',
       autoCommit: false,
-      autoCommitTime: "",
+      autoCommitTime: '',
       canCommit: true,
-      username: "",
-      userpwd: "",
-      ipmp_id: "",
-      ipmp_manhourId: "",
+      username: '',
+      userpwd: '',
+      ipmp_id: '',
+      ipmp_manhourId: '',
       ipmp_tasks: [],
+      bestTask: null,
     };
   },
   computed: {
-    ...mapGetters(["name", "roles"]),
+    ...mapGetters(['name', 'roles']),
+    ...mapGetters(['taskArray']),
   },
   created() {
     this.username = this.$store.state.user.name;
@@ -364,10 +379,10 @@ export default {
     },
     refill() {
       //todo 补填工时
-      console.log("补填工时");
+      console.log('补填工时');
     },
     selectFillDate(date) {
-      console.log(dateFormat("YYYY-mm-dd", date));
+      console.log(dateFormat('YYYY-mm-dd', date));
       this.page(date);
     },
     login() {
@@ -383,24 +398,32 @@ export default {
     },
     page(date) {
       getIPMPPage({
-        fillInDate: dateFormat("YYYY-mm-dd", date),
+        fillInDate: dateFormat('YYYY-mm-dd', date),
       })
         .then((res) => {
           this.ipmp_tasks = [];
           this.info = res;
           let jsonObj = JSON.parse(res);
           let detailDtoList = jsonObj.data.manhourDetailDtoList;
+          let hasCommited = false;
           for (let i = 0; i < detailDtoList.length; i++) {
             const element = detailDtoList[i];
             if (element.id) {
               this.ipmp_id = element.id;
               this.ipmp_manhourId = element.manhourId;
             }
-            if (element.prjId) {
-              element.label;
+            if (
+              element.prjId &&
+              element.manhourType == 'manhour.type.02' //任务集
+            ) {
+              // element.label;
               this.ipmp_tasks.push(element);
             }
+            if (element.statusName == '已提交') {
+              hasCommited = true;
+            }
           }
+          this.canCommit = hasCommited;
           console.log(res);
         })
         .catch((e) => {
@@ -409,6 +432,9 @@ export default {
         });
     },
     add() {
+      if (!this.bestTask) {
+        return;
+      }
       let params = this.getIPMPParams();
       this.info2 = params;
       console.log(params);
@@ -423,7 +449,7 @@ export default {
         });
     },
     reject() {
-      let params = { ids: ["" + this.ipmp_id] };
+      let params = { ids: ['' + this.ipmp_id] };
       rejectHour(params)
         .then((res) => {
           this.info = res;
@@ -435,6 +461,107 @@ export default {
           this.info2 = this.ipmp_id;
           console.log(e);
         });
+    },
+    async evaluate() {
+      this.fillInfo += '0';
+      this.info = 'this.ipmp_tasks';
+      let newList = [];
+      for (let i = 0; i < this.ipmp_tasks.length; i++) {
+        this.fillInfo += 'i:' + i;
+        const element = this.ipmp_tasks[i];
+        for (let j = 0; j < this.taskArray.length; j++) {
+          this.fillInfo += 'j:' + j;
+          const task = this.taskArray[j];
+          if (
+            element.implUnitNo == task.ipmpUnit ||
+            element.implContent.indexOf(
+              (task.taskName.match(/[\w\d\-]+[\w\d]/g) || [])[0]
+            ) != -1
+          ) {
+            this.fillInfo += element.implUnitNo + '在我的当前任务列表中\n';
+            // element.bindTask=task
+            newList.push(element);
+          }
+        }
+      }
+
+      let bestIndex = -1;
+      let stageCode = 9.0;
+      let stageMap = {
+        'implunit.status.05': 0.0, //开发中
+        'implunit.status.04': 3.0, //业测中
+      };
+
+      for (let j = 0; j < newList.length; j++) {
+        const element = newList[j];
+        let pStage = stageMap[element.implStatus] || 8.0;
+        let left = await this.getLeftHour(element.implUnitNo);
+        if (left <= 0.1) {
+          this.fillInfo += `${element.implUnitNo}剩余可填报工作量为${left}人月，小于0.1，不填报此项\n`;
+          continue;
+        }
+        this.fillInfo += `${element.implUnitNo}剩余可填报工作量为${left}人月，可填报\n`;
+        pStage -= left;
+        if (pStage > stageCode) {
+          continue;
+        }
+        this.fillInfo += `${element.implUnitNo}为更优的填报项\n`;
+        stageCode = pStage;
+        bestIndex = i;
+      }
+      if (bestIndex >= 0) {
+        this.fillInfo += `${newList[bestIndex].implUnitNo}为最优的填报项\n`;
+        this.bestTask = newList[bestIndex];
+      } else {
+        this.fillInfo += `用户当前任务中没有可填报项，开始考虑其他实施单元\n`;
+        for (let i = 0; i < this.ipmp_tasks.length; i++) {
+          const element = this.ipmp_tasks[i];
+          if (newList.includes(element)) {
+            continue;
+          }
+          let pStage = stageMap[element.implStatus] || 8.0;
+          let left = await this.getLeftHour(element.implUnitNo);
+          if (left <= 0.1) {
+            this.fillInfo += `${element.implUnitNo}剩余可填报工作量为${left}人月，小于0.1，不填报此项\n`;
+            continue;
+          }
+          this.fillInfo += `${element.implUnitNo}剩余可填报工作量为${left}人月，可填报\n`;
+          pStage -= left;
+          if (pStage > stageCode) {
+            continue;
+          }
+          this.fillInfo += `${element.implUnitNo}为更优的填报项\n`;
+          stageCode = pStage;
+          bestIndex = i;
+        }
+        if (bestIndex >= 0) {
+          this.fillInfo += `${this.ipmp_tasks[bestIndex].implUnitNo}为最优的填报项\n`;
+          this.bestTask = this.ipmp_tasks[bestIndex];
+        } else {
+          this.fillInfo += `无合适填报项，请手动填报\n`;
+        }
+      }
+    },
+    getLeftHour(implNo = '实施单元2022科技581-061') {
+      return new Promise((resolve) => {
+        let params = this.getQueryImplUnitParams(implNo);
+        this.info2 = params;
+        leftHour(params)
+          .then((res) => {
+            this.info = res;
+            console.log(res);
+            let jsonObj = JSON.parse(res);
+            resolve(
+              jsonObj.data[0].expectOwnWorkload -
+                jsonObj.data[0].actualOwnFworkload
+            );
+          })
+          .catch((e) => {
+            this.info = e;
+            console.log(e);
+            resolve(0);
+          });
+      });
     },
     getIPMPParams() {
       let obj;
@@ -601,20 +728,103 @@ export default {
             '"codename":"专项问题修复"}]'
         );
         obj.applicant = this.username;
-        obj.fillInDate = dateFormat("YYYY-mm-dd", this.date);
+        obj.fillInDate = dateFormat('YYYY-mm-dd', this.date);
         obj.everyoneType = null;
-        let bestTask = this.ipmp_tasks[0];
+        let bestTask = this.bestTask;
+        // let bestTask = this.ipmp_tasks[0];
         // let bestTask = JSON.parse(
         //   '{"id":"3c0c410e81484fc6","manhourId":"595ee37db2c543df","prjId":"d2ebb5add7f4401b","prjNo":"22-T139","manhourType":"manhour.type.02","prjManager":"lisq5","taskId":null,"projectRank":null,"implUnitNo":"实施单元2022网络金融148-021","workType":"manhour.work.03","workingHours":"8","workContent":"参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","principal":null,"rejectOpinion":null,"systemId":null,"status":"manhour.status.02","taskPlanProcess":null,"prjName":"个人手机银行系统2022维护任务集","taskName":null,"convert":8.0,"flagId":"实施单元2022网络金融148-021","flagStatus":null,"fillDate":null,"fromProjectId":null,"fromTaskId":null,"fromImplementNo":null,"fromManhourType":null,"ipmpFlag":"manhour.mtprj.type.02","manhourSpecialId":null,"implUnitContents":null,"manhourSpecialReason":null,"remarks":null,"allManager":null,"updateTime":null,"updateBy":null,"manager":null,"assiatant":null,"wbstaskManger":null,"implunitManger":null,"implunitCompanyManger":null,"othdemandManger":null,"othdemandCompanyManger":null,"prjCenterDept":null,"prjRoomDept":null,"prjLineTeam":null,"outsourceType":null,"workTypeName":"需求开发","principalName":null,"projectRankName":"","prjManagerName":"李斯祺","memberId":"wenty","userId":"wenty","companyFullName":"开发服务中心","companyId":"01.01.04.01.","memberName":"文天阳","staffType":"0","fromProjectName":null,"fillInDate":"2022-10-21","fillInMonth":null,"statusName":"已退回","manhourTypeName":"实施单元工时","manhourTypeValue":null,"isManager":null,"implContent":"开发中-实施单元2022网络金融148-021-dzqdUT-WLJR-2022-0707手机银行业务印章规范接入电子印章系统需求（手机第二批）","systemName":null,"prjNoName":null,"productFlag":"false","acturalProductDate":null,"resourceType":"行内","unitList":null,"manhourTypeId":null,"centerRoomId":null,"roomDept":"01.01.04.01.02.","lineTeam":"01.01.04.01.02.03.","roomDeptName":"应用开发服务分中心(武汉)","lineTeamName":"武汉研发A2团队","prjFirstDept":null,"forbidStatus":null,"projectStatus":null,"prjStatus":"mtprj.status.01","implStatus":null,"modifyFlag":false,"workHours":null,"downloadType":null,"startDate":null,"endDate":null,"prjIdList":null,"manHourNature":null,"manHourNatureValue":"正常工时","manhourSpecialReasonValue":"","submitTime":null,"disTaskName":null,"manhourStatus":"manhour.status.02","taskNo":null,"taskDescription":null,"recentlyWorkContents":["参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发"],"order":1}'
         // );
-        bestTask.workType = "manhour.work.03"; //需求开发
-        bestTask.workingHours = "" + this.inputHour;
+        bestTask.workType = 'manhour.work.03'; //需求开发
+        bestTask.workingHours = '' + this.inputHour;
         bestTask.workContent = `参加${bestTask.implContent.substring(
-          bestTask.implContent.lastIndexOf("-") + 1
+          bestTask.implContent.lastIndexOf('-') + 1
         )}开发`;
         bestTask.dict = threeTypeObjArr;
         obj.threeType = [bestTask];
       }
+      return obj;
+    },
+    getQueryImplUnitParams(implNo) {
+      let obj;
+      obj = JSON.parse(
+        '{"draw":3,"columns":[{"data":"implUnitNum",' +
+          '"name":"","searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"implContent","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"headerUnitName","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"headerTeamName","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"implLeaderName","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"planDevelopDate","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"planTestStartDate","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"planTestFinishDate","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"planProductDate","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"acturalDevelopDate","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"acturalTestStartDate","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"acturalTestFinishDate","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"acturalProductDate","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"implStatusName","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"spi","name":"","searchable":true,' +
+          '"orderable":true,"search":{"value":"","regex":false}},{"data":"prjNum",' +
+          '"name":"","searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"implCompanyLeaderName","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"implUnitMemberName","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"requirement","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"expectOwnWorkload","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"expectOutWorkload","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"actualOwnFworkload","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"actualOwnUfworkload","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"actualOutFworkload","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"actualOutUfworkload","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"implDelayTypeName","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"implDelayReason","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"fixDelayType","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"fixDelayReason","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"informationNum","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"informationTitle","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"receiveDate","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"replyDate","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"bookNum","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"bookName","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"dpNum","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"dpName","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"unitTrackerName","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"infoSubmitDept","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"relateSysName","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"unitDevModeName","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"usedSysCodeName","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"infoAssessPeriod","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"unitDevPeriod","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"unitTestPeriod","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"unitReleasePeriod","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}},' +
+          '{"data":"unitExecutPeriod1","name":"","searchable":true,"orderable":true,' +
+          '"search":{"value":"","regex":false}},{"data":"unitExecutPeriod2","name":"",' +
+          '"searchable":true,"orderable":true,"search":{"value":"","regex":false}}],' +
+          '"order":[{"column":0,"dir":"asc"}],"start":0,"length":10,"search":{"value":"",' +
+          '"regex":false},"filters":{"implStatusList":[],"unitTrackerList":[],"implLeaderType":[],' +
+          '"implUnitNum":null}}'
+      );
+      obj.filters.implUnitNum = implNo;
       return obj;
     },
   },

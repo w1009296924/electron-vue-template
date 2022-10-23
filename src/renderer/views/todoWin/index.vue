@@ -193,6 +193,7 @@ export default {
     },
     moveWin(e) {
       this.isKeyDown = true;
+      console.log(window.devicePixelRatio);
       this.dinatesX = Math.floor(e.x * window.devicePixelRatio);
       this.dinatesY = Math.floor(e.y * window.devicePixelRatio);
 
