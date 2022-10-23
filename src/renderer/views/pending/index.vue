@@ -279,13 +279,13 @@ export default {
     //查询他人待办
     getMissionByName(queryNo) {
       //TODO
-      // const response = getMissionByName(queryNo);
-      // this.allGrantMissionList = JSON.parse(
-      //   JSON.stringify(response).replace(/detailId/g, "id")
-      // );
+      const response = getMissionByName(queryNo);
+      this.allGrantMissionList = JSON.parse(
+        JSON.stringify(response).replace(/detailId/g, "id")
+      );
       //测试用
-      this.allGrantMissionList =
-        this.queryInvestor == "wenty" ? this.tableData2 : this.tableData3;
+      // this.allGrantMissionList =
+      //   this.queryInvestor == "wenty" ? this.tableData2 : this.tableData3;
 
       this.searchGranted();
     },

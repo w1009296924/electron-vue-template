@@ -10,9 +10,7 @@ export function getGrantUserList() {
     console.log("getGrantUserList");
     queryGrantUserList(store.state.user.name)
       .then((res) => {
-        grantList = JSON.parse(
-          JSON.stringify(res).replace(/grantName/g, "grant")
-        );
+        grantList = res;
         if (grantList.length > 0) {
           store.commit("SET_GRANTLIST", grantList);
           store.commit("SET_HAVEGRANT", true);
@@ -45,7 +43,9 @@ export function getGrantedUserList() {
   let grantedList = [];
   console.log("getGrantedUserList");
   return new Promise((resolve) => {
-    queryGrantedUserList(store.state.user.name)
+    queryGrantedUserList(
+      store.state.user.name ? store.state.user.name : "liyw11"
+    )
       .then((res) => {
         grantedList = res;
         if (grantedList.length > 0) {
