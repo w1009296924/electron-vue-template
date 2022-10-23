@@ -3,6 +3,7 @@ const user = {
     token: JSON.parse(localStorage.getItem("token")),
     name: JSON.parse(localStorage.getItem("name")),
     roles: JSON.parse(localStorage.getItem("roles")),
+    password: JSON.parse(localStorage.getItem("password")),
   },
 
   mutations: {
@@ -18,6 +19,10 @@ const user = {
       localStorage.setItem("roles", JSON.stringify(roles));
       state.roles = roles;
     },
+    SET_PASSWORD: (state, password) => {
+      localStorage.setItem("password", JSON.stringify(password));
+      state.password = password;
+    },
   },
 
   actions: {
@@ -30,6 +35,7 @@ const user = {
         } else {
           commit("SET_TOKEN", data.username);
           commit("SET_NAME", data.username);
+          commit("SET_PASSWORD", data.password);
           console.log("SET_NAME");
         }
         location.reload();

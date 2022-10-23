@@ -182,7 +182,7 @@
           :class="[canCommit ? 'commit' : 'rollback']"
           @click="commitOrBack"
         >
-          {{ canCommit ? '填报工时' : '回退工时' }}
+          {{ canCommit ? "填报工时" : "回退工时" }}
         </div>
         <div class="abutton refill" @click="refill">补填工时</div>
       </div>
@@ -196,127 +196,129 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import fileTool from '@/utils/fileTool.js';
-import { dateFormat } from '@/utils/utils.js';
-import { loginIPMP, getIPMPPage, fillHour, rejectHour } from '@/utils/ipmp.js';
+import { mapGetters } from "vuex";
+import fileTool from "@/utils/fileTool.js";
+import { dateFormat } from "@/utils/utils.js";
+import { loginIPMP, getIPMPPage, fillHour, rejectHour } from "@/utils/ipmp.js";
 export default {
-  name: 'hour',
+  name: "hour",
   data() {
     return {
-      info: '',
-      info2: '',
+      info: "",
+      info2: "",
       settings: {},
-      hourType: '1',
+      hourType: "1",
       unitList: [
         {
           value:
-            '实施单元213-123UNKJ-2022-1234-代金券哦我我打算的弄啊-啊实打实是哒是法规处是给的原始股大Vu是去外地是武器二不请我大所大所大所奥术大师大所多撒大声地',
-          label: '103',
+            "实施单元213-123UNKJ-2022-1234-代金券哦我我打算的弄啊-啊实打实是哒是法规处是给的原始股大Vu是去外地是武器二不请我大所大所大所奥术大师大所多撒大声地",
+          label: "103",
         },
         {
           value:
-            '实施单元213-123UNKJ-2022-12334-代金券哦我我打算的弄啊-啊实打实撒大声地',
-          label: '1.03',
+            "实施单元213-123UNKJ-2022-12334-代金券哦我我打算的弄啊-啊实打实撒大声地",
+          label: "1.03",
         },
         {
           value:
-            '实施单元213-123UNKJ-2022-1214-代金券哦我我打算的弄啊-啊实打实撒大声地',
-          label: '10.3',
+            "实施单元213-123UNKJ-2022-1214-代金券哦我我打算的弄啊-啊实打实撒大声地",
+          label: "10.3",
         },
         {
           value:
-            '实施单元213-123UNKJ-2022-1224-代金券哦我我打算的弄啊-啊实打实撒大声地',
-          label: '5.03',
+            "实施单元213-123UNKJ-2022-1224-代金券哦我我打算的弄啊-啊实打实撒大声地",
+          label: "5.03",
         },
         {
           value:
-            '实施单元213-123UNKJ-2022-12378-代金券哦我我打算的弄啊-啊实打实撒大声地',
-          label: '2.03',
+            "实施单元213-123UNKJ-2022-12378-代金券哦我我打算的弄啊-啊实打实撒大声地",
+          label: "2.03",
         },
         {
           value:
-            '实施单元213-123UNKJ-2022-1284-代金券哦我我打算的弄啊-啊实打实撒大声地',
-          label: '0.03',
+            "实施单元213-123UNKJ-2022-1284-代金券哦我我打算的弄啊-啊实打实撒大声地",
+          label: "0.03",
         },
       ],
-      unit: '',
+      unit: "",
       rotate: false,
       date: new Date(),
       inputHour: 8,
       smartChooses: [
         {
-          label: '是',
+          label: "是",
           value: true,
         },
         {
-          label: '否',
+          label: "否",
           value: false,
         },
       ],
       smartChoose: false,
-      type: '',
+      type: "",
       typeList: [
         {
-          label: '综合事务',
-          value: '1',
+          label: "综合事务",
+          value: "1",
         },
         {
-          label: '成长提升',
-          value: '2',
+          label: "成长提升",
+          value: "2",
         },
         {
-          label: '项目服务',
-          value: '3',
+          label: "项目服务",
+          value: "3",
         },
         {
-          label: '专项任务',
-          value: '4',
+          label: "专项任务",
+          value: "4",
         },
         {
-          label: '预研工作',
-          value: '5',
+          label: "预研工作",
+          value: "5",
         },
       ],
-      category: '',
+      category: "",
       categoryList: [
         {
-          label: '管理保障',
-          value: '1',
+          label: "管理保障",
+          value: "1",
         },
         {
-          label: '运维保障',
-          value: '2',
+          label: "运维保障",
+          value: "2",
         },
         {
-          label: '研发支撑',
-          value: '3',
+          label: "研发支撑",
+          value: "3",
         },
         {
-          label: '自我提升',
-          value: '4',
+          label: "自我提升",
+          value: "4",
         },
       ],
-      jobContent: '',
+      jobContent: "",
       autoCommit: false,
-      autoCommitTime: '',
+      autoCommitTime: "",
       canCommit: true,
-      username: '',
-      userpwd: '',
-      ipmp_id: '',
-      ipmp_manhourId: '',
+      username: "",
+      userpwd: "",
+      ipmp_id: "",
+      ipmp_manhourId: "",
       ipmp_tasks: [],
     };
   },
   computed: {
-    ...mapGetters(['name', 'roles']),
+    ...mapGetters(["name", "roles"]),
   },
   created() {
-    this.username = 'wenty';
-    this.userpwd = '140454jJ';
+    this.username = this.$store.state.user.name;
+    this.userpwd = this.$store.state.user.password;
+    // this.login();
   },
   mounted() {
     this.init();
+    // this.page(this.date);
   },
   methods: {
     init() {
@@ -362,10 +364,10 @@ export default {
     },
     refill() {
       //todo 补填工时
-      console.log('补填工时');
+      console.log("补填工时");
     },
     selectFillDate(date) {
-      console.log(dateFormat('YYYY-mm-dd', date));
+      console.log(dateFormat("YYYY-mm-dd", date));
       this.page(date);
     },
     login() {
@@ -381,7 +383,7 @@ export default {
     },
     page(date) {
       getIPMPPage({
-        fillInDate: dateFormat('YYYY-mm-dd', date),
+        fillInDate: dateFormat("YYYY-mm-dd", date),
       })
         .then((res) => {
           this.ipmp_tasks = [];
@@ -421,7 +423,7 @@ export default {
         });
     },
     reject() {
-      let params = { ids: ['' + this.ipmp_id] };
+      let params = { ids: ["" + this.ipmp_id] };
       rejectHour(params)
         .then((res) => {
           this.info = res;
@@ -599,16 +601,17 @@ export default {
             '"codename":"专项问题修复"}]'
         );
         obj.applicant = this.username;
-        obj.fillInDate = dateFormat('YYYY-mm-dd', this.date);
+        obj.fillInDate = dateFormat("YYYY-mm-dd", this.date);
         obj.everyoneType = null;
         let bestTask = this.ipmp_tasks[0];
         // let bestTask = JSON.parse(
         //   '{"id":"3c0c410e81484fc6","manhourId":"595ee37db2c543df","prjId":"d2ebb5add7f4401b","prjNo":"22-T139","manhourType":"manhour.type.02","prjManager":"lisq5","taskId":null,"projectRank":null,"implUnitNo":"实施单元2022网络金融148-021","workType":"manhour.work.03","workingHours":"8","workContent":"参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","principal":null,"rejectOpinion":null,"systemId":null,"status":"manhour.status.02","taskPlanProcess":null,"prjName":"个人手机银行系统2022维护任务集","taskName":null,"convert":8.0,"flagId":"实施单元2022网络金融148-021","flagStatus":null,"fillDate":null,"fromProjectId":null,"fromTaskId":null,"fromImplementNo":null,"fromManhourType":null,"ipmpFlag":"manhour.mtprj.type.02","manhourSpecialId":null,"implUnitContents":null,"manhourSpecialReason":null,"remarks":null,"allManager":null,"updateTime":null,"updateBy":null,"manager":null,"assiatant":null,"wbstaskManger":null,"implunitManger":null,"implunitCompanyManger":null,"othdemandManger":null,"othdemandCompanyManger":null,"prjCenterDept":null,"prjRoomDept":null,"prjLineTeam":null,"outsourceType":null,"workTypeName":"需求开发","principalName":null,"projectRankName":"","prjManagerName":"李斯祺","memberId":"wenty","userId":"wenty","companyFullName":"开发服务中心","companyId":"01.01.04.01.","memberName":"文天阳","staffType":"0","fromProjectName":null,"fillInDate":"2022-10-21","fillInMonth":null,"statusName":"已退回","manhourTypeName":"实施单元工时","manhourTypeValue":null,"isManager":null,"implContent":"开发中-实施单元2022网络金融148-021-dzqdUT-WLJR-2022-0707手机银行业务印章规范接入电子印章系统需求（手机第二批）","systemName":null,"prjNoName":null,"productFlag":"false","acturalProductDate":null,"resourceType":"行内","unitList":null,"manhourTypeId":null,"centerRoomId":null,"roomDept":"01.01.04.01.02.","lineTeam":"01.01.04.01.02.03.","roomDeptName":"应用开发服务分中心(武汉)","lineTeamName":"武汉研发A2团队","prjFirstDept":null,"forbidStatus":null,"projectStatus":null,"prjStatus":"mtprj.status.01","implStatus":null,"modifyFlag":false,"workHours":null,"downloadType":null,"startDate":null,"endDate":null,"prjIdList":null,"manHourNature":null,"manHourNatureValue":"正常工时","manhourSpecialReasonValue":"","submitTime":null,"disTaskName":null,"manhourStatus":"manhour.status.02","taskNo":null,"taskDescription":null,"recentlyWorkContents":["参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发","参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发"],"order":1}'
         // );
-        bestTask.workType = 'manhour.work.03'; //需求开发
-        bestTask.workingHours = '' + this.inputHour;
-        bestTask.workContent =
-          '参加UT-WLJR-2022-0707-手机银行业务印章规范接入电子印章系统需求（手机信用卡）开发';
+        bestTask.workType = "manhour.work.03"; //需求开发
+        bestTask.workingHours = "" + this.inputHour;
+        bestTask.workContent = `参加${bestTask.implContent.substring(
+          bestTask.implContent.lastIndexOf("-") + 1
+        )}开发`;
         bestTask.dict = threeTypeObjArr;
         obj.threeType = [bestTask];
       }
