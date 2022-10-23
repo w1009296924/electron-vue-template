@@ -302,20 +302,21 @@ export default {
       this.autoCommit = this.settings.hour.autoCommit;
       this.autoCommitTime = this.settings.hour.autoCommitTime;
       setTimeout(() => {
-        this.page(new Date());
-        //更新工作量
-        this.ipmp_tasks.forEach((item) => {
-          setTimeout(() => {
-            Object.assign(item, {
-              workload: this.getLeftHour(item.implUnitNo),
-            });
-          }, 100);
+        this.page(new Date()).then(() => {
+          //更新工作量
+          for (let i = 0; i < this.ipmp_tasks.length; i++) {
+            setTimeout(() => {
+              this.getLeftHour(item.implUnitNo).then((res) => {
+                this.ipmp_tasks[i].workload = res;
+              });
+            }, 100);
+          }
+          this.checkSmarkChoose();
         });
-        this.checkSmarkChoose();
       }, 500);
     },
-    changeUnit() {
-      this.workload = this.getLeftHour(this.unit);
+    async changeUnit() {
+      this.workload = await this.getLeftHour(this.unit);
       this.bestTask = this.ipmp_tasks.find((item) => {
         return item.implUnitNo == this.unit;
       });
@@ -356,7 +357,17 @@ export default {
     },
     selectFillDate(date) {
       console.log(dateFormat("YYYY-mm-dd", date));
-      this.page(date);
+      this.page(date).then(() => {
+        //更新工作量
+        for (let i = 0; i < this.ipmp_tasks.length; i++) {
+          setTimeout(async () => {
+            this.getLeftHour(item.implUnitNo).then((res) => {
+              this.ipmp_tasks[i].workload = res;
+            });
+          }, 100);
+        }
+        this.checkSmarkChoose();
+      });
     },
     login() {
       loginIPMP(this.username, this.userpwd)
