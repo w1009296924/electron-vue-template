@@ -34,8 +34,8 @@
           class="arrow"
           :src="
             require(item.showDetail
-              ? '@/assets/todoWin/max.png'
-              : '@/assets/todoWin/min.png')
+              ? '@/assets/todoWin/up.png'
+              : '@/assets/todoWin/down.png')
           "
         />
       </div>
@@ -50,7 +50,7 @@
               class="select"
               :src="
                 require(pending.status
-                  ? '@/assets/todoWin/min.png'
+                  ? '@/assets/todoWin/select.png'
                   : '@/assets/todoWin/unselect.png')
               "
               @click.stop="changeStatus(pending)"
