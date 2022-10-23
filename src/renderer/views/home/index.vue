@@ -454,8 +454,8 @@ export default {
       const arg = {
         url: "/todoWin",
         frame: false,
-        width: 380,
-        height: 400,
+        width: 400,
+        height: 425,
         resizable: false,
         movable: true,
         alwaysOnTop: true,
