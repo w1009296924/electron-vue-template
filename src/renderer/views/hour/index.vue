@@ -421,7 +421,7 @@ export default {
         });
     },
     reject() {
-      let params = { ids: this.ipmp_id };
+      let params = { ids: ['' + this.ipmp_id] };
       rejectHour(params)
         .then((res) => {
           this.info = res;
