@@ -111,7 +111,9 @@ export function initMission() {
   //待办数据上传服务端,每次启动上传当前的待办事项
   if (store.state.grant.haveGrant) {
     console.log("上传服务端addMission");
-    addMission(store.state.user.name, store.getters.missionArray);
+    setTimeout(() => {
+      addMission(store.state.user.name, store.getters.missionArray);
+    }, 5000);
   }
 }
 

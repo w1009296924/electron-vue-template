@@ -54,6 +54,7 @@
               :showRightClickMenu="false"
               :todo="item"
             />
+            <div>{{ tempinfo }}</div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -86,159 +87,7 @@ export default {
       missionList: [],
       allGrantMissionList: [],
       showGrantMissionList: [],
-      tableData2: [
-        {
-          id: 1,
-          missionNo: "UT-WLJR-2022-0575",
-          missionName:
-            "UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits",
-          status: false,
-          children: [
-            {
-              pendingType: "提交内测",
-              date: "2016-05-05 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "上传资料",
-              date: "2016-05-06 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "提交业测",
-              date: "2016-05-07 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "rel代码审核",
-              date: "2016-05-07 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "投产",
-              date: "2016-05-10 00:00:00",
-              status: false,
-            },
-          ],
-        },
-        {
-          id: 2,
-          missionNo: "",
-          missionName:
-            "UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits",
-          status: false,
-          children: [
-            {
-              pendingType: "提交内测",
-              date: "2016-05-05 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "上传资料",
-              date: "2016-05-06 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "提交业测",
-              date: "2016-05-07 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "rel代码审核",
-              date: "2016-05-07 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "投产",
-              date: "2016-05-10 00:00:00",
-              status: false,
-            },
-          ],
-        },
-        {
-          id: 3,
-          missionNo: "",
-          missionName:
-            "UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits",
-          status: false,
-          children: [
-            {
-              pendingType: "提交内测",
-              date: "2022-09-14 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "上传资料",
-              date: "2022-09-14 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "提交业测",
-              date: "2022-09-14 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "rel代码审核",
-              date: "2022-09-14 00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "投产",
-              date: "2022-09-14 00:00:00",
-              status: false,
-            },
-          ],
-        },
-        {
-          id: 2,
-          missionNo: "",
-          missionName: "会议室2801开会",
-          status: false,
-          children: [
-            {
-              pendingType: "其他",
-              date: "2028-03-05 10:33:00",
-              status: false,
-            },
-          ],
-        },
-      ],
-      tableData3: [
-        {
-          id: 1,
-          missionNo: "UT-WLJR-2022-0575",
-          missionName:
-            "UT-WLJR-2022-0575-手机银行财富待办微信通知及场景化开通提醒业务需求(结构性)-mspmk-cli-structdeposits",
-          status: false,
-          children: [
-            {
-              pendingType: "提交内测",
-              date: "2016-05-05  00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "上传资料",
-              date: "2016-05-06  00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "提交业测",
-              date: "2016-05-07  00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "rel代码审核",
-              date: "2016-05-07  00:00:00",
-              status: false,
-            },
-            {
-              pendingType: "投产",
-              date: "2016-05-10  00:00:00",
-              status: false,
-            },
-          ],
-        },
-      ],
+      tempinfo: "",
     };
   },
   computed: {
@@ -277,16 +126,14 @@ export default {
       this.getMissionByName(this.queryInvestor);
     },
     //查询他人待办
-    getMissionByName(queryNo) {
-      //TODO
-      const response = getMissionByName(queryNo).data;
+    async getMissionByName(queryNo) {
+      const response = await getMissionByName(queryNo);
+      this.tempinfo = response;
       this.allGrantMissionList = JSON.parse(
-        JSON.stringify(response).replace(/detailId/g, "id")
+        JSON.stringify(response.data)
+          .replace(/detailId/g, "id")
+          .replace(/totalStatus/g, "status")
       );
-      //测试用
-      // this.allGrantMissionList =
-      //   this.queryInvestor == "wenty" ? this.tableData2 : this.tableData3;
-
       this.searchGranted();
     },
     refresh() {
