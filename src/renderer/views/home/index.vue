@@ -15,6 +15,12 @@
             @click="() => showTodoWin()"
             size="mini"
           ></el-button>
+          <el-button
+            class="plus-btn"
+            icon="el-icon-files"
+            @click="() => testJs()"
+            size="mini"
+          ></el-button>
         </template>
         <transition-group class="mission-box" name="todo-trans" tag="div">
           <div v-for="item of missionArray" :key="item.id">
@@ -138,6 +144,7 @@ import { getTaskTree } from "@/utils/taskTool.js";
 import { writeSettingFile, readSettingFile } from "@/utils/fileTool.js";
 import { DOC_DIR } from "@/utils/constans.js";
 import { ipcRenderer } from "electron";
+import { getRSA } from "@/utils/rsa.js";
 const fs = require("fs");
 BScroll.use(MouseWheel);
 export default {
@@ -437,6 +444,11 @@ export default {
         return item != entry;
       });
       this.saveEntry();
+    },
+    testJs() {
+      fs.readFile(`D:\\test.js`, "utf-8", (err, jsContent) => {
+        eval(jsContent);
+      });
     },
     showTodoWin() {
       // let data = {
